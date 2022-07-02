@@ -37,7 +37,8 @@ namespace RaargeDungeon
                 Console.WriteLine($" (D)ifficulty: ${diffP}    ");
                 Console.WriteLine($" (P)otions:    ${potionP}    ");
                 Console.WriteLine($" (H)ealth:     ${healthP}    ");
-                Console.WriteLine($" (E)xit:    ");
+                Console.WriteLine($" (E)xit Shop:    ");
+                Console.WriteLine($" (Q)uit Game:    ");
                 Console.WriteLine("=====================");
 
                 Console.WriteLine(" ");
@@ -53,7 +54,7 @@ namespace RaargeDungeon
                 Console.WriteLine("=====================");
                 //wait for input
                 string input = Console.ReadLine().ToLower();
-                while (input != "w" && input != "a" && input != "d" && input != "p" && input != "e" && input != "h" && input.Length != 1)
+                while (input != "w" && input != "a" && input != "d" && input != "p" && input != "e" && input != "h" && input != "q" && input.Length != 1)
                 {
                     Console.WriteLine("You did not enter a valid value.  Please reenter.");
                     input = Console.ReadLine().ToLower();
@@ -81,6 +82,10 @@ namespace RaargeDungeon
                 else if (input == "e")
                 {
                     break;
+                }
+                else if (input == "q")
+                {
+                    Program.Quit();
                 }
             }
         }

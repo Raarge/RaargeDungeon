@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace RaargeDungeon
 {
+    [XmlRootAttribute("Player", Namespace = "RaargeDungeon, IsNullable = false")]
     public class Player
     {
-        Random rand = new Random();
+        
+        public Random rand = new Random();
 
         public string name;
+        public int id;
         public int coins = 25;
         public int health = 10;
         public int baseHealth = 10;
@@ -31,7 +36,8 @@ namespace RaargeDungeon
         {
             int upper = (4 * mods + 4);
             int lower = (2 *mods + 2);
-            return rand.Next(lower, upper);
+            int retVal = rand.Next(lower, upper);
+            return retVal;
         }
         public int GetCoins()
         {

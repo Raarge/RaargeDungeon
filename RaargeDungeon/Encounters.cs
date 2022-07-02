@@ -149,6 +149,7 @@ namespace RaargeDungeon
                         Console.WriteLine($"As you sprint away from {nm}, its strike catched you in the back, knocking you down.");
                         Console.WriteLine($"You lose {damage} health and are unable to escape");
                         Console.ReadKey();
+                        Program.currentPlayer.health -= damage;
                     }
                     else
                     {
