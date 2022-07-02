@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace RaargeDungeon
+{
+    public class Player
+    {
+        Random rand = new Random();
+
+        public string name;
+        public int coins = 25;
+        public int health = 10;
+        public int baseHealth = 10;
+        public int damage = 1;
+        public int armorValue = 0;
+        public int potion = 5;
+        public int weaponValue = 1;
+
+        public int mods = 0;
+
+        public int GetHealth()
+        {
+            int upper = (4 * mods + 12);
+            int lower = (2 * mods + 5);
+            return rand.Next(lower, upper);
+        }
+        public int GetPower()
+        {
+            int upper = (4 * mods + 4);
+            int lower = (2 *mods + 2);
+            return rand.Next(lower, upper);
+        }
+        public int GetCoins()
+        {
+            int upper = (25 * mods + 101);
+            int lower = (15 * mods + 21);
+            return rand.Next(lower, upper);
+        }
+
+        public int GetPotionHealValue()
+        {
+            int upper = (4 * mods + 11);
+            int lower = (2 * mods +  5);
+            return rand.Next(lower, upper);
+        }
+    }
+}
