@@ -4,6 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace RaargeDungeon
 {
@@ -129,15 +130,15 @@ namespace RaargeDungeon
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Choose your player:");
+                Print("Choose your player:", 60);
 
                 foreach (Player p in players)
                 {
                     Console.WriteLine($"{p.id}: {p.name}");
                 }
 
-                Console.WriteLine("Please input player name or id (id:# or playername).");
-                Console.WriteLine("To Start a New Game type create");
+                Print("Please input player name or id (id:# or playername).");
+                Print("To Start a New Game type create");
                 string[] data = Console.ReadLine().ToLower().Split(':');
 
                 try
@@ -173,7 +174,7 @@ namespace RaargeDungeon
                     {
                         foreach (Player player in players)
                         {
-                            if(player.name == data[0])
+                            if(player.name.ToLower() == data[0])
                             {
                                 return player;
                             }
@@ -185,11 +186,21 @@ namespace RaargeDungeon
                 }
                 catch (IndexOutOfRangeException)
                 {
-                    Console.WriteLine("Your id needs t obe a number! Press any key to continue!");
+                    Console.WriteLine("Your id needs to be a number! Press any key to continue!");
                     Console.ReadKey();  
                 }
             }
             
+        }
+
+        public static void Print(string text, int speed = 40)
+        {
+            foreach (char c in text)
+            {
+                Console.Write(c);
+                Thread.Sleep(speed);
+            }
+            Console.WriteLine("");
         }
     }
 }
