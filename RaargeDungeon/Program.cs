@@ -37,8 +37,8 @@ namespace RaargeDungeon
             Player p = new Player();
 
             Console.Clear();
-            Console.WriteLine("Raarge's Dungeon");
-            Console.WriteLine("What is your characters name? ");
+            Print("Raarge's Dungeon");
+            Print("What is your characters name? ");
             p.name = Console.ReadLine();
             p.id = newId;
 
@@ -49,15 +49,15 @@ namespace RaargeDungeon
                 p.name = Console.ReadLine();
             }
             Console.Clear();
-            Console.WriteLine("You awake on a stone slab in a dark room.");
-            Console.WriteLine($"Welcome {p.name}");
+            Print("You awake on a stone slab in a dark room..........", 30);
+            Print($"Welcome {p.name}");
             Console.ReadKey();
             Console.Clear();
-            Console.WriteLine("You grope around in the dark trying to figure out where you are.  Your head is pounding");
-            Console.WriteLine("and you rub the back of your neck only to find a small incision.  You notice a small");
-            Console.WriteLine("strip of light along the floor and realize it is a door.  You move towards it and feel");
-            Console.WriteLine("for the door handle.  You turn the handle and meet with resistance which suddenly gives");
-            Console.WriteLine("way and you hear the door unlatch...");
+            Print("You grope around in the dark trying to figure out where you are.  Your head is pounding");
+            Print("and you rub the back of your neck only to find a small incision.  You notice a small");
+            Print("strip of light along the floor and realize it is a door.  You move towards it and feel");
+            Print("for the door handle.  You turn the handle and meet with resistance which suddenly gives");
+            Print("way and you hear the door unlatch...");
             Console.ReadKey();
             Console.Clear();
 
@@ -75,23 +75,14 @@ namespace RaargeDungeon
         {
             string path = $"saves/{currentPlayer.id.ToString()}.xml";
             string fileName = currentPlayer.id.ToString();
-
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
+            string[] paths = Directory.GetFiles("saves");
 
             XmlSerializer serializer = new XmlSerializer(typeof(Player));
             TextWriter writer = new StreamWriter(path);
             XmlSerializer sr = new XmlSerializer (typeof(Player));
             serializer.Serialize(writer, currentPlayer);
             writer.Close();
-            //BinaryFormatter binForm = new BinaryFormatter();
-            //FileStream file = File.Open(path, FileMode.OpenOrCreate);
-            // research the replacement for binForm Serialize and replace this code
             
-            //binForm.Serialize(file, currentPlayer);
-            //file.Close();
         }
 
         public static Player Load(out bool newP)
@@ -101,22 +92,20 @@ namespace RaargeDungeon
             List<Player> players = new List<Player>();
             int idCount = 0;
 
-            //BinaryFormatter binForm = new BinaryFormatter();
+            
             
             FileStream fs;
 
             foreach (string p in paths)
             {
-                //FileStream file = File.Open(p, FileMode.Open);
-                //Player player = (Player)binForm.Deserialize(file);
-                //file.Close();
+                
 
-                using (fs = new FileStream(p, FileMode.Open))
+                using (fs = new FileStream(p, FileMode.Open, FileAccess.Read))
                 {
                     XmlSerializer ser = new XmlSerializer(typeof(Player));
                     Player player;
                     player = (Player)ser.Deserialize(fs);
-                    ser.Serialize(fs, player);
+                    //ser.Serialize(fs, player);
                     players.Add(player);
                 };
 
@@ -193,7 +182,7 @@ namespace RaargeDungeon
             
         }
 
-        public static void Print(string text, int speed = 40)
+        public static void Print(string text, int speed = 10)
         {
             foreach (char c in text)
             {

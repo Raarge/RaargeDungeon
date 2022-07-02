@@ -111,8 +111,8 @@ namespace RaargeDungeon
                     int attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4);
                     string leader = GetAttackStart(attack);
                     // attack  // add random first parts later and random return attacks
-                    Console.WriteLine($"{leader}, you swing your weapon at {nm}, who attacks in return.");
-                    Console.WriteLine($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
+                    Program.Print($"{leader}, you swing your weapon at {nm}, who attacks in return.");
+                    Program.Print($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
                     Program.currentPlayer.health -= damage;
                     hlt -= attack;
                     if (hlt <= 0)
@@ -127,9 +127,9 @@ namespace RaargeDungeon
                     int damage = (rand.Next(1, pwr) / 4) - Program.currentPlayer.armorValue; // incomming damage is 25% while defending
                     if (damage < 0 ) damage = 0;
                     int attack = (rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4))/2; // half damage dealt defending
-                    
-                    Console.WriteLine($"As {nm} moves forward to attack, you ready your weapon to defend.");
-                    Console.WriteLine($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
+
+                    Program.Print($"As {nm} moves forward to attack, you ready your weapon to defend.");
+                    Program.Print($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
                     Program.currentPlayer.health -= damage;
                     hlt -= attack;
                     if(hlt <= 0)
@@ -146,14 +146,14 @@ namespace RaargeDungeon
                         int damage = rand.Next(1, pwr) - Program.currentPlayer.armorValue;
                         if (damage < 0 ) damage = 0;
 
-                        Console.WriteLine($"As you sprint away from {nm}, its strike catched you in the back, knocking you down.");
-                        Console.WriteLine($"You lose {damage} health and are unable to escape");
+                        Program.Print($"As you sprint away from {nm}, its strike catched you in the back, knocking you down.");
+                        Program.Print($"You lose {damage} health and are unable to escape");
                         Console.ReadKey();
                         Program.currentPlayer.health -= damage;
                     }
                     else
                     {
-                        Console.WriteLine($"You use your crazy moves to evade the {nm} and you successfully escape!");
+                        Program.Print($"You use your crazy moves to evade the {nm} and you successfully escape!");
                         Console.ReadKey();
                         Shop.loadShop(Program.currentPlayer);
                     };
@@ -165,8 +165,8 @@ namespace RaargeDungeon
                     {
                         int damage = (pwr/2) - Program.currentPlayer.armorValue;
                         if (damage < 0) damage = 0;
-                        Console.WriteLine("You feel around but find no potions!");
-                        Console.WriteLine($"The {nm} strikes you with a blow and you lose {damage} health!");
+                        Program.Print("You feel around but find no potions!");
+                        Program.Print($"The {nm} strikes you with a blow and you lose {damage} health!");
                         Program.currentPlayer.health -= damage;
                     }
                     else
@@ -174,13 +174,13 @@ namespace RaargeDungeon
                         int damage = (pwr/2)-Program.currentPlayer.armorValue;
                         if( damage < 0) damage = 0;
                         int heal = Program.currentPlayer.GetPotionHealValue();
-                        Console.WriteLine("You reach into your bag and pull out a pulsing read flask.  You take a drink from it");
-                        Console.WriteLine($"You gain {heal} health!");
+                        Program.Print("You reach into your bag and pull out a pulsing read flask.  You take a drink from it");
+                        Program.Print($"You gain {heal} health!");
                         Program.currentPlayer.health += heal;
                         if (Program.currentPlayer.health > Program.currentPlayer.baseHealth) Program.currentPlayer.health = Program.currentPlayer.baseHealth;
                         Program.currentPlayer.potion -= 1;
-                        Console.WriteLine($"As you were occupied {nm} advanced and attacked you.");
-                        Console.WriteLine($"You lose {damage} health.");
+                        Program.Print($"As you were occupied {nm} advanced and attacked you.");
+                        Program.Print($"You lose {damage} health.");
                         Program.currentPlayer.health -= damage;
                     }
                     Console.ReadKey();
@@ -188,14 +188,14 @@ namespace RaargeDungeon
                 if (Program.currentPlayer.health <= 0)
                 {
                     // Death code
-                    Console.WriteLine($"As the {nm} delivers a massive blow you collapse to the floor.  Your conciousness fades, you have been slain!");
+                    Program.Print($"As the {nm} delivers a massive blow you collapse to the floor.  Your conciousness fades, you have been slain!");
                     Console.ReadKey();
                     System.Environment.Exit(0);
                 }
                 Console.ReadKey();
             }
             int cn = Program.currentPlayer.GetCoins();
-            Console.WriteLine($"As you stand victorious over the {nm}, its body dissolves into {cn} gold coins!");
+            Program.Print($"As you stand victorious over the {nm}, its body dissolves into {cn} gold coins!");
             Program.currentPlayer.coins += cn;
             Console.ReadKey();
         }
