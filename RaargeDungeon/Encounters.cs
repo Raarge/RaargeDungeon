@@ -17,7 +17,9 @@ namespace RaargeDungeon
         // Encounters
         public static void FirstEncounter()
         {
-            Program.Print("You throw open the door, grab a rusty sword laying on the table by the door and charge");
+            string weapon = GetWeapon();
+
+            Program.Print($"You throw open the door, grab a {weapon} laying on the table by the door and charge");
             Program.Print("your captor.  He turns...");
             Console.ReadKey();
             Combat(false, "Human Rogue", 1, 4);
@@ -113,10 +115,13 @@ namespace RaargeDungeon
                 {
                     int damage = rand.Next(1, pwr) - Program.currentPlayer.armorValue;
                     if (damage < 0 ) damage = 0;
-                    int attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4);
+                    int attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.currentClass == Player.PlayerClass.Warrior)?2:0) * 
+                        ((Program.currentPlayer.currentClass == Player.PlayerClass.Ranger && rand.Next(1,4) == 3)?2:0);
                     string leader = GetAttackStart(attack);
-                    // attack  // add random first parts later and random return attacks
-                    Program.Print($"{leader}, you swing your weapon at {nm}, who attacks in return.");
+                    string style = GetWeaponAttackStyle();
+
+                    // attack  
+                    Program.Print($"{leader}, {style} at {nm}, who attacks in return.");
                     Console.WriteLine($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
                     Program.currentPlayer.health -= damage;
                     hlt -= attack;
@@ -132,8 +137,9 @@ namespace RaargeDungeon
                     int damage = (rand.Next(1, pwr) / 4) - Program.currentPlayer.armorValue; // incomming damage is 25% while defending
                     if (damage < 0 ) damage = 0;
                     int attack = (rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4))/2; // half damage dealt defending
+                    var weapon = GetWeapon();
 
-                    Program.Print($"As {nm} moves forward to attack, you ready your weapon to defend.");
+                    Program.Print($"As {nm} moves forward to attack, you ready your {weapon} to defend.");
                     Console.WriteLine($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
                     Program.currentPlayer.health -= damage;
                     hlt -= attack;
@@ -146,7 +152,7 @@ namespace RaargeDungeon
                 else if (action.ToLower() == "r")
                 {
                     // run
-                    if(rand.Next(0,2) == 0)
+                    if(Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0,2) == 0) //rangers always succeed
                     {
                         int damage = rand.Next(1, pwr) - Program.currentPlayer.armorValue;
                         if (damage < 0 ) damage = 0;
@@ -318,6 +324,83 @@ namespace RaargeDungeon
             }
 
             return attackStart;
+        }
+
+        public static string GetWeaponAttackStyle()
+        {
+            var style = "";
+
+            //Console.WriteLine(Program.currentPlayer.currentClass);
+            if (Program.currentPlayer.currentClass.ToString() == "Warrior")
+            {
+                style = rand.Next(0, 3) switch
+                {
+                    0 => "you chop with your sword",
+                    1 => "you thrust your sword",
+                    2 => "you swing in a wide arching strike",
+                    _ => "you swing your sword",
+                };
+            }
+            else if (Program.currentPlayer.currentClass.ToString() == "Ranger")
+            {
+                switch (rand.Next(0, 3))
+                {
+                    case 0:
+                        style = "you leap backwards and fire your bow";
+                        break;
+                    case 1:
+                        style = "you quickly draw and fire your bow";
+                        break;
+                    case 2:
+                        style = "you notch an arrow and loose it";
+                        break;
+                    default:
+                        style = "you fire an arrow";
+                        break;
+                }
+                
+            }
+            else if (Program.currentPlayer.currentClass.ToString() == "Mage")
+            {
+                switch (rand.Next(0, 3))
+                {
+                    case 0:
+                        style = "you gesture while chanting";
+                        break;
+                    case 1:
+                        style = "you gesture while squeezing a component in your other hand";
+                        break;
+                    case 2:
+                        style = "you quickly cast a spell";
+                        break;
+                    default:
+                        style = "you gesture";
+                        break;
+                }
+            }
+            //Console.WriteLine($"Style: {style}");
+            return style;
+        }
+
+        public static string GetWeapon()
+        {
+            string weapon = "";
+
+            if(Program.currentPlayer.currentClass.ToString() == "Warrior")
+            {
+                weapon = "sword";
+            }
+            else if (Program.currentPlayer.currentClass.ToString() == "Ranger")
+            {
+                weapon = "longbow";
+            }
+            else if (Program.currentPlayer.currentClass.ToString() == "Mage")
+            {
+                weapon = "staff";
+            }
+
+            return weapon;
+
         }
     }
 }
