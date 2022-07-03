@@ -40,6 +40,31 @@ namespace RaargeDungeon
             Print("Raarge's Dungeon");
             Print("What is your characters name? ");
             p.name = Console.ReadLine();
+            Print("Class: Mage  Archer Warrior");
+            bool flag = false;
+            while (flag == false)
+            {
+                flag = true;
+                string input = Console.ReadLine().ToLower();
+                if(input == "mage")
+                {
+                    p.currentClass = Player.PlayerClass.Mage;
+
+                }
+                else if (input == "archer")
+                {
+                    p.currentClass = Player.PlayerClass.Archer;
+                }
+                else if (input == "warrior")
+                {
+                    p.currentClass = Player.PlayerClass.Warrior;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid selection, please choose a valid class.");
+                    flag = false;
+                }
+            }
             p.id = newId;
 
             while(p.name == "" || p.name is null || p.name == " ")

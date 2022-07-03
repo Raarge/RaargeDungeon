@@ -26,6 +26,9 @@ namespace RaargeDungeon
 
         public int mods = 0;
 
+        public enum PlayerClass {Mage, Archer, Warrior};
+        public PlayerClass currentClass = PlayerClass.Warrior;
+
         public int GetHealth()
         {
             int upper = (4 * mods + 12);

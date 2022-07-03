@@ -17,8 +17,8 @@ namespace RaargeDungeon
         // Encounters
         public static void FirstEncounter()
         {
-            Console.WriteLine("You throw open the door, grab a rusty sword laying on the table by the door and charge");
-            Console.WriteLine("your captor.  He turns...");
+            Program.Print("You throw open the door, grab a rusty sword laying on the table by the door and charge");
+            Program.Print("your captor.  He turns...");
             Console.ReadKey();
             Combat(false, "Human Rogue", 1, 4);
         }
@@ -26,7 +26,7 @@ namespace RaargeDungeon
         public static void BasicFightEncounter()
         {
             Console.Clear();
-            Console.WriteLine("You turn the corner and there you see a ....");
+            Program.Print("You turn the corner and there you see a ....");
             Console.ReadKey();
             Combat(true, "", 0, 0);
         }
@@ -34,10 +34,11 @@ namespace RaargeDungeon
         public static void WizardEncounter()
         {
             Console.Clear();
-            Console.WriteLine("The door slowly creaks open as you peer into the dark room.  You see a tall man with a");
-            Console.WriteLine("long beard looking at a large tome.  He looks up from his tome and stares at you menacingly....");
+            Program.Print("The door slowly creaks open as you peer into the dark room.  You see a tall man with a");
+            Program.Print("long beard looking at a large tome.  He looks up from his tome and stares at you menacingly....");
             Console.ReadKey();
-            Combat(false, "A Dark Wizard", 4, 2);
+            Combat(false, "A Dark Wizard", rand.Next((1 + Program.currentPlayer.mods),(4 + Program.currentPlayer.mods)), rand.Next((4 + Program.currentPlayer.mods), 
+                ((2 * Program.currentPlayer.mods) + 7)));
         }
 
         //Encounter Tools
@@ -73,11 +74,15 @@ namespace RaargeDungeon
                 hlt = health;
 
             }
+
+            bool monsterAlive = true;
+
             while (hlt > 0)
             {
                 Console.Clear();
                 Console.WriteLine($"{nm} is here, looking menacingly at you");
                 Console.WriteLine($"Power: {pwr} Health: {hlt}");
+                Console.WriteLine(" ");
                 Console.WriteLine("============");
                 Console.WriteLine("| (A)ttack |");
                 Console.WriteLine("| (D)efend |");
@@ -112,13 +117,13 @@ namespace RaargeDungeon
                     string leader = GetAttackStart(attack);
                     // attack  // add random first parts later and random return attacks
                     Program.Print($"{leader}, you swing your weapon at {nm}, who attacks in return.");
-                    Program.Print($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
+                    Console.WriteLine($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
                     Program.currentPlayer.health -= damage;
                     hlt -= attack;
                     if (hlt <= 0)
                     {
                         Console.WriteLine($"{nm} was Slain!!");
-                        // go to store
+                        monsterAlive = false;
                     }
                 }
                 else if (action.ToLower() == "d")
@@ -129,13 +134,13 @@ namespace RaargeDungeon
                     int attack = (rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4))/2; // half damage dealt defending
 
                     Program.Print($"As {nm} moves forward to attack, you ready your weapon to defend.");
-                    Program.Print($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
+                    Console.WriteLine($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
                     Program.currentPlayer.health -= damage;
                     hlt -= attack;
                     if(hlt <= 0)
                     {
                         Console.WriteLine($"{nm} was Slain!!");
-                        // go to store
+                        monsterAlive = false;
                     }
                 }
                 else if (action.ToLower() == "r")
@@ -147,7 +152,7 @@ namespace RaargeDungeon
                         if (damage < 0 ) damage = 0;
 
                         Program.Print($"As you sprint away from {nm}, its strike catched you in the back, knocking you down.");
-                        Program.Print($"You lose {damage} health and are unable to escape");
+                        Console.WriteLine($"You lose {damage} health and are unable to escape");
                         Console.ReadKey();
                         Program.currentPlayer.health -= damage;
                     }
@@ -166,7 +171,7 @@ namespace RaargeDungeon
                         int damage = (pwr/2) - Program.currentPlayer.armorValue;
                         if (damage < 0) damage = 0;
                         Program.Print("You feel around but find no potions!");
-                        Program.Print($"The {nm} strikes you with a blow and you lose {damage} health!");
+                        Console.WriteLine($"The {nm} strikes you with a blow and you lose {damage} health!");
                         Program.currentPlayer.health -= damage;
                     }
                     else
@@ -180,10 +185,14 @@ namespace RaargeDungeon
                         if (Program.currentPlayer.health > Program.currentPlayer.baseHealth) Program.currentPlayer.health = Program.currentPlayer.baseHealth;
                         Program.currentPlayer.potion -= 1;
                         Program.Print($"As you were occupied {nm} advanced and attacked you.");
-                        Program.Print($"You lose {damage} health.");
+                        Console.WriteLine($"You lose {damage} health.");
                         Program.currentPlayer.health -= damage;
                     }
-                    Console.ReadKey();
+                    if (monsterAlive)
+                    {
+                        Console.ReadKey();
+                    }
+
                 }
                 if (Program.currentPlayer.health <= 0)
                 {
@@ -192,7 +201,8 @@ namespace RaargeDungeon
                     Console.ReadKey();
                     System.Environment.Exit(0);
                 }
-                Console.ReadKey();
+                if (monsterAlive)
+                    Console.ReadKey();
             }
             int cn = Program.currentPlayer.GetCoins();
             Program.Print($"As you stand victorious over the {nm}, its body dissolves into {cn} gold coins!");
