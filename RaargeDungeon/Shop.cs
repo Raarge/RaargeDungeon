@@ -23,11 +23,11 @@ namespace RaargeDungeon
 
             while (true)
             {
-                potionP = 20 + 10 * p.mods;
+                potionP = 20 + (10 * p.mods);
                 armorP = 100 * (p.armorValue + 1);
                 weaponP = 100 * p.weaponValue;
-                diffP = 300 * 100 * p.mods;
-                healthP = 100 * p.baseHealth;
+                diffP = 300 * (100 * p.mods);
+                healthP = 40 * p.baseHealth;
 
                 Console.Clear();
                 Console.WriteLine("        SHOP        ");

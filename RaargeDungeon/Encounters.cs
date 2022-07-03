@@ -168,21 +168,30 @@ namespace RaargeDungeon
                     // heal
                     if(Program.currentPlayer.potion == 0)
                     {
+                        // out of potions
                         int damage = (pwr/2) - Program.currentPlayer.armorValue;
-                        if (damage < 0) damage = 0;
+                        if (damage < 0) 
+                            damage = 0;
+
                         Program.Print("You feel around but find no potions!");
                         Console.WriteLine($"The {nm} strikes you with a blow and you lose {damage} health!");
                         Program.currentPlayer.health -= damage;
                     }
                     else
                     {
+                        // have potions
                         int damage = (pwr/2)-Program.currentPlayer.armorValue;
-                        if( damage < 0) damage = 0;
+                        if( damage < 0) 
+                            damage = 0;
+
                         int heal = Program.currentPlayer.GetPotionHealValue();
+
                         Program.Print("You reach into your bag and pull out a pulsing read flask.  You take a drink from it");
-                        Program.Print($"You gain {heal} health!");
+                        Console.WriteLine($"You feel better and gain {heal} health!");
                         Program.currentPlayer.health += heal;
-                        if (Program.currentPlayer.health > Program.currentPlayer.baseHealth) Program.currentPlayer.health = Program.currentPlayer.baseHealth;
+
+                        if (Program.currentPlayer.health > Program.currentPlayer.baseHealth) 
+                            Program.currentPlayer.health = Program.currentPlayer.baseHealth;
                         Program.currentPlayer.potion -= 1;
                         Program.Print($"As you were occupied {nm} advanced and attacked you.");
                         Console.WriteLine($"You lose {damage} health.");

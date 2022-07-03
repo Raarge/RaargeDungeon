@@ -51,8 +51,8 @@ namespace RaargeDungeon
 
         public int GetPotionHealValue()
         {
-            int upper = (4 * mods + 11);
-            int lower = (2 * mods +  5);
+            int upper = (4 * mods + 11) + ((currentClass == PlayerClass.Mage) ? +3 : 0); // if a mage add extra heal
+            int lower = (2 * mods +  5) + ((currentClass == PlayerClass.Mage)? + 3:0);
             return rand.Next(lower, upper);
         }
     }
