@@ -40,7 +40,7 @@ namespace RaargeDungeon
             Print("Raarge's Dungeon");
             Print("What is your characters name? ");
             p.name = Console.ReadLine();
-            Print("Class: Mage  Archer Warrior");
+            Print("Class: Mage Ranger Warrior");
             bool flag = false;
             while (flag == false)
             {
@@ -51,9 +51,9 @@ namespace RaargeDungeon
                     p.currentClass = Player.PlayerClass.Mage;
 
                 }
-                else if (input == "archer")
+                else if (input == "ranger")
                 {
-                    p.currentClass = Player.PlayerClass.Archer;
+                    p.currentClass = Player.PlayerClass.Ranger;
                 }
                 else if (input == "warrior")
                 {
@@ -188,13 +188,16 @@ namespace RaargeDungeon
                     {
                         foreach (Player player in players)
                         {
-                            if(player.name.ToLower() == data[0])
+                            Console.WriteLine($"Player name: {player.name.ToLower()} | Selected name: {data[0]}");
+                            
+                            if(player.name.ToLower() == data[0].ToLower())
                             {
                                 return player;
                             }
-                            Console.WriteLine("There is no player with that name!");
-                            Console.ReadKey();
+                                                        
                         }
+                        Console.WriteLine("There is no player with that name!");
+                        Console.ReadKey();
                     }
                     
                 }
