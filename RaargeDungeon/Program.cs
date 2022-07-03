@@ -219,5 +219,31 @@ namespace RaargeDungeon
             }
             Console.WriteLine("");
         }
+
+        public static void ProgressBar(string fillerChar, string backgroundChar, decimal value, int size)
+        {
+            int diff = (int)((value * (decimal)size));
+
+            for(int i = 0; i < size; i++)
+            {
+                if (i < diff)
+                    Console.Write(fillerChar);
+                else
+                    Console.Write(backgroundChar);
+            }
+        }
+
+        public static void HealthBar(string fillerChar, string backgroundChar, decimal value, int size)
+        {
+            int diff = (int)((value * (decimal)(size)));
+
+            for(int i = 0; i < size; i++)
+            {
+                if (i < diff)
+                    Console.Write(fillerChar);
+                else
+                    Console.Write(backgroundChar);
+            }
+        }
     }
 }

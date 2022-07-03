@@ -91,7 +91,20 @@ namespace RaargeDungeon
                 Console.WriteLine("| (R)un    |");
                 Console.WriteLine("| (H)eal   |");
                 Console.WriteLine("============");
-                Console.WriteLine($"Potions: {Program.currentPlayer.potion} Health: {Program.currentPlayer.health} Coins: {Program.currentPlayer.coins}");
+                Console.WriteLine($"Potions: {Program.currentPlayer.potion} Coins: {Program.currentPlayer.coins}");
+                Console.WriteLine($"Level: {Program.currentPlayer.level}");
+                Console.Write(" Health Bar: ");
+                Console.Write("[");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Program.ProgressBar("<", "-", ((decimal)Program.currentPlayer.health / (decimal)Program.currentPlayer.baseHealth), 25);
+                Console.ResetColor();
+                Console.WriteLine("]");
+                Console.Write(" XP Bar: ");
+                Console.Write("    [");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Program.ProgressBar(">", "-", ((decimal)Program.currentPlayer.xp / (decimal)Program.currentPlayer.GetLevelUpValue()), 25);
+                Console.ResetColor();
+                Console.WriteLine("]");
                 string action = Console.ReadLine();
 
                 int tester = 0;
@@ -219,9 +232,18 @@ namespace RaargeDungeon
                 if (monsterAlive)
                     Console.ReadKey();
             }
+
+            int xp = Program.currentPlayer.GetXP();
             int cn = Program.currentPlayer.GetCoins();
             Program.Print($"As you stand victorious over the {nm}, its body dissolves into {cn} gold coins!");
+            Program.Print($"You gain {xp} XP!");
+            Console.WriteLine($"You quickly pocket the coins and go down a long hall");
             Program.currentPlayer.coins += cn;
+            Program.currentPlayer.xp += xp;
+
+            if (Program.currentPlayer.CanLevelUp())
+                Program.currentPlayer.LevelUp();
+
             Console.ReadKey();
         }
 
@@ -291,13 +313,13 @@ namespace RaargeDungeon
                 switch(rand.Next(0, 3))
                 {
                     case 0:
-                        attackStart = "Looking as if you stumbled into a good thing";
+                        attackStart = "Looking as if you stumbled";
                         break;
                     case 1:
                         attackStart = "Moving with a purpose";
                         break;
                     case 2:
-                        attackStart = "Grinning because you know lady luck was on your side";
+                        attackStart = "You know lady luck was on your side";
                         break;
                     default:
                         attackStart = "Happening to do the right thing";
@@ -312,7 +334,7 @@ namespace RaargeDungeon
                         attackStart = "With the ferocity of a stiking cobra";
                         break;
                     case 1:
-                        attackStart = "Moving with the termerity of a swooping falcon";
+                        attackStart = "Swooping with the termerity of a falcon";
                         break;
                     case 2:
                         attackStart = "Moving as a force of nature";
@@ -346,10 +368,10 @@ namespace RaargeDungeon
                 switch (rand.Next(0, 3))
                 {
                     case 0:
-                        style = "you leap backwards and fire your bow";
+                        style = "you leap backwards firing your bow";
                         break;
                     case 1:
-                        style = "you quickly draw and fire your bow";
+                        style = "you quickly draw firing your bow";
                         break;
                     case 2:
                         style = "you notch an arrow and loose it";

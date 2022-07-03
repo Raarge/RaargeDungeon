@@ -30,20 +30,35 @@ namespace RaargeDungeon
                 healthP = 40 * p.baseHealth;
 
                 Console.Clear();
-                Console.WriteLine("        SHOP        ");
-                Console.WriteLine("=====================");
+                Console.WriteLine("           SHOP        ");
+                Console.WriteLine("==========================");
                 Console.WriteLine($" (W)eapon:     ${weaponP}    ");
                 Console.WriteLine($" (A)rmor:      ${armorP}    ");
                 Console.WriteLine($" (D)ifficulty: ${diffP}    ");
                 Console.WriteLine($" (P)otions:    ${potionP}    ");
                 Console.WriteLine($" (H)ealth:     ${healthP}    ");
+                Console.WriteLine("==========================");
                 Console.WriteLine($" (E)xit Shop:    ");
                 Console.WriteLine($" (Q)uit Game:    ");
-                Console.WriteLine("=====================");
+                Console.WriteLine("==========================");
 
                 Console.WriteLine(" ");
-                Console.WriteLine($"    {p.name} Stats     ");
-                Console.WriteLine("=====================");
+                Console.WriteLine($" {p.name} Stats     ");
+                Console.WriteLine($" Class: {p.currentClass}");
+                Console.WriteLine($" Level: {p.level}");
+                Console.Write(" Health Bar: ");
+                Console.Write("[");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Program.ProgressBar("<", "-", ((decimal)Program.currentPlayer.health / (decimal)Program.currentPlayer.baseHealth), 25);
+                Console.ResetColor();
+                Console.WriteLine("]");
+                Console.Write(" XP Bar: ");
+                Console.Write("    [");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Program.ProgressBar(">", "-", ((decimal)p.xp / (decimal)(p.GetLevelUpValue())), 25);
+                Console.ResetColor();
+                Console.WriteLine("]");
+                Console.WriteLine("==========================");
                 Console.WriteLine($" Current Health: {p.health}");
                 Console.WriteLine($" Base Health: {p.baseHealth}");
                 Console.WriteLine($" Current Coins: {p.coins}");
@@ -51,7 +66,8 @@ namespace RaargeDungeon
                 Console.WriteLine($" Armor Class: {p.armorValue}    ");
                 Console.WriteLine($" Potions: {p.potion}    ");
                 Console.WriteLine($" Difficulty Mods: {p.mods}    ");
-                Console.WriteLine("=====================");
+                          
+                Console.WriteLine("==========================");
                 //wait for input
                 string input = Console.ReadLine().ToLower();
                 while (input != "w" && input != "a" && input != "d" && input != "p" && input != "e" && input != "h" && input != "q" && input.Length != 1)
