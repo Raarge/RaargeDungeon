@@ -41,7 +41,7 @@ namespace RaargeDungeon
             Program.Print("The door slowly creaks open as you peer into the dark room.  You see a tall man with a");
             Program.Print("long beard looking at a large tome.  He looks up from his tome and stares at you menacingly....");
             Console.ReadKey();
-            Combat(false, "A Dark Wizard", rand.Next((1 + Program.currentPlayer.mods),(4 + Program.currentPlayer.mods)), rand.Next((4 + Program.currentPlayer.mods), 
+            Combat(false, "Dark Wizard", rand.Next((1 + Program.currentPlayer.mods),(4 + Program.currentPlayer.mods)), rand.Next((4 + Program.currentPlayer.mods), 
                 ((2 * Program.currentPlayer.mods) + 7)));
         }
         #endregion
@@ -65,6 +65,8 @@ namespace RaargeDungeon
             string nm = "";
             int pwr = 0;
             int hlt = 0;
+            int baseHlt = 0;
+            
 
             if (random)
             {
@@ -73,22 +75,29 @@ namespace RaargeDungeon
                 nm = GetName();
                 pwr = Program.currentPlayer.GetPower() + ((nm == "Bugbear" || nm == "Ogre")?2:0);
                 hlt = Program.currentPlayer.GetHealth() + ((nm == "Bugbear" || nm == "Ogre")?Program.currentPlayer.mods * 2: 0);
+                baseHlt = hlt;
             }
             else
             {
                 nm = name;
                 pwr = power;
                 hlt = health;
+                baseHlt = hlt;
 
             }
-
+            string leaderMob = GetLeader(pwr);
             bool monsterAlive = true;
 
             while (hlt > 0)
             {
                 Console.Clear();
-                Console.WriteLine($"{nm} is here, looking menacingly at you");
-                Console.WriteLine($"Power: {pwr} Health: {hlt}");
+                Console.WriteLine($"A {leaderMob} {nm} is here, looking menacingly at you");
+                Console.Write($" {nm}'s Health Bar: ");
+                Console.Write("[");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Program.MonsterBar("<", "-", ((decimal)hlt / (decimal)baseHlt), 25);
+                Console.ResetColor();
+                Console.WriteLine("]");
                 Console.WriteLine(" ");
                 Console.WriteLine("============");
                 Console.WriteLine("| (A)ttack |");
@@ -305,8 +314,10 @@ namespace RaargeDungeon
             int xp = Program.currentPlayer.GetXP();
             int cn = Program.currentPlayer.GetCoins();
             Program.Print($"As you stand victorious over the {nm}, its body dissolves into {cn} gold coins!");
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Program.Print($"You gain {xp} XP!");
-            Console.WriteLine($"You quickly pocket the coins and go down a long hall");
+            Console.WriteLine($"You quickly pocket {cn} coins and go down a long hall");
+            Console.ResetColor();
             Program.currentPlayer.coins += cn;
             Program.currentPlayer.xp += xp;
 
@@ -314,6 +325,43 @@ namespace RaargeDungeon
                 Program.currentPlayer.LevelUp();
 
             Console.ReadKey();
+        }
+
+        public static string GetLeader(int pwr)
+        {
+            var tempLeader = "";
+
+            switch (pwr)
+            {
+                case 0:
+                case 1:
+                    tempLeader = "sickly";
+                    break;
+                case 2:
+                case 3:
+                    tempLeader = "young";
+                    break;
+                case 4:
+                case 5:
+                    tempLeader = "elder";
+                    break;
+                case 6:
+                case 7:
+                case 8:
+                    tempLeader = "burly";
+                    break;
+                case 9:
+                case 10:
+                case 12:
+                    tempLeader = "legendary";
+                    break;
+                default:
+                    tempLeader = "mythical";
+                    break;
+            }
+
+            return tempLeader;
+
         }
 
         public static string GetName()

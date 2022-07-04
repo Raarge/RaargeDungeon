@@ -323,5 +323,20 @@ namespace RaargeDungeon
             }
         }
         #endregion
+
+        #region Monster health bar
+        public static void MonsterBar(string fillerChar, string backgroundChar, decimal value, int size)
+        {
+            int diff = (int)((value * (decimal)(size)));
+
+            for (int i = 0; i < size; i++)
+            {
+                if (i < diff)
+                    Console.Write(fillerChar);
+                else
+                    Console.Write(backgroundChar);
+            }
+        }
+        #endregion
     }
 }
