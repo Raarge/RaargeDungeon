@@ -19,8 +19,8 @@ namespace RaargeDungeon
         public int coins = 25;
         public int level = 1;
         public int xp = 0;
-        public int health = 10;
-        public int baseHealth = 10;
+        public int health = 0;
+        public int baseHealth = 0;
         public int damage = 1;
         public int armorValue = 0;
         public int potion = 5;

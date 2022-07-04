@@ -295,7 +295,8 @@ namespace RaargeDungeon
                     // Death code
                     Program.Print($"As the {nm} delivers a massive blow you collapse to the floor.  Your conciousness fades, you have been slain!");
                     Console.ReadKey();
-                    System.Environment.Exit(0);
+                    CheckPlayAgain();
+                    
                 }
                 if (monsterAlive)
                     Console.ReadKey();
@@ -516,5 +517,28 @@ namespace RaargeDungeon
         }
 
         #endregion
+
+        public static void CheckPlayAgain()
+        {
+            Console.Clear();
+            Program.Print("Would you like to start a new game? Yes or No");
+            string answer = Console.ReadLine().ToLower();
+
+            bool tester = false;
+
+            while(tester == false)
+            if (answer == "yes")
+            {
+                    System.Diagnostics.Process.Start(System.AppDomain.CurrentDomain.FriendlyName);
+                    Environment.Exit(0);
+            }
+            else if (answer == "no")
+            {
+                Program.Print("Thank you for playing. Goodbye!");
+                System.Environment.Exit(0);
+            }
+            else 
+                System.Environment.Exit(0);
+        }
     }
 }

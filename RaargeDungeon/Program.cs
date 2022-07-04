@@ -108,15 +108,20 @@ namespace RaargeDungeon
             // Hit Points Setter
             if (p.race == Player.Race.Dwarf || p.race == Player.Race.HalfOrc || p.currentClass == Player.PlayerClass.Warrior)
             {
-                p.health = p.rand.Next(11, 14);
+                p.baseHealth = p.rand.Next(11, 14);
+                p.health = p.baseHealth;
             }
             else if (p.race == Player.Race.Gnome || p.race == Player.Race.Erudite)
             {
-                p.health = p.rand.Next(7, 10);
+                p.baseHealth = p.rand.Next(7, 10);
+                p.health = p.baseHealth;
             }
             else
-                p.health = 10;
-
+            {
+                p.baseHealth = 10;
+                p.health = p.baseHealth;
+            }
+                
             // Damage Resistance Setter
             if (p.currentClass == Player.PlayerClass.Warrior || p.race == Player.Race.Dwarf || p.race == Player.Race.Halfling ||
                 p.race == Player.Race.Elf)
