@@ -165,6 +165,16 @@ namespace RaargeDungeon
                 cost = 0;
                 
             }
+            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rando.Next(1, 16) == 5)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Program.Print("You notice a potion and are certain you can steal it without being seen..");
+                Console.ReadKey();
+                Console.ResetColor();
+
+                cost = 0;
+
+            }
             else
                 cost = 20 + (10 * p.mods);
 
@@ -196,6 +206,16 @@ namespace RaargeDungeon
                 cost = 0;
                 
             }
+            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rando.Next(1, 16) == 5)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Program.Print("You notice some armor and are certain you can steal it without being seen..");
+                Console.ReadKey();
+                Console.ResetColor();
+
+                cost = 0;
+
+            }
             else
                 cost = 100 * (p.armorValue + 1);
 
@@ -224,6 +244,16 @@ namespace RaargeDungeon
 
                 cost = 0;
                 
+            }
+            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rando.Next(1, 16) == 5)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Program.Print("You notice a weapon and are certain you can steal it without being seen..");
+                Console.ReadKey();
+                Console.ResetColor();
+
+                cost = 0;
+
             }
             else
                 cost = 100 * p.weaponValue;

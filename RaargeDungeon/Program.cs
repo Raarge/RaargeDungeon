@@ -48,7 +48,7 @@ namespace RaargeDungeon
                 p.name = Console.ReadLine();
             }
 
-            Print("Class: Mage Ranger Warrior");
+            Print("Class: Mage Ranger Warrior Rogue");
             bool flag = false;
             while (flag == false)
             {
@@ -66,6 +66,10 @@ namespace RaargeDungeon
                 else if (input == "warrior")
                 {
                     p.currentClass = Player.PlayerClass.Warrior;
+                }
+                else if (input == "rogue")
+                {
+                    p.currentClass = Player.PlayerClass.Rogue;
                 }
                 else
                 {

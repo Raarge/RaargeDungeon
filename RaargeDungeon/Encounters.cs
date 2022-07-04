@@ -136,7 +136,7 @@ namespace RaargeDungeon
                     int attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || 
                         Program.currentPlayer.race == Player.Race.HalfOrc)?2:0) * 
                         ((Program.currentPlayer.currentClass == Player.PlayerClass.Ranger && rand.Next(1,4) == 3)?2:0) * ((Program.currentPlayer.race == Player.Race.Halfling && rand.Next(1, 4) == 3) ? 2 : 0) *
-                        ((Program.currentPlayer.race == Player.Race.Elf && rand.Next(1, 4) == 3) ? 2 : 0);
+                        ((Program.currentPlayer.race == Player.Race.Elf && rand.Next(1, 4) == 3) ? 2 : 0) * ((Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rand.Next(1,4) == 3)?2:0) ;
                     string leader = GetAttackStart(attack);
                     string style = GetWeaponAttackStyle();
 
@@ -151,7 +151,37 @@ namespace RaargeDungeon
                         monsterAlive = false;
                     }
 
+                    // Rogue backstab
+                    if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && Program.currentPlayer.rand.Next(1, 6) == 5)
+                    {
+                        int backStabDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+
+                        leader = GetAttackStart(attack);
+                        style = GetWeaponAttackStyle();
+
+                        // attack
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Program.Print($"Quickly stepping behind, {style} at {nm} dealing {backStabDamage} damage.");
+                        Console.ResetColor();
+                        hlt -= attack;
+                        if (hlt <= 0)
+                        {
+                            Console.WriteLine($"{nm} was Slain!!");
+                            monsterAlive = false;
+                        }
+                    }
+
                     if (Program.currentPlayer.race == Player.Race.Halfling && rand.Next(1, 11) == 5)
+                    {
+                        int purseCoins = rand.Next(1, 15) * ((Program.currentPlayer.mods * 1) + 10);
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Program.Print($"You notice a small purse hanging from {nm}'s belt");
+                        Console.WriteLine($"You reach out and slit the purse swiftly catching {purseCoins} gold coins! ");
+                        Console.ResetColor();
+                        Program.currentPlayer.coins += purseCoins;
+                    }
+                    else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rand.Next(1, 11) == 5)
                     {
                         int purseCoins = rand.Next(1, 15) * ((Program.currentPlayer.mods * 1) + 10);
 
@@ -438,6 +468,24 @@ namespace RaargeDungeon
                         break;
                 }
             }
+            else if (Program.currentPlayer.currentClass.ToString() == "Rogue")
+            {
+                switch (rand.Next(0, 3))
+                {
+                    case 0:
+                        style = "you dance hypnotically with your blades";
+                        break;
+                    case 1:
+                        style = "you lead high and low with your blades";
+                        break;
+                    case 2:
+                        style = "you swing your blades with a flourish";
+                        break;
+                    default:
+                        style = "you stab with your blades";
+                        break;
+                }
+            }
             //Console.WriteLine($"Style: {style}");
             return style;
         }
@@ -457,6 +505,10 @@ namespace RaargeDungeon
             else if (Program.currentPlayer.currentClass.ToString() == "Mage")
             {
                 weapon = "staff";
+            }
+            else if (Program.currentPlayer.currentClass.ToString() == "Rogue")
+            {
+                weapon = "twin daggers";
             }
 
             return weapon;
