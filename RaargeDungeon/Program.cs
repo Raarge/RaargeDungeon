@@ -101,6 +101,32 @@ namespace RaargeDungeon
                 }
             }
 
+            // Hit Points Setter
+            if (p.race == Player.Race.Dwarf || p.race == Player.Race.HalfOrc || p.currentClass == Player.PlayerClass.Warrior)
+            {
+                p.health = p.rand.Next(11, 14);
+            }
+            else if (p.race == Player.Race.Gnome || p.race == Player.Race.Erudite)
+            {
+                p.health = p.rand.Next(7, 10);
+            }
+            else
+                p.health = 10;
+
+            // Damage Resistance Setter
+            if (p.currentClass == Player.PlayerClass.Warrior || p.race == Player.Race.Dwarf || p.race == Player.Race.Halfling ||
+                p.race == Player.Race.Elf)
+            {
+                p.damageResit = 1;
+            }
+            else if (p.race == Player.Race.Gnome || p.race == Player.Race.Erudite || p.currentClass == Player.PlayerClass.Mage)
+            {
+                p.damageResit = -1;
+            }
+            else
+                p.damageResit = 0;
+
+            // Player ID Setter
             p.id = newId;
 
             

@@ -151,7 +151,11 @@ namespace RaargeDungeon
             {
                 cost = 18 + (8 * p.mods);
             }
-            else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 11) == 5)
+            else if (Program.currentPlayer.race == Player.Race.HalfOrc)
+            {
+                cost = 22 + (11 * p.mods);
+            }
+            else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 21) == 5)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Program.Print("You notice a potion and are certain you can steal it without being seen.");
@@ -178,7 +182,11 @@ namespace RaargeDungeon
             {
                 cost = 90 * (p.armorValue + 1);
             }
-            else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 11) == 5)
+            else if (Program.currentPlayer.race == Player.Race.HalfOrc)
+            {
+                cost = 110 * (p.armorValue + 1);
+            }
+            else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 21) == 5)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Program.Print("You notice some armor and are certain you can steal it without being seen.");
@@ -203,7 +211,11 @@ namespace RaargeDungeon
             {
                 cost = 90 * p.weaponValue;
             }
-            else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 11) == 5)
+            else if (Program.currentPlayer.race == Player.Race.HalfOrc)
+            {
+                cost = 110 * p.weaponValue;
+            }
+            else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 21) == 5)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Program.Print("You notice a weapon and are certain you can steal it without being seen..");
@@ -228,6 +240,10 @@ namespace RaargeDungeon
             {
                 cost = 270 * (90 * (p.mods + 1));
             }
+            else if (Program.currentPlayer.race == Player.Race.HalfOrc)
+            {
+                cost = 330 * (110 * (p.mods + 1));
+            }
             else
                 cost = 300 * (100 * (p.mods + 1));
 
@@ -242,6 +258,10 @@ namespace RaargeDungeon
             if (Program.currentPlayer.race == Player.Race.Human)
             {
                 cost = 36 * p.baseHealth;
+            }
+            else if (Program.currentPlayer.race == Player.Race.HalfOrc)
+            {
+                cost = 44 * p.baseHealth;
             }
             else
                 cost = 40 * p.baseHealth;

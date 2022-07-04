@@ -25,6 +25,7 @@ namespace RaargeDungeon
         public int armorValue = 0;
         public int potion = 5;
         public int weaponValue = 1;
+        public int damageResit = 0;
         
         public enum Race {Human, Elf, Dwarf, Gnome, Halfling, HalfOrc, Erudite}
         public Race race = Race.Human;

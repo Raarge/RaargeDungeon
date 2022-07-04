@@ -131,11 +131,12 @@ namespace RaargeDungeon
                 }
                 if (action.ToLower() == "a")
                 {
-                    int damage = rand.Next(1, pwr) - Program.currentPlayer.armorValue;
+                    int damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
                     if (damage < 0 ) damage = 0;
                     int attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || 
                         Program.currentPlayer.race == Player.Race.HalfOrc)?2:0) * 
-                        ((Program.currentPlayer.currentClass == Player.PlayerClass.Ranger && rand.Next(1,4) == 3)?2:0) * ((Program.currentPlayer.race == Player.Race.Halfling && rand.Next(1, 4) == 3) ? 2 : 0);
+                        ((Program.currentPlayer.currentClass == Player.PlayerClass.Ranger && rand.Next(1,4) == 3)?2:0) * ((Program.currentPlayer.race == Player.Race.Halfling && rand.Next(1, 4) == 3) ? 2 : 0) *
+                        ((Program.currentPlayer.race == Player.Race.Elf && rand.Next(1, 4) == 3) ? 2 : 0);
                     string leader = GetAttackStart(attack);
                     string style = GetWeaponAttackStyle();
 
@@ -164,7 +165,7 @@ namespace RaargeDungeon
                 else if (action.ToLower() == "d")
                 {
                     // defend
-                    int damage = (rand.Next(1, pwr) / 4) - Program.currentPlayer.armorValue; // incomming damage is 25% while defending
+                    int damage = (rand.Next(1, pwr) / 4) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit); // incomming damage is 25% while defending
                     if (damage < 0 ) damage = 0;
                     int attack = (rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4))/2; // half damage dealt defending
                     var weapon = GetWeapon();
@@ -179,13 +180,33 @@ namespace RaargeDungeon
                         monsterAlive = false;
                     }
                 }
-                else if (action.ToLower() == "r")
+                else if (action.ToLower() == "r" && Program.currentPlayer.race != Player.Race.Dwarf)
                 {
                     // run
-                    if(Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0,2) == 0) //rangers always succeed
+                    if(Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0,2) == 0 &&
+                        Program.currentPlayer.race != Player.Race.Halfling && Program.currentPlayer.race != Player.Race.Elf) 
                     {
-                        int damage = rand.Next(1, pwr) - Program.currentPlayer.armorValue;
+                        int damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
                         if (damage < 0 ) damage = 0;
+
+                        Program.Print($"As you sprint away from {nm}, its strike catched you in the back, knocking you down.");
+                        Console.WriteLine($"You lose {damage} health and are unable to escape");
+                        Console.ReadKey();
+                        Program.currentPlayer.health -= damage;
+                    }
+                    else
+                    {
+                        Program.Print($"You use your crazy moves to evade the {nm} and you successfully escape!");
+                        Console.ReadKey();
+                        Shop.loadShop(Program.currentPlayer);
+                    };
+                }
+                else if (action.ToLower() == "r" && Program.currentPlayer.race == Player.Race.Dwarf)
+                {
+                    if (Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0, 3) == 0 )
+                    {
+                        int damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
+                        if (damage < 0) damage = 0;
 
                         Program.Print($"As you sprint away from {nm}, its strike catched you in the back, knocking you down.");
                         Console.WriteLine($"You lose {damage} health and are unable to escape");
@@ -205,7 +226,7 @@ namespace RaargeDungeon
                     if(Program.currentPlayer.potion == 0)
                     {
                         // out of potions
-                        int damage = (pwr/2) - Program.currentPlayer.armorValue;
+                        int damage = (pwr/2) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
                         if (damage < 0) 
                             damage = 0;
 
@@ -216,7 +237,7 @@ namespace RaargeDungeon
                     else
                     {
                         // have potions
-                        int damage = (pwr/2)-Program.currentPlayer.armorValue;
+                        int damage = (pwr/2)- (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
                         if( damage < 0) 
                             damage = 0;
 
