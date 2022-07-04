@@ -10,11 +10,13 @@ namespace RaargeDungeon
     
     public class Encounters
     {
+        #region EncounterGeneric
         static Random rand = new Random();
         // Encounter Generic
 
+        #endregion
 
-        // Encounters
+        #region Encounter
         public static void FirstEncounter()
         {
             string weapon = GetWeapon();
@@ -42,7 +44,9 @@ namespace RaargeDungeon
             Combat(false, "A Dark Wizard", rand.Next((1 + Program.currentPlayer.mods),(4 + Program.currentPlayer.mods)), rand.Next((4 + Program.currentPlayer.mods), 
                 ((2 * Program.currentPlayer.mods) + 7)));
         }
+        #endregion
 
+        #region EncounterTools
         //Encounter Tools
         public static void RandomEncounter()
         {
@@ -65,9 +69,10 @@ namespace RaargeDungeon
             if (random)
             {
                 //Console.WriteLine("Made it to Combat");
+
                 nm = GetName();
-                pwr = Program.currentPlayer.GetPower();
-                hlt = Program.currentPlayer.GetHealth();
+                pwr = Program.currentPlayer.GetPower() + ((nm == "Bugbear" || nm == "Ogre")?2:0);
+                hlt = Program.currentPlayer.GetHealth() + ((nm == "Bugbear" || nm == "Ogre")?Program.currentPlayer.mods * 2: 0);
             }
             else
             {
@@ -128,8 +133,9 @@ namespace RaargeDungeon
                 {
                     int damage = rand.Next(1, pwr) - Program.currentPlayer.armorValue;
                     if (damage < 0 ) damage = 0;
-                    int attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.currentClass == Player.PlayerClass.Warrior)?2:0) * 
-                        ((Program.currentPlayer.currentClass == Player.PlayerClass.Ranger && rand.Next(1,4) == 3)?2:0);
+                    int attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || 
+                        Program.currentPlayer.race == Player.Race.HalfOrc)?2:0) * 
+                        ((Program.currentPlayer.currentClass == Player.PlayerClass.Ranger && rand.Next(1,4) == 3)?2:0) * ((Program.currentPlayer.race == Player.Race.Halfling && rand.Next(1, 4) == 3) ? 2 : 0);
                     string leader = GetAttackStart(attack);
                     string style = GetWeaponAttackStyle();
 
@@ -142,6 +148,17 @@ namespace RaargeDungeon
                     {
                         Console.WriteLine($"{nm} was Slain!!");
                         monsterAlive = false;
+                    }
+
+                    if (Program.currentPlayer.race == Player.Race.Halfling && rand.Next(1, 11) == 5)
+                    {
+                        int purseCoins = rand.Next(1, 15) * ((Program.currentPlayer.mods * 1) + 10);
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Program.Print($"You notice a small purse hanging from {nm}'s belt");
+                        Console.WriteLine($"You reach out and slit the purse swiftly catching {purseCoins} gold coins! ");
+                        Console.ResetColor();
+                        Program.currentPlayer.coins += purseCoins;
                     }
                 }
                 else if (action.ToLower() == "d")
@@ -424,5 +441,7 @@ namespace RaargeDungeon
             return weapon;
 
         }
+
+        #endregion
     }
 }

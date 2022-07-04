@@ -25,6 +25,9 @@ namespace RaargeDungeon
         public int armorValue = 0;
         public int potion = 5;
         public int weaponValue = 1;
+        
+        public enum Race {Human, Elf, Dwarf, Gnome, Halfling, HalfOrc, Erudite}
+        public Race race = Race.Human;
 
         public int mods = 0;
 
@@ -80,6 +83,7 @@ namespace RaargeDungeon
                 return false;
         }
 
+        #region PlayerLevelUp
         public void LevelUp()
         {
             while (CanLevelUp())
@@ -133,5 +137,6 @@ namespace RaargeDungeon
             Program.Print($"Ding!!!! You are now level {level}! ");
             Console.ResetColor();
         }
+        #endregion
     }
 }

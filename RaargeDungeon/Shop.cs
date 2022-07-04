@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,11 +9,13 @@ namespace RaargeDungeon
 {
     public class Shop
     {
+        static Random rando = new Random();
         public static void loadShop(Player p)
         {
             RunShop(p);
         }
 
+        #region RunShop
         public static void RunShop(Player p)
         {
             int potionP;
@@ -23,11 +26,11 @@ namespace RaargeDungeon
 
             while (true)
             {
-                potionP = 20 + (10 * p.mods);
-                armorP = 100 * (p.armorValue + 1);
-                weaponP = 100 * p.weaponValue;
-                diffP = 300 * (100 * p.mods);
-                healthP = 40 * p.baseHealth;
+                potionP = GetPotionCost(p);
+                armorP = GetArmorCost(p);
+                weaponP = GetWeaponCost(p);
+                diffP = GetDiffpCost(p);
+                healthP = GetHealthCost(p); 
 
                 Console.Clear();
                 Console.WriteLine("           SHOP        ");
@@ -105,9 +108,10 @@ namespace RaargeDungeon
                 }
             }
         }
+        #endregion
 
 
-
+        #region TryBuying
         static void TryBuy(string item, int cost, Player p)
         {
             if (p.coins >= cost)
@@ -134,6 +138,115 @@ namespace RaargeDungeon
                 Console.WriteLine($"You don't have enough got for {item}s.");
                 Console.ReadKey();
             }
+        }
+        #endregion
+
+        #region Set Potion costs with modifiers
+        static int GetPotionCost(Player p)
+        {
+            int cost = 0;
+            
+
+            if (Program.currentPlayer.race == Player.Race.Human)
+            {
+                cost = 18 + (8 * p.mods);
+            }
+            else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 11) == 5)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Program.Print("You notice a potion and are certain you can steal it without being seen.");
+                Console.ReadKey();
+                Console.ResetColor();
+
+                cost = 0;
+                
+            }
+            else
+                cost = 20 + (10 * p.mods);
+
+            return cost;
+        }
+        #endregion
+
+        #region Get Armor Cost with Modifiers
+        static int GetArmorCost(Player p)
+        {
+            int cost = 0;
+            
+
+            if (Program.currentPlayer.race == Player.Race.Human)
+            {
+                cost = 90 * (p.armorValue + 1);
+            }
+            else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 11) == 5)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Program.Print("You notice some armor and are certain you can steal it without being seen.");
+                Console.ReadKey();
+                Console.ResetColor();
+
+                cost = 0;
+                
+            }
+            else
+                cost = 100 * (p.armorValue + 1);
+
+            return cost;
+        }
+        #endregion
+
+        static int GetWeaponCost(Player p)
+        {
+            int cost = 0;
+            
+            if (Program.currentPlayer.race == Player.Race.Human)
+            {
+                cost = 90 * p.weaponValue;
+            }
+            else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 11) == 5)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Program.Print("You notice a weapon and are certain you can steal it without being seen..");
+                Console.ReadKey();
+                Console.ResetColor();
+
+                cost = 0;
+                
+            }
+            else
+                cost = 100 * p.weaponValue;
+
+            return cost;
+        }
+
+        static int GetDiffpCost(Player p)
+        {
+            int cost = 0;
+            
+
+            if (Program.currentPlayer.race == Player.Race.Human)
+            {
+                cost = 270 * (90 * (p.mods + 1));
+            }
+            else
+                cost = 300 * (100 * (p.mods + 1));
+
+            
+            return cost;
+        }
+
+        static int GetHealthCost(Player p)
+        {
+            int cost = 0;
+            
+            if (Program.currentPlayer.race == Player.Race.Human)
+            {
+                cost = 36 * p.baseHealth;
+            }
+            else
+                cost = 40 * p.baseHealth;
+
+            return cost;
         }
     }
 }

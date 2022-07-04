@@ -32,6 +32,7 @@ namespace RaargeDungeon
             }
         }
 
+        #region NewCharacterStart
         static Player NewStart(int newId)
         {
             Player p = new Player();
@@ -40,6 +41,13 @@ namespace RaargeDungeon
             Print("Raarge's Dungeon");
             Print("What is your characters name? ");
             p.name = Console.ReadLine();
+            while (p.name == "" || p.name is null || p.name == " ")
+            {
+                Console.WriteLine("Surely you meant to put in your name?");
+                Console.WriteLine("What is your characters name? ");
+                p.name = Console.ReadLine();
+            }
+
             Print("Class: Mage Ranger Warrior");
             bool flag = false;
             while (flag == false)
@@ -65,14 +73,37 @@ namespace RaargeDungeon
                     flag = false;
                 }
             }
+
+            Print("Race: Human, Elf, Dwarf, Gnome, Halfling, HalfOrc, Erudite");
+            bool raceFlag = false;
+            while (raceFlag == false)
+            {
+                raceFlag = true;
+                string race = Console.ReadLine().ToLower();
+                if (race == "human")
+                    p.race = Player.Race.Human;
+                else if (race == "elf")
+                    p.race = Player.Race.Elf;
+                else if (race == "dwarf")
+                    p.race = Player.Race.Dwarf;
+                else if (race == "gnome")
+                    p.race = Player.Race.Gnome;
+                else if (race == "halfling")
+                    p.race = Player.Race.Halfling;
+                else if (race == "halforc")
+                    p.race = Player.Race.HalfOrc;
+                else if (race == "erudite")
+                    p.race = Player.Race.Erudite;
+                else
+                {
+                    Console.WriteLine("You did not pick a valid race! Please try again.");
+                    raceFlag = false;
+                }
+            }
+
             p.id = newId;
 
-            while(p.name == "" || p.name is null || p.name == " ")
-            {
-                Console.WriteLine("Surely you meant to put in your name?");
-                Console.WriteLine("What is your characters name? ");
-                p.name = Console.ReadLine();
-            }
+            
             Console.Clear();
             Print("You awake on a stone slab in a dark room..........", 30);
             Print($"Welcome {p.name}");
@@ -88,14 +119,18 @@ namespace RaargeDungeon
 
             return p;
         }
+        #endregion
 
+        #region Quitting
         public static void Quit()
         {
             
             Save();
             Environment.Exit(0);
         }
+        #endregion
 
+        #region Saving
         public static void Save()
         {
             string path = $"saves/{currentPlayer.id.ToString()}.xml";
@@ -109,7 +144,9 @@ namespace RaargeDungeon
             writer.Close();
             
         }
+        #endregion
 
+        #region Loading
         public static Player Load(out bool newP)
         {
             newP = false;
@@ -136,8 +173,7 @@ namespace RaargeDungeon
 
                 
             }
-
-            
+                      
             
             idCount = players.Count;
 
@@ -209,7 +245,9 @@ namespace RaargeDungeon
             }
             
         }
+        #endregion
 
+        #region SpecialPrint
         public static void Print(string text, int speed = 10)
         {
             foreach (char c in text)
@@ -219,7 +257,9 @@ namespace RaargeDungeon
             }
             Console.WriteLine("");
         }
+        #endregion
 
+        #region ExperianceBar
         public static void ProgressBar(string fillerChar, string backgroundChar, decimal value, int size)
         {
             int diff = (int)((value * (decimal)size));
@@ -232,7 +272,9 @@ namespace RaargeDungeon
                     Console.Write(backgroundChar);
             }
         }
+        #endregion
 
+        #region HealthBar
         public static void HealthBar(string fillerChar, string backgroundChar, decimal value, int size)
         {
             int diff = (int)((value * (decimal)(size)));
@@ -245,5 +287,6 @@ namespace RaargeDungeon
                     Console.Write(backgroundChar);
             }
         }
+        #endregion
     }
 }
