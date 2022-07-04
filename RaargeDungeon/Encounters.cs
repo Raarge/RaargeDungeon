@@ -138,46 +138,160 @@ namespace RaargeDungeon
                     Console.WriteLine("Invalid selection, choose again");
                     action = Console.ReadLine();
                 }
+                
                 if (action.ToLower() == "a")
                 {
-                    int damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
-                    if (damage < 0 ) damage = 0;
-                    int attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || 
-                        Program.currentPlayer.race == Player.Race.HalfOrc)?2:0) * 
-                        ((Program.currentPlayer.currentClass == Player.PlayerClass.Ranger && rand.Next(1,4) == 3)?2:0) * ((Program.currentPlayer.race == Player.Race.Halfling && rand.Next(1, 4) == 3) ? 2 : 0) *
-                        ((Program.currentPlayer.race == Player.Race.Elf && rand.Next(1, 4) == 3) ? 2 : 0) * ((Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rand.Next(1,4) == 3)?2:0) ;
-                    string leader = GetAttackStart(attack);
-                    string style = GetWeaponAttackStyle();
+                    int damage = 0;
+                    int attack = 0;
+                    string leader = "";
+                    string style = "";
 
-                    // attack  
-                    Program.Print($"{leader}, {style} at {nm}, who attacks in return.");
-                    Console.WriteLine($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
-                    Program.currentPlayer.health -= damage;
-                    hlt -= attack;
-                    if (hlt <= 0)
+                    // Ranger, Halfling, Elf 33% Crit Chance, 2X Damage
+                    if((Program.currentPlayer.currentClass == Player.PlayerClass.Ranger || Program.currentPlayer.race == Player.Race.Halfling ||
+                        Program.currentPlayer.race == Player.Race.Elf) && rand.Next(0 , 3) == 2)
                     {
-                        Console.WriteLine($"{nm} was Slain!!");
-                        monsterAlive = false;
-                    }
-
-                    // Rogue backstab
-                    if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && Program.currentPlayer.rand.Next(1, 6) == 5)
-                    {
-                        int backStabDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
-
+                        damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
+                        if (damage < 0) damage = 0;
+                        attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.currentClass == Player.PlayerClass.Warrior ||
+                            Program.currentPlayer.race == Player.Race.HalfOrc) ? 2 + (Program.currentPlayer.level/2) : 0);
+                        attack = attack * 2;
                         leader = GetAttackStart(attack);
                         style = GetWeaponAttackStyle();
 
-                        // attack
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Program.Print($"Quickly stepping behind, {style} at {nm} dealing {backStabDamage} damage.");
+                        // attack flavor text 
+                        Program.Print($"{leader}, {style} at {nm}, who attacks in return.");
+                        Console.Write($"You lose {damage} health. ");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine($"**Critical Hit ** you deal {attack} damage to {nm}.");
                         Console.ResetColor();
+                        Program.currentPlayer.health -= damage;
                         hlt -= attack;
                         if (hlt <= 0)
                         {
                             Console.WriteLine($"{nm} was Slain!!");
                             monsterAlive = false;
                         }
+                    }   // Rogue Crit Chance 25%, 2x Damage
+                    else if(Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rand.Next(1, 5) == 3)
+                    {
+                        damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
+                        if (damage < 0) damage = 0;
+                        attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.race == Player.Race.HalfOrc) ? 2 + (Program.currentPlayer.level / 2) : 0);
+                        attack = attack * 2;
+                        leader = GetAttackStart(attack);
+                        style = GetWeaponAttackStyle();
+
+                        Console.WriteLine($"Attack Rogue Crit: {attack}");
+
+
+
+                        // attack flavor text 
+                        Program.Print($"{leader}, {style} at {nm}, who attacks in return.");
+                        Console.Write($"You lose {damage} health. ");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"**Critical Hit ** you deal {attack} damage to {nm}.");
+                        Console.ResetColor();
+                        Program.currentPlayer.health -= damage;
+                        hlt -= attack;
+                        if (hlt <= 0)
+                        {
+                            Console.WriteLine($"{nm} was Slain!!");
+                            monsterAlive = false;
+                        }
+                    }   // Everyone not covered above Crit Chance 10%, 2x Damage
+                    else if(Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && Program.currentPlayer.race != Player.Race.Halfling &&
+                        Program.currentPlayer.race != Player.Race.Elf && Program.currentPlayer.currentClass != Player.PlayerClass.Rogue && rand.Next(0, 10) == 2)
+                    {
+                        damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
+                        if (damage < 0) damage = 0;
+                        attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.race == Player.Race.HalfOrc) ? 2 + (Program.currentPlayer.level / 2) : 0);
+                        attack = attack * 2;
+                        leader = GetAttackStart(attack);
+                        style = GetWeaponAttackStyle();
+
+                        // attack flavor text 
+                        Program.Print($"{leader}, {style} at {nm}, who attacks in return.");
+                        Console.Write($"You lose {damage} health. ");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine($"**Critical Hit ** you deal {attack} damage to {nm}.");
+                        Console.ResetColor();
+                        Program.currentPlayer.health -= damage;
+                        hlt -= attack;
+                        if (hlt <= 0)
+                        {
+                            Console.WriteLine($"{nm} was Slain!!");
+                            monsterAlive = false;
+                        }
+                    }
+                    else // standard damage no multiplier
+                    {
+                        damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
+                        if (damage < 0) damage = 0;
+                        attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.currentClass == Player.PlayerClass.Warrior ||
+                            Program.currentPlayer.race == Player.Race.HalfOrc) ? 2 + (Program.currentPlayer.level / 2) : 0);
+                        leader = GetAttackStart(attack);
+                        style = GetWeaponAttackStyle();
+
+                        // attack  
+                        Program.Print($"{leader}, {style} at {nm}, who attacks in return.");
+                        Console.WriteLine($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
+                        Program.currentPlayer.health -= damage;
+                        hlt -= attack;
+                        if (hlt <= 0)
+                        {
+                            Console.WriteLine($"{nm} was Slain!!");
+                            monsterAlive = false;
+                        }
+                    }
+                    
+
+                    // Rogue backstab
+                    if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && Program.currentPlayer.rand.Next(1, 6) == 5)
+                    {
+                        int backStabDamage = 0;
+                        if(Program.currentPlayer.rand.Next(1, 4) == 3)
+                        {
+                            backStabDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                            backStabDamage = backStabDamage * 3;
+
+                            leader = GetAttackStart(attack);
+                            style = GetWeaponAttackStyle();
+
+                            // attack
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("** Critical Backstab! **");
+                            Console.ResetColor();
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Program.Print($"Quickly stepping behind, {style} at {nm} dealing {backStabDamage} damage.");
+                            Console.ResetColor();
+                            hlt -= attack;
+                            if (hlt <= 0)
+                            {
+                                Console.WriteLine($"{nm} was Slain!!");
+                                monsterAlive = false;
+                            }
+                        }
+                        else
+                        {
+                            backStabDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+
+                            leader = GetAttackStart(attack);
+                            style = GetWeaponAttackStyle();
+
+                            // attack
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Program.Print($"Quickly stepping behind, {style} at {nm} dealing {backStabDamage} damage.");
+                            Console.ResetColor();
+                            hlt -= attack;
+                            if (hlt <= 0)
+                            {
+                                Console.WriteLine($"{nm} was Slain!!");
+                                monsterAlive = false;
+                            }
+                        }
+                            
+
+                        
                     }
 
                     if (Program.currentPlayer.race == Player.Race.Halfling && rand.Next(1, 11) == 5)
@@ -289,8 +403,19 @@ namespace RaargeDungeon
                         if (Program.currentPlayer.health > Program.currentPlayer.baseHealth) 
                             Program.currentPlayer.health = Program.currentPlayer.baseHealth;
                         Program.currentPlayer.potion -= 1;
-                        Program.Print($"As you were occupied {nm} advanced and attacked you.");
-                        Console.WriteLine($"You lose {damage} health.");
+
+                        if (rand.Next(0,2) == 0)
+                        {
+                            Program.Print($"As you were occupied {nm} advanced and attacked you.");
+                            Console.WriteLine($"You lose {damage} health.");
+                            Program.currentPlayer.health -= damage;
+                        }
+                        else
+                        {
+                            Program.Print($"As you were occupied {nm} advanced and attacked you.");
+                            Console.WriteLine($"You quickly step out of the way.");
+                        }
+                        
                         Program.currentPlayer.health -= damage;
                     }
                     if (monsterAlive)

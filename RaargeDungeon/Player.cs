@@ -134,6 +134,7 @@ namespace RaargeDungeon
 
             }
 
+            health = baseHealth;
             Console.ForegroundColor = ConsoleColor.Green;
             Program.Print($"Ding!!!! You are now level {level}! ");
             Console.ResetColor();
