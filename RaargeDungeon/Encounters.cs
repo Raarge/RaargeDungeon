@@ -124,21 +124,21 @@ namespace RaargeDungeon
                 int tester = 0;
                 if (action.ToLower() == "a")
                     tester = 1;
-                else if(action.ToLower() == "d")
+                else if (action.ToLower() == "d")
                     tester = 2;
-                else if(action.ToLower() == "r")
+                else if (action.ToLower() == "r")
                     tester = 3;
-                else if(action.ToLower() == "h")
+                else if (action.ToLower() == "h")
                     tester = 4;
-                else 
+                else
                     tester = 5;
-                                
-                while(tester != 1 && tester != 2 && tester != 3 && tester != 4 && action.Length > 1)
+
+                while (tester != 1 && tester != 2 && tester != 3 && tester != 4 && action.Length > 1)
                 {
                     Console.WriteLine("Invalid selection, choose again");
                     action = Console.ReadLine();
                 }
-                
+
                 if (action.ToLower() == "a")
                 {
                     int damage = 0;
@@ -147,13 +147,13 @@ namespace RaargeDungeon
                     string style = "";
 
                     // Ranger, Halfling, Elf 33% Crit Chance, 2X Damage
-                    if((Program.currentPlayer.currentClass == Player.PlayerClass.Ranger || Program.currentPlayer.race == Player.Race.Halfling ||
-                        Program.currentPlayer.race == Player.Race.Elf) && rand.Next(0 , 3) == 2)
+                    if ((Program.currentPlayer.currentClass == Player.PlayerClass.Ranger || Program.currentPlayer.race == Player.Race.Halfling ||
+                        Program.currentPlayer.race == Player.Race.Elf) && rand.Next(0, 3) == 2)
                     {
                         damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
                         if (damage < 0) damage = 0;
                         attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.currentClass == Player.PlayerClass.Warrior ||
-                            Program.currentPlayer.race == Player.Race.HalfOrc) ? 2 + (Program.currentPlayer.level/2) : 0);
+                            Program.currentPlayer.race == Player.Race.HalfOrc) ? 2 + (Program.currentPlayer.level / 2) : 0);
                         attack = attack * 2;
                         leader = GetAttackStart(attack);
                         style = GetWeaponAttackStyle();
@@ -172,7 +172,7 @@ namespace RaargeDungeon
                             monsterAlive = false;
                         }
                     }   // Rogue Crit Chance 25%, 2x Damage
-                    else if(Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rand.Next(1, 5) == 3)
+                    else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rand.Next(1, 5) == 3)
                     {
                         damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
                         if (damage < 0) damage = 0;
@@ -199,7 +199,7 @@ namespace RaargeDungeon
                             monsterAlive = false;
                         }
                     }   // Everyone not covered above Crit Chance 10%, 2x Damage
-                    else if(Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && Program.currentPlayer.race != Player.Race.Halfling &&
+                    else if (Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && Program.currentPlayer.race != Player.Race.Halfling &&
                         Program.currentPlayer.race != Player.Race.Elf && Program.currentPlayer.currentClass != Player.PlayerClass.Rogue && rand.Next(0, 10) == 2)
                     {
                         damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
@@ -243,91 +243,26 @@ namespace RaargeDungeon
                             monsterAlive = false;
                         }
                     }
-                    
+
 
                     // Rogue backstab
-                    if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && Program.currentPlayer.rand.Next(1, 6) == 5)
-                    {
-                        int backStabDamage = 0;
-                        if(Program.currentPlayer.rand.Next(1, 4) == 3)
-                        {
-                            backStabDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
-                            backStabDamage = backStabDamage * 3;
+                    BackStab(nm, ref hlt, ref monsterAlive, attack, ref leader, ref style);
 
-                            leader = GetAttackStart(attack);
-                            style = GetWeaponAttackStyle();
-
-                            // attack
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("** Critical Backstab! **");
-                            Console.ResetColor();
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Program.Print($"Quickly stepping behind, {style} at {nm} dealing {backStabDamage} damage.");
-                            Console.ResetColor();
-                            hlt -= attack;
-                            if (hlt <= 0)
-                            {
-                                Console.WriteLine($"{nm} was Slain!!");
-                                monsterAlive = false;
-                            }
-                        }
-                        else
-                        {
-                            backStabDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
-
-                            leader = GetAttackStart(attack);
-                            style = GetWeaponAttackStyle();
-
-                            // attack
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Program.Print($"Quickly stepping behind, {style} at {nm} dealing {backStabDamage} damage.");
-                            Console.ResetColor();
-                            hlt -= attack;
-                            if (hlt <= 0)
-                            {
-                                Console.WriteLine($"{nm} was Slain!!");
-                                monsterAlive = false;
-                            }
-                        }
-                            
-
-                        
-                    }
-
-                    if (Program.currentPlayer.race == Player.Race.Halfling && rand.Next(1, 11) == 5)
-                    {
-                        int purseCoins = rand.Next(1, 15) * ((Program.currentPlayer.mods * 1) + 10);
-
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Program.Print($"You notice a small purse hanging from {nm}'s belt");
-                        Console.WriteLine($"You reach out and slit the purse swiftly catching {purseCoins} gold coins! ");
-                        Console.ResetColor();
-                        Program.currentPlayer.coins += purseCoins;
-                    }
-                    else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rand.Next(1, 11) == 5)
-                    {
-                        int purseCoins = rand.Next(1, 15) * ((Program.currentPlayer.mods * 1) + 10);
-
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Program.Print($"You notice a small purse hanging from {nm}'s belt");
-                        Console.WriteLine($"You reach out and slit the purse swiftly catching {purseCoins} gold coins! ");
-                        Console.ResetColor();
-                        Program.currentPlayer.coins += purseCoins;
-                    }
+                    CombatStealing(nm);
                 }
                 else if (action.ToLower() == "d")
                 {
                     // defend
                     int damage = (rand.Next(1, pwr) / 4) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit); // incomming damage is 25% while defending
-                    if (damage < 0 ) damage = 0;
-                    int attack = (rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4))/2; // half damage dealt defending
+                    if (damage < 0) damage = 0;
+                    int attack = (rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4)) / 2; // half damage dealt defending
                     var weapon = GetWeapon();
 
                     Program.Print($"As {nm} moves forward to attack, you ready your {weapon} to defend.");
                     Console.WriteLine($"You lose {damage} health.  However, you deal {attack} damage to {nm}.");
                     Program.currentPlayer.health -= damage;
                     hlt -= attack;
-                    if(hlt <= 0)
+                    if (hlt <= 0)
                     {
                         Console.WriteLine($"{nm} was Slain!!");
                         monsterAlive = false;
@@ -336,11 +271,11 @@ namespace RaargeDungeon
                 else if (action.ToLower() == "r" && Program.currentPlayer.race != Player.Race.Dwarf)
                 {
                     // run
-                    if(Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0,2) == 0 &&
-                        Program.currentPlayer.race != Player.Race.Halfling && Program.currentPlayer.race != Player.Race.Elf) 
+                    if (Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0, 2) == 0 &&
+                        Program.currentPlayer.race != Player.Race.Halfling && Program.currentPlayer.race != Player.Race.Elf)
                     {
                         int damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
-                        if (damage < 0 ) damage = 0;
+                        if (damage < 0) damage = 0;
 
                         Program.Print($"As you sprint away from {nm}, its strike catched you in the back, knocking you down.");
                         Console.WriteLine($"You lose {damage} health and are unable to escape");
@@ -356,7 +291,7 @@ namespace RaargeDungeon
                 }
                 else if (action.ToLower() == "r" && Program.currentPlayer.race == Player.Race.Dwarf)
                 {
-                    if (Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0, 3) == 0 )
+                    if (Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0, 3) == 0)
                     {
                         int damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
                         if (damage < 0) damage = 0;
@@ -376,62 +311,16 @@ namespace RaargeDungeon
                 else if (action.ToLower() == "h")
                 {
                     // heal
-                    if(Program.currentPlayer.potion == 0)
-                    {
-                        // out of potions
-                        int damage = (pwr/2) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
-                        if (damage < 0) 
-                            damage = 0;
+                    PotionHealing(nm, pwr);
 
-                        Program.Print("You feel around but find no potions!");
-                        Console.WriteLine($"The {nm} strikes you with a blow and you lose {damage} health!");
-                        Program.currentPlayer.health -= damage;
-                    }
-                    else
-                    {
-                        // have potions
-                        int damage = (pwr/2)- (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
-                        if( damage < 0) 
-                            damage = 0;
-
-                        int heal = Program.currentPlayer.GetPotionHealValue();
-
-                        Program.Print("You reach into your bag and pull out a pulsing read flask.  You take a drink from it");
-                        Console.WriteLine($"You feel better and gain {heal} health!");
-                        Program.currentPlayer.health += heal;
-
-                        if (Program.currentPlayer.health > Program.currentPlayer.baseHealth) 
-                            Program.currentPlayer.health = Program.currentPlayer.baseHealth;
-                        Program.currentPlayer.potion -= 1;
-
-                        if (rand.Next(0,2) == 0)
-                        {
-                            Program.Print($"As you were occupied {nm} advanced and attacked you.");
-                            Console.WriteLine($"You lose {damage} health.");
-                            Program.currentPlayer.health -= damage;
-                        }
-                        else
-                        {
-                            Program.Print($"As you were occupied {nm} advanced and attacked you.");
-                            Console.WriteLine($"You quickly step out of the way.");
-                        }
-                        
-                        Program.currentPlayer.health -= damage;
-                    }
                     if (monsterAlive)
                     {
                         Console.ReadKey();
                     }
 
                 }
-                if (Program.currentPlayer.health <= 0)
-                {
-                    // Death code
-                    Program.Print($"As the {nm} delivers a massive blow you collapse to the floor.  Your conciousness fades, you have been slain!");
-                    Console.ReadKey();
-                    CheckPlayAgain();
-                    
-                }
+                CheckForDeath(nm);
+
                 if (monsterAlive)
                     Console.ReadKey();
             }
@@ -450,6 +339,140 @@ namespace RaargeDungeon
                 Program.currentPlayer.LevelUp();
 
             Console.ReadKey();
+        }
+
+        private static void PotionHealing(string nm, int pwr)
+        {
+            if (Program.currentPlayer.potion == 0)
+            {
+                // out of potions
+                int damage = (pwr / 2) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
+                if (damage < 0)
+                    damage = 0;
+
+                Program.Print("You feel around but find no potions!");
+                Console.WriteLine($"The {nm} strikes you with a blow and you lose {damage} health!");
+                Program.currentPlayer.health -= damage;
+            }
+            else
+            {
+                // have potions
+                int damage = (pwr / 2) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
+                if (damage < 0)
+                    damage = 0;
+
+                int heal = Program.currentPlayer.GetPotionHealValue();
+
+                Program.Print("You reach into your bag and pull out a pulsing read flask.  You take a drink from it");
+                Console.WriteLine($"You feel better and gain {heal} health!");
+                Program.currentPlayer.health += heal;
+
+                if (Program.currentPlayer.health > Program.currentPlayer.baseHealth)
+                    Program.currentPlayer.health = Program.currentPlayer.baseHealth;
+                Program.currentPlayer.potion -= 1;
+
+                if (rand.Next(0, 2) == 0)
+                {
+                    Program.Print($"As you were occupied {nm} advanced and attacked you.");
+                    Console.WriteLine($"You lose {damage} health.");
+                    Program.currentPlayer.health -= damage;
+                }
+                else
+                {
+                    Program.Print($"As you were occupied {nm} advanced and attacked you.");
+                    Console.WriteLine($"You quickly step out of the way.");
+                }
+
+                Program.currentPlayer.health -= damage;
+            }
+        }
+
+        public static void CheckForDeath(string nm)
+        {
+            if (Program.currentPlayer.health <= 0)
+            {
+                // Death code
+                Program.Print($"As the {nm} delivers a massive blow you collapse to the floor.  Your conciousness fades, you have been slain!");
+                Console.ReadKey();
+                CheckPlayAgain();
+
+            }
+        }
+
+        public static void BackStab(string nm, ref int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style)
+        {
+            if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && Program.currentPlayer.rand.Next(1, 6) == 5)
+            {
+                int backStabDamage = 0;
+                if (Program.currentPlayer.rand.Next(1, 4) == 3)
+                {
+                    backStabDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                    backStabDamage = backStabDamage * 3;
+
+                    leader = GetAttackStart(attack);
+                    style = GetWeaponAttackStyle();
+
+                    // attack
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("** Critical Backstab! **");
+                    Console.ResetColor();
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Program.Print($"Quickly stepping behind, {style} at {nm} dealing {backStabDamage} damage.");
+                    Console.ResetColor();
+                    hlt -= attack;
+                    if (hlt <= 0)
+                    {
+                        Console.WriteLine($"{nm} was Slain!!");
+                        monsterAlive = false;
+                    }
+                }
+                else
+                {
+                    backStabDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+
+                    leader = GetAttackStart(attack);
+                    style = GetWeaponAttackStyle();
+
+                    // attack
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Program.Print($"Quickly stepping behind, {style} at {nm} dealing {backStabDamage} damage.");
+                    Console.ResetColor();
+                    hlt -= attack;
+                    if (hlt <= 0)
+                    {
+                        Console.WriteLine($"{nm} was Slain!!");
+                        monsterAlive = false;
+                    }
+                }
+
+
+
+            }
+        }
+
+        private static void CombatStealing(string nm)
+        {
+            // Combat Stealing
+            if (Program.currentPlayer.race == Player.Race.Halfling && rand.Next(1, 11) == 5)
+            {
+                int purseCoins = rand.Next(1, 15) * ((Program.currentPlayer.mods * 1) + 10);
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Program.Print($"You notice a small purse hanging from {nm}'s belt");
+                Console.WriteLine($"You reach out and slit the purse swiftly catching {purseCoins} gold coins! ");
+                Console.ResetColor();
+                Program.currentPlayer.coins += purseCoins;
+            }
+            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rand.Next(1, 11) == 5)
+            {
+                int purseCoins = rand.Next(1, 15) * ((Program.currentPlayer.mods * 1) + 10);
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Program.Print($"You notice a small purse hanging from {nm}'s belt");
+                Console.WriteLine($"You reach out and slit the purse swiftly catching {purseCoins} gold coins! ");
+                Console.ResetColor();
+                Program.currentPlayer.coins += purseCoins;
+            }
         }
 
         public static string GetLeader(int pwr)
