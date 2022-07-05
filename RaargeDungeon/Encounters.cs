@@ -145,6 +145,8 @@ namespace RaargeDungeon
                     int attack = 0;
                     string leader = "";
                     string style = "";
+                    string companion = "";
+                    string spellType = "";
 
                     // Ranger, Halfling, Elf 33% Crit Chance, 2X Damage
                     if ((Program.currentPlayer.currentClass == Player.PlayerClass.Ranger || Program.currentPlayer.race == Player.Race.Halfling ||
@@ -248,6 +250,106 @@ namespace RaargeDungeon
                     // Rogue backstab
                     BackStab(nm, ref hlt, ref monsterAlive, attack, ref leader, ref style);
 
+                    // Ranger Animal Call 25% chance
+                    if(Program.currentPlayer.currentClass == Player.PlayerClass.Ranger && rand.Next(1,5) == 3)
+                    {
+                        int animalCallDamage = 0;
+                        if (Program.currentPlayer.rand.Next(1, 4) == 3)
+                        {
+                            animalCallDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                            animalCallDamage = animalCallDamage * 2;
+
+                            leader = GetAttackStart(attack);
+                            style = GetWeaponAttackStyle();
+                            companion = GetAnimalCompanion();
+
+                            // attack
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"** Critical {companion} attack! **");
+                            Console.ResetColor();
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Program.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {nm} dealing ");
+                            Program.Print($"{animalCallDamage} damage.");
+                            Console.ResetColor();
+                            hlt -= attack;
+                            if (hlt <= 0)
+                            {
+                                Console.WriteLine($"{nm} was Slain!!");
+                                monsterAlive = false;
+                            }
+                        }
+                        else
+                        {
+                            animalCallDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+
+                            leader = GetAttackStart(attack);
+                            style = GetWeaponAttackStyle();
+                            companion = GetAnimalCompanion();
+
+                            // attack
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Program.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {nm} dealing ");
+                            Program.Print($"{animalCallDamage} damage.");
+                            Console.ResetColor();
+                            hlt -= attack;
+                            if (hlt <= 0)
+                            {
+                                Console.WriteLine($"{nm} was Slain!!");
+                                monsterAlive = false;
+                            }
+                        }
+                    }
+
+                    // mage spell blast 25% chance
+                    if (Program.currentPlayer.currentClass == Player.PlayerClass.Mage && rand.Next(1,5) == 3)
+                    {
+                        int spellDamage = 0;
+                        if (Program.currentPlayer.rand.Next(1, 6) == 3)
+                        {
+                            spellDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                            spellDamage = spellDamage * 4;
+
+                            leader = GetAttackStart(attack);
+                            style = GetWeaponAttackStyle();
+                            spellType = GetSpellType();
+
+                            // attack
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"** Critical {spellType} spell attack! **");
+                            Console.ResetColor();
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Program.Print($"You gesture chanting loudly, a {spellType} materializes striking a {nm} dealing ");
+                            Program.Print($"{spellDamage} damage.");
+                            Console.ResetColor();
+                            hlt -= attack;
+                            if (hlt <= 0)
+                            {
+                                Console.WriteLine($"{nm} was Slain!!");
+                                monsterAlive = false;
+                            }
+                        }
+                        else
+                        {
+                            spellDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+
+                            leader = GetAttackStart(attack);
+                            style = GetWeaponAttackStyle();
+                            spellType = GetSpellType();
+
+                            // attack
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Program.Print($"You gesture chanting loudly, a {spellType} materializes striking a {nm} dealing ");
+                            Program.Print($"{spellDamage} damage."); 
+                            Console.ResetColor();
+                            hlt -= attack;
+                            if (hlt <= 0)
+                            {
+                                Console.WriteLine($"{nm} was Slain!!");
+                                monsterAlive = false;
+                            }
+                        }
+                    }
+
                     CombatStealing(nm);
                 }
                 else if (action.ToLower() == "d")
@@ -341,6 +443,48 @@ namespace RaargeDungeon
             Console.ReadKey();
         }
 
+        private static string GetSpellType()
+        {
+            string spellName = "";
+
+            spellName = Program.currentPlayer.level switch
+            {
+                1 => "Magic Missile",
+                2 => "Magic Missile",
+                3 => "Dinazar Olken",
+                4 => "Dinazar Olken",
+                5 => "Dinazar Olken",
+                6 => "Fireball",
+                7 => "Fireball",
+                8 => "Fireball",
+                9 => "Fireball",
+                _ => "Eldrich Blast",
+            };
+
+            return spellName;
+        }
+
+        private static string GetAnimalCompanion()
+        {
+            string comp = "";
+
+            comp = Program.currentPlayer.level switch
+            {
+                1 => "Badger",
+                2 => "Badger",
+                3 => "Hyena",
+                4 => "Hyena",
+                5 => "Hyena",
+                6 => "Wolf",
+                7 => "Wolf",
+                8 => "Wolf",
+                9 => "Wolf",
+                _ => "Dire Wolf",
+            };
+
+            return comp;
+        }
+
         private static void PotionHealing(string nm, int pwr)
         {
             if (Program.currentPlayer.potion == 0)
@@ -383,7 +527,7 @@ namespace RaargeDungeon
                     Console.WriteLine($"You quickly step out of the way.");
                 }
 
-                Program.currentPlayer.health -= damage;
+                //Program.currentPlayer.health -= damage;
             }
         }
 
@@ -652,16 +796,16 @@ namespace RaargeDungeon
                 switch (rand.Next(0, 3))
                 {
                     case 0:
-                        style = "you gesture while chanting";
+                        style = "you swing widly with your staff";
                         break;
                     case 1:
-                        style = "you gesture while squeezing a component in your other hand";
+                        style = "you thrust your staff forward";
                         break;
                     case 2:
-                        style = "you quickly cast a spell";
+                        style = "you chop downward with your staff";
                         break;
                     default:
-                        style = "you gesture";
+                        style = "You swing your staff";
                         break;
                 }
             }
@@ -723,12 +867,12 @@ namespace RaargeDungeon
             bool tester = false;
 
             while(tester == false)
-            if (answer == "yes")
+            if (answer == "yes" || answer == "y")
             {
                     System.Diagnostics.Process.Start(System.AppDomain.CurrentDomain.FriendlyName);
                     Environment.Exit(0);
             }
-            else if (answer == "no")
+            else if (answer == "no" || answer == "n")
             {
                 Program.Print("Thank you for playing. Goodbye!");
                 System.Environment.Exit(0);
