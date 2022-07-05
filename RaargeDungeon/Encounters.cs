@@ -170,7 +170,7 @@ namespace RaargeDungeon
                         hlt -= attack;
                         if (hlt <= 0)
                         {
-                            Console.WriteLine($"{nm} was Slain!!");
+                            //Console.WriteLine($"{nm} was Slain!!");
                             monsterAlive = false;
                         }
                     }   // Rogue Crit Chance 25%, 2x Damage
@@ -197,7 +197,7 @@ namespace RaargeDungeon
                         hlt -= attack;
                         if (hlt <= 0)
                         {
-                            Console.WriteLine($"{nm} was Slain!!");
+                            //Console.WriteLine($"{nm} was Slain!!");
                             monsterAlive = false;
                         }
                     }   // Everyone not covered above Crit Chance 10%, 2x Damage
@@ -221,7 +221,7 @@ namespace RaargeDungeon
                         hlt -= attack;
                         if (hlt <= 0)
                         {
-                            Console.WriteLine($"{nm} was Slain!!");
+                           // Console.WriteLine($"{nm} was Slain!!");
                             monsterAlive = false;
                         }
                     }
@@ -241,7 +241,7 @@ namespace RaargeDungeon
                         hlt -= attack;
                         if (hlt <= 0)
                         {
-                            Console.WriteLine($"{nm} was Slain!!");
+                            //Console.WriteLine($"{nm} was Slain!!");
                             monsterAlive = false;
                         }
                     }
@@ -274,7 +274,7 @@ namespace RaargeDungeon
                             hlt -= attack;
                             if (hlt <= 0)
                             {
-                                Console.WriteLine($"{nm} was Slain!!");
+                               // Console.WriteLine($"{nm} was Slain!!");
                                 monsterAlive = false;
                             }
                         }
@@ -294,7 +294,7 @@ namespace RaargeDungeon
                             hlt -= attack;
                             if (hlt <= 0)
                             {
-                                Console.WriteLine($"{nm} was Slain!!");
+                                //Console.WriteLine($"{nm} was Slain!!");
                                 monsterAlive = false;
                             }
                         }
@@ -324,7 +324,7 @@ namespace RaargeDungeon
                             hlt -= attack;
                             if (hlt <= 0)
                             {
-                                Console.WriteLine($"{nm} was Slain!!");
+                                //Console.WriteLine($"{nm} was Slain!!");
                                 monsterAlive = false;
                             }
                         }
@@ -344,7 +344,7 @@ namespace RaargeDungeon
                             hlt -= attack;
                             if (hlt <= 0)
                             {
-                                Console.WriteLine($"{nm} was Slain!!");
+                                //Console.WriteLine($"{nm} was Slain!!");
                                 monsterAlive = false;
                             }
                         }
@@ -366,7 +366,7 @@ namespace RaargeDungeon
                     hlt -= attack;
                     if (hlt <= 0)
                     {
-                        Console.WriteLine($"{nm} was Slain!!");
+                        
                         monsterAlive = false;
                     }
                 }
@@ -426,6 +426,8 @@ namespace RaargeDungeon
                 if (monsterAlive)
                     Console.ReadKey();
             }
+
+            Console.WriteLine($"{nm} was Slain!!");
 
             int xp = Program.currentPlayer.GetXP();
             int cn = Program.currentPlayer.GetCoins();

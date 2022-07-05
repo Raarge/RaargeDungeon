@@ -37,14 +37,14 @@ namespace RaargeDungeon
 
         public int GetHealth()
         {
-            int upper = (4 * mods + 12);
-            int lower = (2 * mods + 5);
+            int upper = ((4 * mods) + 12 + level);
+            int lower = ((2 * mods) + 5 + level );
             return rand.Next(lower, upper);
         }
         public int GetPower()
         {
-            int upper = (4 * mods + 4);
-            int lower = (2 *mods + 2);
+            int upper = (((4 * mods) + 4) + (level / 2));
+            int lower = (((2 * mods) + 2) + (level / 2));
             int retVal = rand.Next(lower, upper);
             return retVal;
         }
@@ -64,8 +64,8 @@ namespace RaargeDungeon
 
         public int GetXP()
         {
-            int upper = (20 * mods + 50);
-            int lower = (15 * mods + 10);
+            int upper = (20 * mods + 50 + level);
+            int lower = (15 * mods + 10 + level);
             return rand.Next(lower, upper);
         }
 
