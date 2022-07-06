@@ -26,6 +26,8 @@ namespace RaargeDungeon
         public int potion = 5;
         public int weaponValue = 1;
         public int damageResit = 0;
+        public int favors = 0;
+        public int lifetimeFavors = 0;
         
         public enum Race {Human, Elf, Dwarf, Gnome, Halfling, HalfOrc, Erudite}
         public Race race = Race.Human;
@@ -138,6 +140,94 @@ namespace RaargeDungeon
             Console.ForegroundColor = ConsoleColor.Green;
             Program.Print($"Ding!!!! You are now level {level}! ");
             Console.ResetColor();
+        }
+        #endregion
+
+        #region GetFavor()
+        public int GetFavor()
+        {
+            int favorEarned = 0;
+            int favCheckRand1 = rand.Next(1, 3);
+            int favCheckRand2 = rand.Next(1, 4);
+            int favCheckRand3 = rand.Next(1, 5);
+            int favCheckRand4 = rand.Next(1, 6);
+            int favCheckRand5 = rand.Next(1, 7);
+            int favCheckRand6 = rand.Next(1, 8);
+
+            if(favors == 0)
+            {
+                favorEarned = 1;
+                favors++;
+                lifetimeFavors++;
+            }
+            else if (favors == 1)
+            {
+                if (favCheckRand1 == 1)
+                {
+                    favorEarned = 1;
+                    favors++;
+                    lifetimeFavors++;
+                }
+                else
+                    favorEarned = 0;
+            }
+            else if (favors == 2)
+            {
+                if (favCheckRand2 == 1)
+                {
+                    favorEarned = 1;
+                    favors++;
+                    lifetimeFavors++;
+                }
+                else
+                    favorEarned = 0;
+            }
+            else if (favors == 3)
+            {
+                if (favCheckRand3 == 1)
+                {
+                    favorEarned = 1;
+                    favors++;
+                    lifetimeFavors++;
+                }
+                else
+                    favorEarned = 0;
+            }
+            else if (favors == 4)
+            {
+                if (favCheckRand4 == 1)
+                {
+                    favorEarned = 1;
+                    favors++;
+                    lifetimeFavors++;
+                }
+                else
+                    favorEarned = 0;
+            }
+            else if (favors == 5)
+            {
+                if (favCheckRand5 == 1)
+                {
+                    favorEarned = 1;
+                    favors++;
+                    lifetimeFavors++;
+                }
+                else
+                    favorEarned = 0;
+            }
+            else
+            {
+                if (favCheckRand6 == 1)
+                {
+                    favorEarned = 1;
+                    favors++;
+                    lifetimeFavors++;
+                }
+                else
+                    favorEarned = 0;
+            }
+
+            return favorEarned;
         }
         #endregion
     }

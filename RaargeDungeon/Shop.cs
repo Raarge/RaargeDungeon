@@ -23,6 +23,7 @@ namespace RaargeDungeon
             int weaponP;
             int diffP;
             int healthP;
+            int lsP;
 
             while (true)
             {
@@ -30,7 +31,8 @@ namespace RaargeDungeon
                 armorP = GetArmorCost(p);
                 weaponP = GetWeaponCost(p);
                 diffP = GetDiffpCost(p);
-                healthP = GetHealthCost(p); 
+                healthP = GetHealthCost(p);
+                lsP = GetLifesageCost(p);
 
                 Console.Clear();
                 Console.WriteLine("           SHOP        ");
@@ -40,6 +42,7 @@ namespace RaargeDungeon
                 Console.WriteLine($" (D)ifficulty: ${diffP}    ");
                 Console.WriteLine($" (P)otions:    ${potionP}    ");
                 Console.WriteLine($" (H)ealth:     ${healthP}    ");
+                Console.WriteLine($" (L)ifesage:   ${lsP}    ");
                 Console.WriteLine("==========================");
                 Console.WriteLine($" (E)xit Shop:    ");
                 Console.WriteLine($" (Q)uit Game:    ");
@@ -67,13 +70,15 @@ namespace RaargeDungeon
                 Console.WriteLine($" Current Coins: {p.coins}");
                 Console.WriteLine($" Weapon Strength: {p.weaponValue}    ");
                 Console.WriteLine($" Armor Class: {p.armorValue}    ");
+                Console.WriteLine($" Favors: {p.favors}    ");
+                Console.WriteLine($" Lifetime Favors: {p.lifetimeFavors}    ");
                 Console.WriteLine($" Potions: {p.potion}    ");
                 Console.WriteLine($" Difficulty Mods: {p.mods}    ");
                           
                 Console.WriteLine("==========================");
                 //wait for input
                 string input = Console.ReadLine().ToLower();
-                while (input != "w" && input != "a" && input != "d" && input != "p" && input != "e" && input != "h" && input != "q" && input.Length != 1)
+                while (input != "w" && input != "a" && input != "d" && input != "p" && input != "e" && input != "h" && input != "q" && input != "l" && input.Length != 1)
                 {
                     Console.WriteLine("You did not enter a valid value.  Please reenter.");
                     input = Console.ReadLine().ToLower();
@@ -106,13 +111,28 @@ namespace RaargeDungeon
                 {
                     Program.Quit();
                 }
+                else if (input == "l")
+                {
+                    TryBuy("lifesage", lsP, p);
+                        
+                }
             }
         }
         #endregion
 
+        #region Get Lifesage Cost
+        public static int GetLifesageCost(Player p)
+        {
+            int lsCost = 0;
+
+            lsCost = p.level * (p.lifetimeFavors + 25);
+
+            return lsCost;
+        }
+        #endregion
 
         #region TryBuying
-        static void TryBuy(string item, int cost, Player p)
+        public static void TryBuy(string item, int cost, Player p)
         {
             if (p.coins >= cost)
             {
@@ -129,6 +149,10 @@ namespace RaargeDungeon
                     p.health++;
                     p.baseHealth++;
                 }
+                else if (item == "lifesage")
+                {
+                    TryFavor(p);
+                }
                     
 
                 p.coins -= cost;
@@ -139,10 +163,34 @@ namespace RaargeDungeon
                 Console.ReadKey();
             }
         }
+
+        public static void TryFavor(Player p)
+        {
+            int tryFav = p.GetFavor();
+
+            Program.Print("You purchase lifesage and place it on the altar by the counter");
+            Program.Print("You quietly chant a prayer to your god");
+            Console.WriteLine(" ");
+            Program.Print("The lifesage slowly fades away.....");
+            Console.ForegroundColor = ConsoleColor.Green;
+
+            if (tryFav == 0)
+            {
+                Program.Print("You feel a sense of lonliness in the cosmos.");
+            }
+            else if(tryFav == 1)
+            {
+                Program.Print("You feel a sudden sense of joy and realize you are not alone in the universe.");
+                Program.Print("You wipe the tears of joy from your eyes.");
+            }
+            Console.ResetColor();
+            Console.ReadKey();
+
+        }
         #endregion
 
         #region Set Potion costs with modifiers
-        static int GetPotionCost(Player p)
+        public static int GetPotionCost(Player p)
         {
             int cost = 0;
             
@@ -183,7 +231,7 @@ namespace RaargeDungeon
         #endregion
 
         #region Get Armor Cost with Modifiers
-        static int GetArmorCost(Player p)
+        public static int GetArmorCost(Player p)
         {
             int cost = 0;
             
@@ -223,7 +271,7 @@ namespace RaargeDungeon
         }
         #endregion
 
-        static int GetWeaponCost(Player p)
+        public static int GetWeaponCost(Player p)
         {
             int cost = 0;
             
@@ -261,7 +309,7 @@ namespace RaargeDungeon
             return cost;
         }
 
-        static int GetDiffpCost(Player p)
+        public static int GetDiffpCost(Player p)
         {
             int cost = 0;
             
@@ -281,7 +329,7 @@ namespace RaargeDungeon
             return cost;
         }
 
-        static int GetHealthCost(Player p)
+        public static int GetHealthCost(Player p)
         {
             int cost = 0;
             

@@ -183,7 +183,7 @@ namespace RaargeDungeon
                         leader = GetAttackStart(attack);
                         style = GetWeaponAttackStyle();
 
-                        Console.WriteLine($"Attack Rogue Crit: {attack}");
+                        //Console.WriteLine($"Attack Rogue Crit: {attack}");
 
 
 
@@ -304,11 +304,26 @@ namespace RaargeDungeon
                     if (Program.currentPlayer.currentClass == Player.PlayerClass.Mage && rand.Next(1,5) == 3)
                     {
                         int spellDamage = 0;
-                        if (Program.currentPlayer.rand.Next(1, 6) == 3)
+                        int regSpellCritTry = Program.currentPlayer.rand.Next(1, 6);
+                        int gnomeEruditeCritTry = Program.currentPlayer.rand.Next(1, 4);
+                        
+                        if (regSpellCritTry == 3 || ((Program.currentPlayer.race == Player.Race.Gnome || Program.currentPlayer.race == Player.Race.Erudite) &&
+                            gnomeEruditeCritTry == 2))
                         {
-                            spellDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
-                            spellDamage = spellDamage * 4;
+                            if(Program.currentPlayer.race == Player.Race.Gnome || Program.currentPlayer.race == Player.Race.Erudite)
+                            {
+                                Console.WriteLine("Inside the gnome/erudie Spellblast Critical Loop");
+                                Console.ReadKey();
 
+                                spellDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level + (Program.currentPlayer.level / 2);
+                                spellDamage = spellDamage * 4;
+                            }
+                            else
+                            {
+                                spellDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                                spellDamage = spellDamage * 4;
+                            }
+                            
                             leader = GetAttackStart(attack);
                             style = GetWeaponAttackStyle();
                             spellType = GetSpellType();
@@ -330,7 +345,15 @@ namespace RaargeDungeon
                         }
                         else
                         {
-                            spellDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                            if(Program.currentPlayer.race == Player.Race.Gnome || Program.currentPlayer.race == Player.Race.Erudite)
+                            {
+                                spellDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level + (Program.currentPlayer.level / 2);
+                            }
+                            else
+                            {
+                                spellDamage = rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                            }
+                            
 
                             leader = GetAttackStart(attack);
                             style = GetWeaponAttackStyle();
@@ -540,7 +563,16 @@ namespace RaargeDungeon
                 // Death code
                 Program.Print($"As the {nm} delivers a massive blow you collapse to the floor.  Your conciousness fades, you have been slain!");
                 Console.ReadKey();
-                CheckPlayAgain();
+
+                if(Program.currentPlayer.favors > 0)
+                {
+                    Program.Print("You are suddenly surrounded by a blinding light. You are lifted into the air and given");
+                    Program.Print("a new lease on life!");
+                    Program.currentPlayer.favors--;
+                    Program.currentPlayer.health = Program.currentPlayer.baseHealth;
+                }
+                else
+                    CheckPlayAgain();
 
             }
         }
@@ -568,7 +600,7 @@ namespace RaargeDungeon
                     hlt -= attack;
                     if (hlt <= 0)
                     {
-                        Console.WriteLine($"{nm} was Slain!!");
+                        //Console.WriteLine($"{nm} was Slain!!");
                         monsterAlive = false;
                     }
                 }
@@ -586,7 +618,7 @@ namespace RaargeDungeon
                     hlt -= attack;
                     if (hlt <= 0)
                     {
-                        Console.WriteLine($"{nm} was Slain!!");
+                        //Console.WriteLine($"{nm} was Slain!!");
                         monsterAlive = false;
                     }
                 }
