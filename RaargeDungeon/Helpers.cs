@@ -200,16 +200,25 @@ namespace RaargeDungeon
         public static void GetMonsterHitLine(string nm, int damage, bool monsterCrit, string action)
         {
             if (monsterCrit == true)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{nm} delivers a **Critical Hit**");
-                Console.ResetColor();
+            { 
+                if(damage != 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{nm} delivers a **Critical Hit**");
+                    Console.ResetColor();
+                }
+                
             }
 
             if (damage == 0)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.Print("However, your armor protects you.");
+                if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
+                    Program.Print("You quickly dodge out of the way.");
+                else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue || Program.currentPlayer.currentClass == Player.PlayerClass.Ranger)
+                    Program.Print("At the last second, you lean out of the way of the incomming blow.");
+                else
+                    Program.Print("However, your armor protects you.");
                 Console.ResetColor();
             }
 
