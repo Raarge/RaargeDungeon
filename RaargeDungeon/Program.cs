@@ -48,7 +48,7 @@ namespace RaargeDungeon
                 p.name = Console.ReadLine();
             }
 
-            Print("Class: Mage Ranger Warrior Rogue");
+            Print("Class: Mage Ranger Warrior Rogue Cleric Monk");
             bool flag = false;
             while (flag == false)
             {
@@ -70,6 +70,14 @@ namespace RaargeDungeon
                 else if (input == "rogue")
                 {
                     p.currentClass = Player.PlayerClass.Rogue;
+                }
+                else if (input == "cleric")
+                {
+                    p.currentClass = Player.PlayerClass.Cleric;
+                }
+                else if (input == "monk")
+                {
+                    p.currentClass = Player.PlayerClass.Monk;
                 }
                 else
                 {
@@ -134,6 +142,12 @@ namespace RaargeDungeon
             }
             else
                 p.damageResit = 0;
+
+            // Armor Setter
+            if (p.currentClass == Player.PlayerClass.Warrior || p.currentClass == Player.PlayerClass.Cleric)
+                p.armorValue = 1;
+            if (p.currentClass == Player.PlayerClass.Monk)
+                p.armorValue = 2;
 
             // Player ID Setter
             p.id = newId;

@@ -234,7 +234,7 @@ namespace RaargeDungeon
         public static int GetArmorCost(Player p)
         {
             int cost = 0;
-            
+
 
             if (Program.currentPlayer.race == Player.Race.Human)
             {
@@ -244,6 +244,10 @@ namespace RaargeDungeon
             {
                 cost = 110 * (p.armorValue + 1);
             }
+            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
+                cost = 100 * (p.armorValue);
+            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
+                cost = 100 * (p.armorValue - 1);
             else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 21) == 5)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -252,7 +256,7 @@ namespace RaargeDungeon
                 Console.ResetColor();
 
                 cost = 0;
-                
+
             }
             else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rando.Next(1, 16) == 5)
             {
