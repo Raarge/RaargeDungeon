@@ -21,6 +21,8 @@ namespace RaargeDungeon
         public int xp = 0;
         public int health = 0;
         public int baseHealth = 0;
+        public int energy = 0;
+        public int baseEnergy = 0;
         public int damage = 1;
         public int armorValue = 0;
         public int potion = 5;
@@ -28,6 +30,7 @@ namespace RaargeDungeon
         public int damageResit = 0;
         public int favors = 0;
         public int lifetimeFavors = 0;
+        public int deaths = 0;
         
         public enum Race {Human, Elf, Dwarf, Gnome, Halfling, HalfOrc, Erudite}
         public Race race = Race.Human;

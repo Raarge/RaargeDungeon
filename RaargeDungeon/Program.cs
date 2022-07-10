@@ -308,20 +308,7 @@ namespace RaargeDungeon
         }
         #endregion
 
-        #region ExperianceBar
-        public static void ProgressBar(string fillerChar, string backgroundChar, decimal value, int size)
-        {
-            int diff = (int)((value * (decimal)size));
-
-            for(int i = 0; i < size; i++)
-            {
-                if (i < diff)
-                    Console.Write(fillerChar);
-                else
-                    Console.Write(backgroundChar);
-            }
-        }
-        #endregion
+        
 
         #region HealthBar
         public static void HealthBar(string fillerChar, string backgroundChar, decimal value, int size)

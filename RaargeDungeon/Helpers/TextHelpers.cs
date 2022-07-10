@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RaargeDungeon
+namespace RaargeDungeon.Helpers
 {
-    public class Helpers
+    public static class TextHelpers
     {
         public static Random rand = new Random();
 
@@ -126,11 +126,11 @@ namespace RaargeDungeon
         public static string GetWeaponAttackStyle()
         {
             var style = "";
+            var rando = rand.Next(0, 3);
 
-            //Console.WriteLine(Program.currentPlayer.currentClass);
             if (Program.currentPlayer.currentClass.ToString() == "Warrior")
             {
-                style = rand.Next(0, 3) switch
+                style = rando switch
                 {
                     0 => "you chop with your sword",
                     1 => "you thrust your sword",
@@ -138,9 +138,29 @@ namespace RaargeDungeon
                     _ => "you swing your sword",
                 };
             }
+            else if (Program.currentPlayer.currentClass.ToString() == "Monk")
+            {
+                style = rando switch
+                {
+                    0 => "you thrust your fists forward",
+                    1 => "you spin on your heal",
+                    2 => "you swing your fists in a blurring motion",
+                    _ => "you use your body as a weapon",
+                };
+            }
+            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
+            {
+                style = rando switch
+                {
+                    0 => "you chop your mace downward",
+                    1 => "you swing your mace backhanded",
+                    2 => "you swing your mace wildly",
+                    _ => "you swing your mace",
+                };
+            }
             else if (Program.currentPlayer.currentClass.ToString() == "Ranger")
             {
-                switch (rand.Next(0, 3))
+                switch (rando)
                 {
                     case 0:
                         style = "you leap backwards firing your bow";
@@ -159,7 +179,7 @@ namespace RaargeDungeon
             }
             else if (Program.currentPlayer.currentClass.ToString() == "Mage")
             {
-                switch (rand.Next(0, 3))
+                switch (rando)
                 {
                     case 0:
                         style = "you swing widly with your staff";
@@ -177,7 +197,7 @@ namespace RaargeDungeon
             }
             else if (Program.currentPlayer.currentClass.ToString() == "Rogue")
             {
-                switch (rand.Next(0, 3))
+                switch (rando)
                 {
                     case 0:
                         style = "you dance hypnotically with your blades";
@@ -200,14 +220,14 @@ namespace RaargeDungeon
         public static void GetMonsterHitLine(string nm, int damage, bool monsterCrit, string action)
         {
             if (monsterCrit == true)
-            { 
-                if(damage != 0)
+            {
+                if (damage != 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"{nm} delivers a **Critical Hit**");
                     Console.ResetColor();
                 }
-                
+
             }
 
             if (damage == 0)
@@ -319,6 +339,10 @@ namespace RaargeDungeon
             {
                 weapon = "twin daggers";
             }
+            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
+                weapon = "knuckle dusters";
+            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
+                weapon = "mace";
 
             return weapon;
 

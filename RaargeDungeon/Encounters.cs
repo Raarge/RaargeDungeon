@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using RaargeDungeon.Helpers;
 
 namespace RaargeDungeon
 {
-    
+
     public class Encounters
     {
         #region EncounterGeneric
@@ -19,7 +20,7 @@ namespace RaargeDungeon
         #region Encounter
         public static void FirstEncounter()
         {
-            string weapon = Helpers.GetWeapon();
+            string weapon = TextHelpers.GetWeapon();
 
             Program.Print($"You throw open the door, grab a {weapon} laying on the table by the door and charge");
             Program.Print("your captor.  He turns...");
@@ -72,7 +73,7 @@ namespace RaargeDungeon
             {
                 //Console.WriteLine("Made it to Combat");
 
-                nm = Helpers.GetName();
+                nm = TextHelpers.GetName();
                 pwr = Program.currentPlayer.GetPower() + ((nm == "Bugbear" || nm == "Ogre")?2:0);
                 hlt = Program.currentPlayer.GetHealth() + ((nm == "Bugbear" || nm == "Ogre")?Program.currentPlayer.mods * 2: 0);
                 baseHlt = hlt;
@@ -85,13 +86,13 @@ namespace RaargeDungeon
                 baseHlt = hlt;
 
             }
-            string leaderMob = Helpers.GetLeader(pwr);
+            string leaderMob = TextHelpers.GetLeader(pwr);
             bool monsterAlive = true;
 
             while (hlt > 0)
             {
                 Console.Clear();
-                Console.WriteLine($"A {leaderMob} {nm} is here, looking menacingly at you");
+                Console.WriteLine($" A {leaderMob} {nm} is here, looking menacingly at you");
                 Console.Write($" {nm}'s Health Bar: ");
                 Console.Write("[");
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -99,26 +100,21 @@ namespace RaargeDungeon
                 Console.ResetColor();
                 Console.WriteLine("]");
                 Console.WriteLine(" ");
-                Console.WriteLine("============");
-                Console.WriteLine("| (A)ttack |");
-                Console.WriteLine("| (D)efend |");
-                Console.WriteLine("| (R)un    |");
-                Console.WriteLine("| (H)eal   |");
-                Console.WriteLine("============");
-                Console.WriteLine($"Potions: {Program.currentPlayer.potion} Coins: {Program.currentPlayer.coins}");
-                Console.WriteLine($"Level: {Program.currentPlayer.level}");
-                Console.Write(" Health Bar: ");
-                Console.Write("[");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Program.ProgressBar("<", "-", ((decimal)Program.currentPlayer.health / (decimal)Program.currentPlayer.baseHealth), 25);
-                Console.ResetColor();
-                Console.WriteLine("]");
-                Console.Write(" XP Bar: ");
-                Console.Write("    [");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.ProgressBar(">", "-", ((decimal)Program.currentPlayer.xp / (decimal)Program.currentPlayer.GetLevelUpValue()), 25);
-                Console.ResetColor();
-                Console.WriteLine("]");
+                Console.WriteLine(" ============");
+                Console.WriteLine(" | (A)ttack |");
+                Console.WriteLine(" | (D)efend |");
+                Console.WriteLine(" | (R)un    |");
+                Console.WriteLine(" | (H)eal   |");
+                Console.WriteLine(" ============");
+                Console.WriteLine($" Level: {Program.currentPlayer.level} Potions: {Program.currentPlayer.potion} Coins: {Program.currentPlayer.coins}");
+                
+
+                // -- Health Bar --
+                UIHelpers.GenerateStatusBar("Health", "<", "-", ConsoleColor.Red, Program.currentPlayer.health, Program.currentPlayer.baseHealth);
+                
+                // -- Experiance Bar --
+                UIHelpers.GenerateStatusBar("XP", ">", "-", ConsoleColor.Yellow, Program.currentPlayer.xp, Program.currentPlayer.GetLevelUpValue());
+                //Console.WriteLine($"XP:{Program.currentPlayer.xp} Needed XP: {Program.currentPlayer.GetLevelUpValue()} ");
                 string action = Console.ReadLine();
 
                 int tester = 0;
@@ -138,6 +134,7 @@ namespace RaargeDungeon
                     Console.WriteLine("Invalid selection, choose again");
                     action = Console.ReadLine();
                 }
+
 
                 int damage = 0;
                 bool monsterCrit = false;
@@ -180,12 +177,12 @@ namespace RaargeDungeon
                         attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.currentClass == Player.PlayerClass.Warrior ||
                             Program.currentPlayer.race == Player.Race.HalfOrc) ? 2 + (Program.currentPlayer.level / 2) : 0);
                         attack = attack * 2;
-                        leader = Helpers.GetAttackStart(attack);
-                        style = Helpers.GetWeaponAttackStyle();
+                        leader = TextHelpers.GetAttackStart(attack);
+                        style = TextHelpers.GetWeaponAttackStyle();
 
                         // attack flavor text 
                         Program.Print($"{leader}, {style} at {nm}, who attacks in return.");
-                        Helpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                        TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
 
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.WriteLine($"**Critical Hit ** you deal {attack} damage to {nm}.");
@@ -203,8 +200,8 @@ namespace RaargeDungeon
 
                         attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.race == Player.Race.HalfOrc) ? 2 + (Program.currentPlayer.level / 2) : 0);
                         attack = attack * 2;
-                        leader = Helpers.GetAttackStart(attack);
-                        style = Helpers.GetWeaponAttackStyle();
+                        leader = TextHelpers.GetAttackStart(attack);
+                        style = TextHelpers.GetWeaponAttackStyle();
 
                         //Console.WriteLine($"Attack Rogue Crit: {attack}");
 
@@ -212,7 +209,7 @@ namespace RaargeDungeon
 
                         // attack flavor text 
                         Program.Print($"{leader}, {style} at {nm}, who attacks in return.");
-                        Helpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                        TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
 
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"**Critical Hit ** you deal {attack} damage to {nm}.");
@@ -231,12 +228,12 @@ namespace RaargeDungeon
 
                         attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.race == Player.Race.HalfOrc) ? 2 + (Program.currentPlayer.level / 2) : 0);
                         attack = attack * 2;
-                        leader = Helpers.GetAttackStart(attack);
-                        style = Helpers.GetWeaponAttackStyle();
+                        leader = TextHelpers.GetAttackStart(attack);
+                        style = TextHelpers.GetWeaponAttackStyle();
 
                         // attack flavor text 
                         Program.Print($"{leader}, {style} at {nm}, who attacks in return.");
-                        Helpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                        TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
 
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.WriteLine($"**Critical Hit ** you deal {attack} damage to {nm}.");
@@ -254,13 +251,13 @@ namespace RaargeDungeon
 
                         attack = rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4) + ((Program.currentPlayer.currentClass == Player.PlayerClass.Warrior ||
                             Program.currentPlayer.race == Player.Race.HalfOrc) ? 2 + (Program.currentPlayer.level / 2) : 0);
-                        leader = Helpers.GetAttackStart(attack);
-                        style = Helpers.GetWeaponAttackStyle();
+                        leader = TextHelpers.GetAttackStart(attack);
+                        style = TextHelpers.GetWeaponAttackStyle();
 
                         // attack  
                         Program.Print($"{leader}, {style} at {nm}, who attacks in return.");
                         Console.WriteLine($"You deal {attack} damage to {nm}.");
-                        Helpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                        TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
 
                         hlt -= attack;
                         if (hlt <= 0)
@@ -270,26 +267,33 @@ namespace RaargeDungeon
                         }
                     }
 
-
                     // Rogue backstab
                     Skills.BackStab(nm, ref hlt, ref monsterAlive, attack, ref leader, ref style);
 
                     // Ranger Animal Call 25% chance
                     Skills.AnimalCall(nm, ref hlt, ref monsterAlive, attack, ref leader, ref style, ref companion);
 
+                    // Mage SpellBlast 
                     Skills.SpellBlast(nm, ref hlt, ref monsterAlive, attack, ref leader, ref style, ref spellType);
 
+                    // Combat Stealing
                     Skills.CombatStealing(nm);
+
+                    // Monk Chi Strike
+                    Skills.ChiStrike(nm, ref hlt, ref monsterAlive, attack, ref leader, ref style);
+
+                    // Cleric Holy Strike
+                    Skills.HolyStrike(nm, ref hlt, ref monsterAlive, attack, ref leader, ref style);
                 }
                 else if (action.ToLower() == "d")
                 {
                     // defend
                     int attack = (rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4)) / 2; // half damage dealt defending
-                    var weapon = Helpers.GetWeapon();
+                    var weapon = TextHelpers.GetWeapon();
 
                     Program.Print($"As {nm} moves forward to attack, you ready your {weapon} to defend.");
                     Console.WriteLine($"You deal {attack} damage to {nm}.");
-                    Helpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                    TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
 
                     hlt -= attack;
                     if (hlt <= 0)
@@ -305,7 +309,7 @@ namespace RaargeDungeon
                         Program.currentPlayer.race != Player.Race.Halfling && Program.currentPlayer.race != Player.Race.Elf)
                     {
                         Program.Print($"As you sprint away from {nm}, its strike catched you in the back, knocking you down.");
-                        Helpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                        TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
                         Console.ReadKey();
                         Program.currentPlayer.health -= damage;
                     }
@@ -321,7 +325,7 @@ namespace RaargeDungeon
                     if (Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0, 3) == 0)
                     {
                         Program.Print($"As you sprint away from {nm}, its strike catched you in the back, knocking you down.");
-                        Helpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                        TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
                         Console.ReadKey();
                         Program.currentPlayer.health -= damage;
                     }
@@ -400,7 +404,7 @@ namespace RaargeDungeon
                 if (rand.Next(0, 2) == 0)
                 {
                     Program.Print($"As you were occupied {nm} advanced and attacked you.");
-                    Helpers.GetMonsterHitLine(nm, damage, monsterCrit, action);
+                    TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action);
                 }
                 else
                 {
@@ -426,6 +430,7 @@ namespace RaargeDungeon
                     Program.Print("a new lease on life!");
                     Program.currentPlayer.favors--;
                     Program.currentPlayer.health = Program.currentPlayer.baseHealth;
+                    Program.currentPlayer.deaths += 1;
                 }
                 else
                     CheckPlayAgain();

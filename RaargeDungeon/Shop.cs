@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RaargeDungeon.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -52,30 +53,22 @@ namespace RaargeDungeon
                 Console.WriteLine($" {p.name} Stats     ");
                 Console.WriteLine($" Class: {p.currentClass}");
                 Console.WriteLine($" Level: {p.level}");
-                Console.Write(" Health Bar: ");
-                Console.Write("[");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Program.ProgressBar("<", "-", ((decimal)Program.currentPlayer.health / (decimal)Program.currentPlayer.baseHealth), 25);
-                Console.ResetColor();
-                Console.WriteLine("]");
-                Console.Write(" XP Bar: ");
-                Console.Write("    [");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.ProgressBar(">", "-", ((decimal)p.xp / (decimal)(p.GetLevelUpValue())), 25);
-                Console.ResetColor();
-                Console.WriteLine("]");
-                Console.WriteLine("==========================");
-                Console.WriteLine($" Current Health: {p.health}");
-                Console.WriteLine($" Base Health: {p.baseHealth}");
+
+                //-- Health Bar --
+                UIHelpers.GenerateStatusBar("Health", "<", "-", ConsoleColor.Red, p.health, p.baseHealth);
+                
+                // -- Experiance Bar --
+                UIHelpers.GenerateStatusBar("XP", ">", "-", ConsoleColor.Yellow, p.xp, p.GetLevelUpValue());
+                
+                Console.WriteLine("==============================================================");
+                Console.WriteLine($" Current Health: {p.health} Base Health: {p.baseHealth}");
                 Console.WriteLine($" Current Coins: {p.coins}");
-                Console.WriteLine($" Weapon Strength: {p.weaponValue}    ");
-                Console.WriteLine($" Armor Class: {p.armorValue}    ");
-                Console.WriteLine($" Favors: {p.favors}    ");
-                Console.WriteLine($" Lifetime Favors: {p.lifetimeFavors}    ");
+                Console.WriteLine($" Weapon Strength: {p.weaponValue} Armor Class: {p.armorValue}   ");
+                Console.WriteLine($" Favors: {p.favors} Lifetime Favors: {p.lifetimeFavors}   ");
                 Console.WriteLine($" Potions: {p.potion}    ");
                 Console.WriteLine($" Difficulty Mods: {p.mods}    ");
                           
-                Console.WriteLine("==========================");
+                Console.WriteLine("===============================================================");
                 //wait for input
                 string input = Console.ReadLine().ToLower();
                 while (input != "w" && input != "a" && input != "d" && input != "p" && input != "e" && input != "h" && input != "q" && input != "l" && input.Length != 1)
@@ -235,14 +228,23 @@ namespace RaargeDungeon
         {
             int cost = 0;
 
-
             if (Program.currentPlayer.race == Player.Race.Human)
             {
-                cost = 90 * (p.armorValue + 1);
+                if (Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
+                    cost = 90 * (p.armorValue);
+                else if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
+                    cost = 90 * (p.armorValue - 1);
+                else
+                    cost = 90 * (p.armorValue + 1);
             }
             else if (Program.currentPlayer.race == Player.Race.HalfOrc)
             {
-                cost = 110 * (p.armorValue + 1);
+                if (Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
+                    cost = 110 * (p.armorValue);
+                else if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
+                    cost = 110 * (p.armorValue - 1);
+                else
+                    cost = 110 * (p.armorValue + 1);
             }
             else if (Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
                 cost = 100 * (p.armorValue);
