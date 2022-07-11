@@ -105,15 +105,20 @@ namespace RaargeDungeon
                 Console.WriteLine(" | (D)efend |");
                 Console.WriteLine(" | (R)un    |");
                 Console.WriteLine(" | (H)eal   |");
+                Console.WriteLine(" | (M)Mana  |");
                 Console.WriteLine(" ============");
-                Console.WriteLine($" Level: {Program.currentPlayer.level} Potions: {Program.currentPlayer.potion} Coins: {Program.currentPlayer.coins}");
-                
+                Console.WriteLine($" Level: {Program.currentPlayer.level} Coins: {Program.currentPlayer.coins}");
+                Console.WriteLine($" Potions: {Program.currentPlayer.potion} Mana Potions: {Program.currentPlayer.manaPotion}");
 
                 // -- Health Bar --
                 UIHelpers.GenerateStatusBar("Health", "<", "-", ConsoleColor.Red, Program.currentPlayer.health, Program.currentPlayer.baseHealth);
                 
                 // -- Experiance Bar --
                 UIHelpers.GenerateStatusBar("XP", ">", "-", ConsoleColor.Yellow, Program.currentPlayer.xp, Program.currentPlayer.GetLevelUpValue());
+
+                // -- Mana Bar --
+                UIHelpers.GenerateStatusBar(Program.currentPlayer.manaType.ToString(), "*", " ", ConsoleColor.Blue, Program.currentPlayer.energy, Program.currentPlayer.baseEnergy);
+
                 //Console.WriteLine($"XP:{Program.currentPlayer.xp} Needed XP: {Program.currentPlayer.GetLevelUpValue()} ");
                 string action = Console.ReadLine();
 
@@ -126,10 +131,12 @@ namespace RaargeDungeon
                     tester = 3;
                 else if (action.ToLower() == "h")
                     tester = 4;
-                else
+                else if (action.ToLower() == "m")
                     tester = 5;
+                else
+                    tester = 6;
 
-                while (tester != 1 && tester != 2 && tester != 3 && tester != 4 && action.Length > 1)
+                while (tester != 1 && tester != 2 && tester != 3 && tester != 4 && tester !=5 && action.Length > 1)
                 {
                     Console.WriteLine("Invalid selection, choose again");
                     action = Console.ReadLine();
@@ -339,13 +346,22 @@ namespace RaargeDungeon
                 else if (action.ToLower() == "h")
                 {
                     // heal
-                    PotionHealing(nm, pwr, monsterCrit, action.ToLower());
+                    PotionHealing(nm, pwr, monsterCrit, action.ToLower(), "health");
 
                     if (monsterAlive)
                     {
                         Console.ReadKey();
                     }
 
+                }
+                else if (action.ToLower() == "m")
+                {
+                    PotionHealing(nm, pwr, monsterCrit, action.ToLower(), "mana");
+
+                    if (monsterAlive)
+                    {
+                        Console.ReadKey();
+                    }
                 }
                 CheckForDeath(nm);
 
@@ -371,7 +387,7 @@ namespace RaargeDungeon
             Console.ReadKey();
         }                
 
-        private static void PotionHealing(string nm, int pwr, bool monsterCrit, string action)
+        private static void PotionHealing(string nm, int pwr, bool monsterCrit, string action, string type)
         {
             if (Program.currentPlayer.potion == 0)
             {
@@ -391,15 +407,45 @@ namespace RaargeDungeon
                 if (damage < 0)
                     damage = 0;
 
-                int heal = Program.currentPlayer.GetPotionHealValue();
+                if (type == "health")
+                {
+                    int heal = Program.currentPlayer.GetPotionHealValue("health");
 
-                Program.Print("You reach into your bag and pull out a pulsing read flask.  You take a drink from it");
-                Console.WriteLine($"You feel better and gain {heal} health!");
-                Program.currentPlayer.health += heal;
+                    if (heal > Program.currentPlayer.baseHealth - Program.currentPlayer.health)
+                        heal = Program.currentPlayer.baseHealth - Program.currentPlayer.health;
 
-                if (Program.currentPlayer.health > Program.currentPlayer.baseHealth)
-                    Program.currentPlayer.health = Program.currentPlayer.baseHealth;
-                Program.currentPlayer.potion -= 1;
+                    Program.Print("You reach into your bag and pull out a pulsing red flask.  You take a drink from it");
+                    if (heal != 0)
+                        Console.WriteLine($"You feel better and gain {heal} health!");
+                    else
+                        Console.WriteLine($"You feel better but gain {heal} health.");
+
+                    Program.currentPlayer.health += heal;
+
+                    if (Program.currentPlayer.health > Program.currentPlayer.baseHealth)
+                        Program.currentPlayer.health = Program.currentPlayer.baseHealth;
+
+                    Program.currentPlayer.potion -= 1;
+                }
+                else if (type == "mana")
+                {
+                    int mana = Program.currentPlayer.GetPotionHealValue("mana");
+
+                    if (mana > Program.currentPlayer.baseEnergy - Program.currentPlayer.baseEnergy)
+                        mana = Program.currentPlayer.baseEnergy - Program.currentPlayer.energy;
+
+                    Program.Print("You reach into your bag and pull out a pulsing blue flask.  You take a drink from it.");
+                    if (mana != 0)
+                        Console.WriteLine($"You feel your power rise and gain {mana} {Program.currentPlayer.manaType}");
+                    else
+                        Console.WriteLine($"You feel your power attempt to rise but gain {mana} {Program.currentPlayer.manaType}");
+
+                    if (Program.currentPlayer.energy > Program.currentPlayer.baseEnergy)
+                        Program.currentPlayer.energy = Program.currentPlayer.baseEnergy;
+
+                    Program.currentPlayer.potion -= 1;
+                }
+                
 
                 if (rand.Next(0, 2) == 0)
                 {

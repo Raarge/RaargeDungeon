@@ -21,11 +21,12 @@ namespace RaargeDungeon
         public int xp = 0;
         public int health = 0;
         public int baseHealth = 0;
-        public int energy = 0;
-        public int baseEnergy = 0;
+        public int energy = 30;
+        public int baseEnergy = 30;
         public int damage = 1;
         public int armorValue = 0;
         public int potion = 5;
+        public int manaPotion = 5;
         public int weaponValue = 1;
         public int damageResit = 0;
         public int favors = 0;
@@ -39,6 +40,9 @@ namespace RaargeDungeon
 
         public enum PlayerClass {Mage, Ranger, Warrior, Rogue, Cleric, Monk};
         public PlayerClass currentClass = PlayerClass.Warrior;
+
+        public enum ManaType {Mana, Chi, Kri, Rage}
+        public ManaType manaType = ManaType.Mana;
 
         public int GetHealth()
         {
@@ -60,10 +64,22 @@ namespace RaargeDungeon
             return rand.Next(lower, upper);
         }
 
-        public int GetPotionHealValue()
+        public int GetPotionHealValue(string typePotion)
         {
-            int upper = (4 * mods + 11) + ((currentClass == PlayerClass.Mage) ? +3 : 0); // if a mage add extra heal
-            int lower = (2 * mods +  5) + ((currentClass == PlayerClass.Mage)? + 3:0);
+            int upper = 0;
+            int lower = 0;
+
+            if (typePotion == "health")
+            {
+                upper = (4 * mods + 11) + ((currentClass == PlayerClass.Mage) ? +3 : 0); // if a mage add extra heal
+                lower = (2 * mods + 5) + ((currentClass == PlayerClass.Mage) ? +3 : 0);
+            }
+            else if(typePotion == "mana")
+            {
+                upper = ((4 * mods + 11) + (level * 2));
+                lower = ((2 * mods + 5) + (level * 2));
+            }
+            
             return rand.Next(lower, upper);
         }
 

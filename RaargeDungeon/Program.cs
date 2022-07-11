@@ -57,27 +57,32 @@ namespace RaargeDungeon
                 if(input == "mage")
                 {
                     p.currentClass = Player.PlayerClass.Mage;
-
+                    p.manaType = Player.ManaType.Mana;
                 }
                 else if (input == "ranger")
                 {
                     p.currentClass = Player.PlayerClass.Ranger;
+                    p.manaType = Player.ManaType.Mana;
                 }
                 else if (input == "warrior")
                 {
                     p.currentClass = Player.PlayerClass.Warrior;
+                    p.manaType = Player.ManaType.Rage;
                 }
                 else if (input == "rogue")
                 {
                     p.currentClass = Player.PlayerClass.Rogue;
+                    p.manaType = Player.ManaType.Kri;
                 }
                 else if (input == "cleric")
                 {
                     p.currentClass = Player.PlayerClass.Cleric;
+                    p.manaType = Player.ManaType.Mana;
                 }
                 else if (input == "monk")
                 {
                     p.currentClass = Player.PlayerClass.Monk;
+                    p.manaType = Player.ManaType.Chi;
                 }
                 else
                 {
