@@ -4,6 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Collections.Generic;
+using RaargeDungeon.Helpers;
 using System.Threading;
 
 namespace RaargeDungeon
@@ -38,8 +39,8 @@ namespace RaargeDungeon
             Player p = new Player();
 
             Console.Clear();
-            Print("Raarge's Dungeon");
-            Print("What is your characters name? ");
+            UIHelpers.Print("Raarge's Dungeon");
+            UIHelpers.Print("What is your characters name? ");
             p.name = Console.ReadLine();
             while (p.name == "" || p.name is null || p.name == " ")
             {
@@ -48,7 +49,7 @@ namespace RaargeDungeon
                 p.name = Console.ReadLine();
             }
 
-            Print("Class: Mage Ranger Warrior Rogue Cleric Monk");
+            UIHelpers.Print("Class: Mage Ranger Warrior Rogue Cleric Monk");
             bool flag = false;
             while (flag == false)
             {
@@ -91,7 +92,7 @@ namespace RaargeDungeon
                 }
             }
 
-            Print("Race: Human, Elf, Dwarf, Gnome, Halfling, HalfOrc, Erudite");
+            UIHelpers.Print("Race: Human, Elf, Dwarf, Gnome, Halfling, HalfOrc, Erudite");
             bool raceFlag = false;
             while (raceFlag == false)
             {
@@ -159,15 +160,15 @@ namespace RaargeDungeon
 
             
             Console.Clear();
-            Print("You awake on a stone slab in a dark room..........", 30);
-            Print($"Welcome {p.name}");
+            UIHelpers.Print("You awake on a stone slab in a dark room..........", 30);
+            UIHelpers.Print($"Welcome {p.name}");
             Console.ReadKey();
             Console.Clear();
-            Print("You grope around in the dark trying to figure out where you are.  Your head is pounding");
-            Print("and you rub the back of your neck only to find a small incision.  You notice a small");
-            Print("strip of light along the floor and realize it is a door.  You move towards it and feel");
-            Print("for the door handle.  You turn the handle and meet with resistance which suddenly gives");
-            Print("way and you hear the door unlatch...");
+            UIHelpers.Print("You grope around in the dark trying to figure out where you are.  Your head is pounding");
+            UIHelpers.Print("and you rub the back of your neck only to find a small incision.  You notice a small");
+            UIHelpers.Print("strip of light along the floor and realize it is a door.  You move towards it and feel");
+            UIHelpers.Print("for the door handle.  You turn the handle and meet with resistance which suddenly gives");
+            UIHelpers.Print("way and you hear the door unlatch...");
             Console.ReadKey();
             Console.Clear();
 
@@ -234,15 +235,15 @@ namespace RaargeDungeon
             while (true)
             {
                 Console.Clear();
-                Print("Choose your player:", 60);
+                UIHelpers.Print("Choose your player:", 60);
 
                 foreach (Player p in players)
                 {
                     Console.WriteLine($"{p.id}: {p.name}");
                 }
 
-                Print("Please input player name or id (id:# or playername).");
-                Print("To Start a New Game type create");
+                UIHelpers.Print("Please input player name or id (id:# or playername).");
+                UIHelpers.Print("To Start a New Game type create");
                 string[] data = Console.ReadLine().ToLower().Split(':');
 
                 try
@@ -300,20 +301,6 @@ namespace RaargeDungeon
             
         }
         #endregion
-
-        #region SpecialPrint
-        public static void Print(string text, int speed = 10)
-        {
-            foreach (char c in text)
-            {
-                Console.Write(c);
-                Thread.Sleep(speed);
-            }
-            Console.WriteLine("");
-        }
-        #endregion
-
-        
 
         #region HealthBar
         public static void HealthBar(string fillerChar, string backgroundChar, decimal value, int size)

@@ -234,11 +234,11 @@ namespace RaargeDungeon.Helpers
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
-                    Program.Print("You quickly dodge out of the way.");
+                    UIHelpers.Print("You quickly dodge out of the way.");
                 else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue || Program.currentPlayer.currentClass == Player.PlayerClass.Ranger)
-                    Program.Print("At the last second, you lean out of the way of the incomming blow.");
+                    UIHelpers.Print("At the last second, you lean out of the way of the incomming blow.");
                 else
-                    Program.Print("However, your armor protects you.");
+                    UIHelpers.Print("However, your armor protects you.");
                 Console.ResetColor();
             }
 

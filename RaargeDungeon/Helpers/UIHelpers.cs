@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RaargeDungeon.Helpers
@@ -31,5 +32,17 @@ namespace RaargeDungeon.Helpers
             Console.ResetColor();
             Console.WriteLine("]");
         }
+
+        #region SpecialPrint
+        public static void Print(string text, int speed = 10)
+        {
+            foreach (char c in text)
+            {
+                Console.Write(c);
+                Thread.Sleep(speed);
+            }
+            Console.WriteLine("");
+        }
+        #endregion
     }
 }

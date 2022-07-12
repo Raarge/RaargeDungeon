@@ -1,4 +1,5 @@
 ﻿using RaargeDungeon.Helpers;
+using RaargeDungeon.Shops;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RaargeDungeon
+namespace RaargeDungeon.Shops
 {
     public class Shop
     {
@@ -39,44 +40,43 @@ namespace RaargeDungeon
 
                 Console.Clear();
                 Console.WriteLine("           SHOP        ");
-                Console.WriteLine("===========================");
-                Console.WriteLine($" (W)eapon:      ${weaponP}    ");
-                Console.WriteLine($" (A)rmor:       ${armorP}    ");
-                Console.WriteLine($" (D)ifficulty:  ${diffP}    ");
-                Console.WriteLine($" (P)otions:     ${potionP}    ");
-                Console.WriteLine($" (M)ana Potion: ${potionP}    ");
-                Console.WriteLine($" (H)ealth:      ${healthP}    ");
+                Console.WriteLine("=========================================================");
+                Console.WriteLine($" (W)eapon:      ${weaponP} (A)rmor:       ${armorP}   ");
+                Console.WriteLine($" (D)ifficulty:  ${diffP}   (P)otions:     ${potionP}");
+                Console.WriteLine($" (M)ana Potion: ${potionP} (H)ealth:      ${healthP}   ");
                 Console.WriteLine($" (L)ifesage:    ${lsP}    ");
-                Console.WriteLine("===========================");
-                Console.WriteLine($" (E)xit Shop:    ");
-                Console.WriteLine($" (Q)uit Game:    ");
-                Console.WriteLine("===========================");
+                Console.WriteLine("=========================================================");
+                Console.WriteLine("  Magic (S)hop - Coming soon Stat (T)raining - Comming soon");
+                Console.WriteLine("=========================================================");
+                Console.WriteLine($" (E)xit Shop              (Q)uit Game ");
+                Console.WriteLine("=========================================================");
 
                 Console.WriteLine(" ");
                 Console.WriteLine($" {p.name} Stats     ");
                 Console.WriteLine($" Level: {p.level} Class: {p.currentClass} Race: {p.race}");
-                
+
                 //-- Health Bar --
                 UIHelpers.GenerateStatusBar("Health", "<", "-", ConsoleColor.Red, p.health, p.baseHealth);
-                
+
                 // -- Experiance Bar --
                 UIHelpers.GenerateStatusBar("XP", ">", "-", ConsoleColor.Yellow, p.xp, p.GetLevelUpValue());
 
                 // -- Mana Bar --
                 UIHelpers.GenerateStatusBar(p.manaType.ToString(), "*", " ", ConsoleColor.Blue, p.energy, p.baseEnergy);
-                
+
                 Console.WriteLine("==============================================================");
                 Console.WriteLine($" Current Health: {p.health} Base Health: {p.baseHealth}");
                 Console.WriteLine($" Current Coins: {p.coins}");
                 Console.WriteLine($" Weapon Strength: {p.weaponValue} Armor Class: {p.armorValue}   ");
                 Console.WriteLine($" Favors: {p.favors} Lifetime Favors: {p.lifetimeFavors}   ");
-                Console.WriteLine($" Healing Potions: {p.potion} {p.manaType} Potions: {p.manaPotion}   " );
+                Console.WriteLine($" Healing Potions: {p.potion} {p.manaType} Potions: {p.manaPotion}   ");
                 Console.WriteLine($" Difficulty Mods: {p.mods}    ");
-                          
+
                 Console.WriteLine("===============================================================");
                 //wait for input
                 string input = Console.ReadLine().ToLower();
-                while (input != "w" && input != "a" && input != "d" && input != "p" && input != "e" && input != "h" && input != "q" && input != "l" && input != "m" && input.Length != 1)
+                while (input != "w" && input != "a" && input != "d" && input != "p" && input != "e" && input != "h" && input != "q" && input != "l" && input != "m" && 
+                    input != "s" && input.Length != 1)
                 {
                     Console.WriteLine("You did not enter a valid value.  Please reenter.");
                     input = Console.ReadLine().ToLower();
@@ -105,7 +105,8 @@ namespace RaargeDungeon
                 }
                 else if (input == "e")
                 {
-                    break;
+                    //break;
+                    Encounters.RandomEncounter();
                 }
                 else if (input == "q")
                 {
@@ -114,7 +115,10 @@ namespace RaargeDungeon
                 else if (input == "l")
                 {
                     TryBuy("lifesage", lsP, p);
-
+                }
+                else if (input == "s")
+                {
+                    MagicShop.RunMagicShop(p);
                 }
             }
         }
@@ -155,7 +159,7 @@ namespace RaargeDungeon
                 {
                     TryFavor(p);
                 }
-                    
+
 
                 p.coins -= cost;
             }
@@ -170,20 +174,20 @@ namespace RaargeDungeon
         {
             int tryFav = p.GetFavor();
 
-            Program.Print("You purchase lifesage and place it on the altar by the counter");
-            Program.Print("You quietly chant a prayer to your god");
+            UIHelpers.Print("You purchase lifesage and place it on the altar by the counter");
+            UIHelpers.Print("You quietly chant a prayer to your god");
             Console.WriteLine(" ");
-            Program.Print("The lifesage slowly fades away.....");
+            UIHelpers.Print("The lifesage slowly fades away.....");
             Console.ForegroundColor = ConsoleColor.Green;
 
             if (tryFav == 0)
             {
-                Program.Print("You feel a sense of lonliness in the cosmos.");
+                UIHelpers.Print("You feel a sense of lonliness in the cosmos.");
             }
-            else if(tryFav == 1)
+            else if (tryFav == 1)
             {
-                Program.Print("You feel a sudden sense of joy and realize you are not alone in the universe.");
-                Program.Print("You wipe the tears of joy from your eyes.");
+                UIHelpers.Print("You feel a sudden sense of joy and realize you are not alone in the universe.");
+                UIHelpers.Print("You wipe the tears of joy from your eyes.");
             }
             Console.ResetColor();
             Console.ReadKey();
@@ -195,30 +199,30 @@ namespace RaargeDungeon
         public static int GetPotionCost(Player p, string type)
         {
             int cost = 0;
-            
+
 
             if (Program.currentPlayer.race == Player.Race.Human)
             {
-                cost =(int) (( 20.0m + (10 * p.mods)) * 0.90m);
+                cost = (int)((20.0m + 10 * p.mods) * 0.90m);
             }
             else if (Program.currentPlayer.race == Player.Race.HalfOrc)
             {
-                cost = (int) ((20m + (10m * p.mods)) * 1.1m);
+                cost = (int)((20m + 10m * p.mods) * 1.1m);
             }
             else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 21) == 5)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.Print($"You notice a {type} potion and are certain you can steal it without being seen.");
+                UIHelpers.Print($"You notice a {type} potion and are certain you can steal it without being seen.");
                 Console.ReadKey();
                 Console.ResetColor();
 
                 cost = 0;
-                
+
             }
             else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rando.Next(1, 16) == 5)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.Print($"You notice a {type} potion and are certain you can steal it without being seen..");
+                UIHelpers.Print($"You notice a {type} potion and are certain you can steal it without being seen..");
                 Console.ReadKey();
                 Console.ResetColor();
 
@@ -226,7 +230,7 @@ namespace RaargeDungeon
 
             }
             else
-                cost = 20 + (10 * p.mods);
+                cost = 20 + 10 * p.mods;
 
             return cost;
         }
@@ -240,7 +244,7 @@ namespace RaargeDungeon
             if (Program.currentPlayer.race == Player.Race.Human)
             {
                 if (Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
-                    cost = 90 * (p.armorValue);
+                    cost = 90 * p.armorValue;
                 else if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
                     cost = 90 * (p.armorValue - 1);
                 else
@@ -249,20 +253,20 @@ namespace RaargeDungeon
             else if (Program.currentPlayer.race == Player.Race.HalfOrc)
             {
                 if (Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
-                    cost = 110 * (p.armorValue);
+                    cost = 110 * p.armorValue;
                 else if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
                     cost = 110 * (p.armorValue - 1);
                 else
                     cost = 110 * (p.armorValue + 1);
             }
             else if (Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
-                cost = 100 * (p.armorValue);
+                cost = 100 * p.armorValue;
             else if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
                 cost = 100 * (p.armorValue - 1);
             else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 21) == 5)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.Print("You notice some armor and are certain you can steal it without being seen.");
+                UIHelpers.Print("You notice some armor and are certain you can steal it without being seen.");
                 Console.ReadKey();
                 Console.ResetColor();
 
@@ -272,7 +276,7 @@ namespace RaargeDungeon
             else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rando.Next(1, 16) == 5)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.Print("You notice some armor and are certain you can steal it without being seen..");
+                UIHelpers.Print("You notice some armor and are certain you can steal it without being seen..");
                 Console.ReadKey();
                 Console.ResetColor();
 
@@ -289,7 +293,7 @@ namespace RaargeDungeon
         public static int GetWeaponCost(Player p)
         {
             int cost = 0;
-            
+
             if (Program.currentPlayer.race == Player.Race.Human)
             {
                 cost = 90 * p.weaponValue;
@@ -301,17 +305,17 @@ namespace RaargeDungeon
             else if (Program.currentPlayer.race == Player.Race.Halfling && rando.Next(1, 21) == 5)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.Print("You notice a weapon and are certain you can steal it without being seen..");
+                UIHelpers.Print("You notice a weapon and are certain you can steal it without being seen..");
                 Console.ReadKey();
                 Console.ResetColor();
 
                 cost = 0;
-                
+
             }
             else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && rando.Next(1, 16) == 5)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.Print("You notice a weapon and are certain you can steal it without being seen..");
+                UIHelpers.Print("You notice a weapon and are certain you can steal it without being seen..");
                 Console.ReadKey();
                 Console.ResetColor();
 
@@ -327,27 +331,27 @@ namespace RaargeDungeon
         public static int GetDiffpCost(Player p)
         {
             int cost = 0;
-            
+
 
             if (Program.currentPlayer.race == Player.Race.Human)
             {
-                cost = 270 * (90 * (p.mods + 1));
+                cost = 270 * 90 * (p.mods + 1);
             }
             else if (Program.currentPlayer.race == Player.Race.HalfOrc)
             {
-                cost = 330 * (110 * (p.mods + 1));
+                cost = 330 * 110 * (p.mods + 1);
             }
             else
-                cost = 300 * (100 * (p.mods + 1));
+                cost = 300 * 100 * (p.mods + 1);
 
-            
+
             return cost;
         }
 
         public static int GetHealthCost(Player p)
         {
             int cost = 0;
-            
+
             if (Program.currentPlayer.race == Player.Race.Human)
             {
                 cost = 36 * p.baseHealth;

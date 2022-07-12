@@ -1,5 +1,7 @@
 ﻿using System;
+using RaargeDungeon.Items;
 using System.Collections.Generic;
+using RaargeDungeon.Helpers;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +13,10 @@ namespace RaargeDungeon
     [XmlRootAttribute("Player", Namespace = "RaargeDungeon, IsNullable = false")]
     public class Player
     {
-        
+
         public Random rand = new Random();
+
+        public List<SpellScroll> spells = new List<SpellScroll>(); 
 
         public string name;
         public int id;
@@ -32,6 +36,10 @@ namespace RaargeDungeon
         public int favors = 0;
         public int lifetimeFavors = 0;
         public int deaths = 0;
+
+        public decimal magicMastery = 0.0m;
+        public decimal spellCasting = 0.0m;
+        public decimal spellChanneling = 0.0m;
         
         public enum Race {Human, Elf, Dwarf, Gnome, Halfling, HalfOrc, Erudite}
         public Race race = Race.Human;
@@ -157,7 +165,7 @@ namespace RaargeDungeon
 
             health = baseHealth;
             Console.ForegroundColor = ConsoleColor.Green;
-            Program.Print($"Ding!!!! You are now level {level}! ");
+            UIHelpers.Print($"Ding!!!! You are now level {level}! ");
             Console.ResetColor();
         }
         #endregion

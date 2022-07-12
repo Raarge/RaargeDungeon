@@ -13,13 +13,15 @@ namespace RaargeDungeon
     {
         public static void CombatStealing(string nm)
         {
+            // add skillxp gains for using this at a greatly reduced xp gain.
+
             // Combat Stealing
             if (Program.currentPlayer.race == Player.Race.Halfling && TextHelpers.rand.Next(1, 11) == 5)
             {
                 int purseCoins = TextHelpers.rand.Next(1, 15) * ((Program.currentPlayer.mods * 1) + 10);
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.Print($"You notice a small purse hanging from {nm}'s belt");
+                UIHelpers.Print($"You notice a small purse hanging from {nm}'s belt");
                 Console.WriteLine($"You reach out and slit the purse swiftly catching {purseCoins} gold coins! ");
                 Console.ResetColor();
                 Program.currentPlayer.coins += purseCoins;
@@ -29,7 +31,7 @@ namespace RaargeDungeon
                 int purseCoins = TextHelpers.rand.Next(1, 15) * ((Program.currentPlayer.mods * 1) + 10);
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.Print($"You notice a small purse hanging from {nm}'s belt");
+                UIHelpers.Print($"You notice a small purse hanging from {nm}'s belt");
                 Console.WriteLine($"You reach out and slit the purse swiftly catching {purseCoins} gold coins! ");
                 Console.ResetColor();
                 Program.currentPlayer.coins += purseCoins;
@@ -72,7 +74,7 @@ namespace RaargeDungeon
                 }
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.Print($"Quickly stepping behind, {style} at {nm} dealing {backStabDamage} damage.");
+                UIHelpers.Print($"Quickly stepping behind, {style} at {nm} dealing {backStabDamage} damage.");
                 Console.ResetColor();
             }
         }
@@ -112,8 +114,8 @@ namespace RaargeDungeon
                     Console.WriteLine($"** Critical {spellType} spell attack! **");
                     Console.ResetColor();
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Program.Print($"You gesture chanting loudly, a {spellType} materializes striking a {nm} dealing ");
-                    Program.Print($"{spellDamage} damage.");
+                    UIHelpers.Print($"You gesture chanting a cantrip, a pulse of arcane energy strikes a {nm} for ");
+                    UIHelpers.Print($"{spellDamage} damage.");
                     Console.ResetColor();
                     hlt -= attack;
                     if (hlt <= 0)
@@ -140,8 +142,8 @@ namespace RaargeDungeon
 
                     // attack
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Program.Print($"You gesture chanting loudly, a {spellType} materializes striking a {nm} dealing ");
-                    Program.Print($"{spellDamage} damage.");
+                    UIHelpers.Print($"You gesture chanting loudly, a {spellType} materializes striking a {nm} dealing ");
+                    UIHelpers.Print($"{spellDamage} damage.");
                     Console.ResetColor();
                     hlt -= attack;
                     if (hlt <= 0)
@@ -172,8 +174,8 @@ namespace RaargeDungeon
                     Console.WriteLine($"** Critical {companion} attack! **");
                     Console.ResetColor();
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Program.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {nm} dealing ");
-                    Program.Print($"{animalCallDamage} damage.");
+                    UIHelpers.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {nm} dealing ");
+                    UIHelpers.Print($"{animalCallDamage} damage.");
                     Console.ResetColor();
                     hlt -= attack;
                     if (hlt <= 0)
@@ -192,8 +194,8 @@ namespace RaargeDungeon
 
                     // attack
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Program.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {nm} dealing ");
-                    Program.Print($"{animalCallDamage} damage.");
+                    UIHelpers.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {nm} dealing ");
+                    UIHelpers.Print($"{animalCallDamage} damage.");
                     Console.ResetColor();
                     hlt -= attack;
                     if (hlt <= 0)
@@ -241,7 +243,7 @@ namespace RaargeDungeon
                 }
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.Print($"In a blur of motion, {style} at {nm} dealing {chiStrikeDamage} damage.");
+                UIHelpers.Print($"In a blur of motion, {style} at {nm} dealing {chiStrikeDamage} damage.");
                 Console.ResetColor();
             }
         }
@@ -282,7 +284,7 @@ namespace RaargeDungeon
                 }
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Program.Print($"You thrust your chest forward light erupting from you, {style} at {nm} dealing {holyStrikeDamage} damage.");
+                UIHelpers.Print($"You thrust your chest forward light erupting from you, {style} at {nm} dealing {holyStrikeDamage} damage.");
                 Console.ResetColor();
             }
         }
