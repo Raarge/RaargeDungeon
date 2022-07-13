@@ -9,6 +9,7 @@ using RaargeDungeon.Shops;
 using RaargeDungeon.Items;
 using System.Threading;
 using System.Collections;
+using RaargeDungeon.Creatures;
 
 namespace RaargeDungeon
 {
@@ -368,7 +369,7 @@ namespace RaargeDungeon
                     chosenSpell = Pickers.GetChosenSpell();
                     int spellCost = Checkers.GetSpellCost(chosenSpell);
 
-                    int spellAttack = (int)(Math.Ceiling((decimal)(rand.Next(1, chosenSpell.damage)) + Program.currentPlayer.magicMastery)); 
+                    int spellAttack = (int)(Math.Ceiling((decimal)Randomizer.GetRandomDieRoll(chosenSpell.damage) + Program.currentPlayer.magicMastery)); 
                     // monster damage
 
                     if (rand.Next(0, upper) == 0)

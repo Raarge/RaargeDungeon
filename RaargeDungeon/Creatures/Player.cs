@@ -8,17 +8,16 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace RaargeDungeon
+namespace RaargeDungeon.Creatures
 {
-    [XmlRootAttribute("Player", Namespace = "RaargeDungeon, IsNullable = false")]
-    public class Player
+    [XmlRoot("Player", Namespace = "RaargeDungeon, IsNullable = false")]
+    public class Player : BaseCreature
     {
 
         public Random rand = new Random();
 
-        public List<SpellScroll> spells = new List<SpellScroll>(); 
+        public List<SpellScroll> spells = new List<SpellScroll>();
 
-        public string name;
         public int id;
         public int coins = 25;
         public int level = 1;
@@ -40,35 +39,35 @@ namespace RaargeDungeon
         public decimal magicMastery = 0.0m;
         public decimal spellCasting = 0.0m;
         public decimal spellChanneling = 0.0m;
-        
-        public enum Race {Human, Elf, Dwarf, Gnome, Halfling, HalfOrc, Erudite}
+
+        public enum Race { Human, Elf, Dwarf, Gnome, Halfling, HalfOrc, Erudite }
         public Race race = Race.Human;
 
         public int mods = 0;
 
-        public enum PlayerClass {Mage, Ranger, Warrior, Rogue, Cleric, Monk};
+        public enum PlayerClass { Mage, Ranger, Warrior, Rogue, Cleric, Monk };
         public PlayerClass currentClass = PlayerClass.Warrior;
 
-        public enum ManaType {Mana, Chi, Kri, Rage}
+        public enum ManaType { Mana, Chi, Kri, Rage }
         public ManaType manaType = ManaType.Mana;
 
         public int GetHealth()
         {
-            int upper = ((4 * mods) + 12 + level);
-            int lower = ((2 * mods) + 5 + level );
+            int upper = 4 * mods + 12 + level;
+            int lower = 2 * mods + 5 + level;
             return rand.Next(lower, upper);
         }
         public int GetPower()
         {
-            int upper = (((4 * mods) + 4) + (level / 2));
-            int lower = (((2 * mods) + 2) + (level / 2));
+            int upper = 4 * mods + 4 + level / 2;
+            int lower = 2 * mods + 2 + level / 2;
             int retVal = rand.Next(lower, upper);
             return retVal;
         }
         public int GetCoins()
         {
-            int upper = (25 * mods + 101);
-            int lower = (15 * mods + 21);
+            int upper = 25 * mods + 101;
+            int lower = 15 * mods + 21;
             return rand.Next(lower, upper);
         }
 
@@ -79,28 +78,28 @@ namespace RaargeDungeon
 
             if (typePotion == "health")
             {
-                upper = (4 * mods + 11) + ((currentClass == PlayerClass.Mage) ? +3 : 0); // if a mage add extra heal
-                lower = (2 * mods + 5) + ((currentClass == PlayerClass.Mage) ? +3 : 0);
+                upper = 4 * mods + 11 + (currentClass == PlayerClass.Mage ? +3 : 0); // if a mage add extra heal
+                lower = 2 * mods + 5 + (currentClass == PlayerClass.Mage ? +3 : 0);
             }
-            else if(typePotion == "mana")
+            else if (typePotion == "mana")
             {
-                upper = ((4 * mods + 11) + (level * 2));
-                lower = ((2 * mods + 5) + (level * 2));
+                upper = 4 * mods + 11 + level * 2;
+                lower = 2 * mods + 5 + level * 2;
             }
-            
+
             return rand.Next(lower, upper);
         }
 
         public int GetXP()
         {
-            int upper = (20 * mods + 50 + level);
-            int lower = (15 * mods + 10 + level);
+            int upper = 20 * mods + 50 + level;
+            int lower = 15 * mods + 10 + level;
             return rand.Next(lower, upper);
         }
 
         public int GetLevelUpValue()
         {
-            return (100 * level) + 400;
+            return 100 * level + 400;
         }
 
         public bool CanLevelUp()
@@ -181,7 +180,7 @@ namespace RaargeDungeon
             int favCheckRand5 = rand.Next(1, 7);
             int favCheckRand6 = rand.Next(1, 8);
 
-            if(favors == 0)
+            if (favors == 0)
             {
                 favorEarned = 1;
                 favors++;

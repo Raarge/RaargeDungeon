@@ -1,4 +1,5 @@
-﻿using RaargeDungeon.Helpers;
+﻿using RaargeDungeon.Creatures;
+using RaargeDungeon.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

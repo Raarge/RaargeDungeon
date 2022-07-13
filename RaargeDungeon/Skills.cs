@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RaargeDungeon.Creatures;
 using RaargeDungeon.Helpers;
 
 
@@ -16,9 +17,9 @@ namespace RaargeDungeon
             // add skillxp gains for using this at a greatly reduced xp gain.
 
             // Combat Stealing
-            if (Program.currentPlayer.race == Player.Race.Halfling && TextHelpers.rand.Next(1, 11) == 5)
+            if (Program.currentPlayer.race == Player.Race.Halfling && Randomizer.GetRandomNumber(11) == 5)
             {
-                int purseCoins = TextHelpers.rand.Next(1, 15) * ((Program.currentPlayer.mods * 1) + 10);
+                int purseCoins = Randomizer.GetRandomNumber(15) * ((Program.currentPlayer.mods * 1) + 10);
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 UIHelpers.Print($"You notice a small purse hanging from {nm}'s belt");
@@ -26,9 +27,9 @@ namespace RaargeDungeon
                 Console.ResetColor();
                 Program.currentPlayer.coins += purseCoins;
             }
-            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && TextHelpers.rand.Next(1, 11) == 5)
+            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && Randomizer.GetRandomNumber(11) == 5)
             {
-                int purseCoins = TextHelpers.rand.Next(1, 15) * ((Program.currentPlayer.mods * 1) + 10);
+                int purseCoins = Randomizer.GetRandomNumber(15) * ((Program.currentPlayer.mods * 1) + 10);
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 UIHelpers.Print($"You notice a small purse hanging from {nm}'s belt");
@@ -44,7 +45,7 @@ namespace RaargeDungeon
             {
                 int backStabDamage = 0;
 
-                backStabDamage = TextHelpers.rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                backStabDamage = Randomizer.GetRandomDieRoll(Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
 
                 leader = TextHelpers.GetAttackStart(attack);
                 style = TextHelpers.GetWeaponAttackStyle();
@@ -82,7 +83,7 @@ namespace RaargeDungeon
         public static void SpellBlast(string nm, ref int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style, ref string spellType)
         {
             // mage spell blast 25% chance
-            if (Program.currentPlayer.currentClass == Player.PlayerClass.Mage && TextHelpers.rand.Next(1, 5) == 3)
+            if (Program.currentPlayer.currentClass == Player.PlayerClass.Mage && Randomizer.GetRandomNumber(5) == 3)
             {
                 int spellDamage = 0;
                 int regSpellCritTry = Program.currentPlayer.rand.Next(1, 6);
@@ -96,12 +97,12 @@ namespace RaargeDungeon
                         //Console.WriteLine("Inside the gnome/erudie Spellblast Critical Loop");
                         //Console.ReadKey();
 
-                        spellDamage = TextHelpers.rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level + (Program.currentPlayer.level / 2);
+                        spellDamage = Randomizer.GetRandomNumber(Program.currentPlayer.weaponValue) + Program.currentPlayer.level + (Program.currentPlayer.level / 2);
                         spellDamage = spellDamage * 4;
                     }
                     else
                     {
-                        spellDamage = TextHelpers.rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                        spellDamage = Randomizer.GetRandomNumber(Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
                         spellDamage = spellDamage * 4;
                     }
 
@@ -128,11 +129,11 @@ namespace RaargeDungeon
                 {
                     if (Program.currentPlayer.race == Player.Race.Gnome || Program.currentPlayer.race == Player.Race.Erudite)
                     {
-                        spellDamage = TextHelpers.rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level + (Program.currentPlayer.level / 2);
+                        spellDamage = Randomizer.GetRandomNumber(Program.currentPlayer.weaponValue) + Program.currentPlayer.level + (Program.currentPlayer.level / 2);
                     }
                     else
                     {
-                        spellDamage = TextHelpers.rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                        spellDamage = Randomizer.GetRandomNumber(Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
                     }
 
 
@@ -157,12 +158,12 @@ namespace RaargeDungeon
 
         public static void AnimalCall(string nm, ref int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style, ref string companion)
         {
-            if (Program.currentPlayer.currentClass == Player.PlayerClass.Ranger && TextHelpers.rand.Next(1, 5) == 3)
+            if (Program.currentPlayer.currentClass == Player.PlayerClass.Ranger && Randomizer.GetRandomNumber(5) == 3)
             {
                 int animalCallDamage = 0;
                 if (Program.currentPlayer.rand.Next(1, 4) == 3)
                 {
-                    animalCallDamage = TextHelpers.rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                    animalCallDamage = Randomizer.GetRandomNumber(Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
                     animalCallDamage = animalCallDamage * 2;
 
                     leader = TextHelpers.GetAttackStart(attack);
@@ -186,7 +187,7 @@ namespace RaargeDungeon
                 }
                 else
                 {
-                    animalCallDamage = TextHelpers.rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                    animalCallDamage = Randomizer.GetRandomNumber(Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
 
                     leader = TextHelpers.GetAttackStart(attack);
                     style = TextHelpers.GetWeaponAttackStyle();
@@ -213,7 +214,7 @@ namespace RaargeDungeon
             {
                 int chiStrikeDamage = 0;
 
-                chiStrikeDamage = TextHelpers.rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                chiStrikeDamage = Randomizer.GetRandomNumber(Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
 
                 leader = TextHelpers.GetAttackStart(attack);
                 style = TextHelpers.GetWeaponAttackStyle();
@@ -254,7 +255,7 @@ namespace RaargeDungeon
             {
                 int holyStrikeDamage = 0;
 
-                holyStrikeDamage = TextHelpers.rand.Next(1, Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                holyStrikeDamage = Randomizer.GetRandomNumber(Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
 
                 leader = TextHelpers.GetAttackStart(attack);
                 style = TextHelpers.GetWeaponAttackStyle();

@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using System.Collections.Generic;
 using RaargeDungeon.Helpers;
 using System.Threading;
+using RaargeDungeon.Creatures;
 
 namespace RaargeDungeon
 {
@@ -119,23 +120,21 @@ namespace RaargeDungeon
                 }
             }
 
+
+            // Get Stats
+            p.strength = Randomizer.GetPlayerStats();
+            p.constitution = Randomizer.GetPlayerStats();
+            p.dexterity = Randomizer.GetPlayerStats();
+            p.intelligence = Randomizer.GetPlayerStats();
+            p.wisdom = Randomizer.GetPlayerStats();
+            p.charisma = Randomizer.GetPlayerStats();
+
             // Hit Points Setter
-            if (p.race == Player.Race.Dwarf || p.race == Player.Race.HalfOrc || p.currentClass == Player.PlayerClass.Warrior)
-            {
-                p.baseHealth = p.rand.Next(11, 14);
-                p.health = p.baseHealth;
-            }
-            else if (p.race == Player.Race.Gnome || p.race == Player.Race.Erudite)
-            {
-                p.baseHealth = p.rand.Next(7, 10);
-                p.health = p.baseHealth;
-            }
-            else
-            {
-                p.baseHealth = 10;
-                p.health = p.baseHealth;
-            }
-                
+            p = Checkers.GetStartingHealth(p);
+            p.baseHealth = p.baseHealth + p.GetModifier(p.constitution);
+            p.health = p.baseHealth;
+
+                            
             // Damage Resistance Setter
             if (p.currentClass == Player.PlayerClass.Warrior || p.race == Player.Race.Dwarf || p.race == Player.Race.Halfling ||
                 p.race == Player.Race.Elf)

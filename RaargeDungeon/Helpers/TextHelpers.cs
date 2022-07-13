@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RaargeDungeon.Creatures;
+using RaargeDungeon.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +10,6 @@ namespace RaargeDungeon.Helpers
 {
     public static class TextHelpers
     {
-        public static Random rand = new Random();
-
         public static string GetSpellType()
         {
             string spellName = "";
@@ -61,7 +61,7 @@ namespace RaargeDungeon.Helpers
 
             if (att == 0)
             {
-                switch (rand.Next(0, 5))
+                switch (Randomizer.GetRandomNumber(5, 0))
                 {
                     case 0:
                         attackStart = "With the speed of a startled slug";
@@ -85,7 +85,7 @@ namespace RaargeDungeon.Helpers
             }
             else if (att == 1 || att == 2)
             {
-                switch (rand.Next(0, 3))
+                switch (Randomizer.GetRandomNumber(3, 0))
                 {
                     case 0:
                         attackStart = "Looking as if you stumbled";
@@ -103,7 +103,7 @@ namespace RaargeDungeon.Helpers
             }
             else if (att >= 3)
             {
-                switch (rand.Next(0, 3))
+                switch (Randomizer.GetRandomNumber(3, 0))
                 {
                     case 0:
                         attackStart = "With the ferocity of a stiking cobra";
@@ -126,7 +126,7 @@ namespace RaargeDungeon.Helpers
         public static string GetWeaponAttackStyle()
         {
             var style = "";
-            var rando = rand.Next(0, 3);
+            var rando = Randomizer.GetRandomNumber(3, 0);
 
             if (Program.currentPlayer.currentClass.ToString() == "Warrior")
             {
@@ -293,7 +293,7 @@ namespace RaargeDungeon.Helpers
         {
             Console.WriteLine("Made it to Get Name");
             string creature = "";
-            switch (rand.Next(0, 5))
+            switch (Randomizer.GetRandomNumber(5, 0))
             {
                 case 0:
                     creature = "Skeleton";
