@@ -107,7 +107,7 @@ namespace RaargeDungeon.Shops
                 else if (input == "e")
                 {
                     //break;
-                    Encounters.RandomEncounter();
+                    Encounters.RandomEncounter(p);
                 }
                 else if (input == "q")
                 {

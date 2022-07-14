@@ -36,6 +36,9 @@ namespace RaargeDungeon.Creatures
         public int lifetimeFavors = 0;
         public int deaths = 0;
 
+        public int hitDice { get; set; }
+        public int numberHitDice { get; set; }
+
         public decimal magicMastery = 0.0m;
         public decimal spellCasting = 0.0m;
         public decimal spellChanneling = 0.0m;
@@ -51,19 +54,70 @@ namespace RaargeDungeon.Creatures
         public enum ManaType { Mana, Chi, Kri, Rage }
         public ManaType manaType = ManaType.Mana;
 
-        public int GetHealth()
+        public static int GetPlayerHitDice(string plrClass)
         {
-            int upper = 4 * mods + 12 + level;
-            int lower = 2 * mods + 5 + level;
-            return rand.Next(lower, upper);
+            int hd = 0;
+
+            switch (plrClass)
+            {
+                case "Mage":
+                    hd = 6;
+                    break;
+                case "Ranger":
+                    hd = 10;
+                    break;
+                case "Warrior":
+                    hd = 10;
+                    break;
+                case "Rogue":
+                    hd = 8;
+                    break;
+                case "Cleric":
+                    hd = 8;
+                    break;
+                case "Monk":
+                    hd = 8;
+                    break;
+                default:
+                    hd = 6;
+                    break;
+            }
+
+            return hd;
         }
-        public int GetPower()
+
+        public static int GetPlayerArmorClass(string plyrClass)
         {
-            int upper = 4 * mods + 4 + level / 2;
-            int lower = 2 * mods + 2 + level / 2;
-            int retVal = rand.Next(lower, upper);
-            return retVal;
+            int ac = 0;
+
+            switch (plyrClass)
+            {
+                case "Mage":
+                    ac = 11;
+                    break;
+                case "Ranger":
+                    ac = 12;
+                    break;
+                case "Warrior":
+                    ac = 16;
+                    break;
+                case "Rogue":
+                   ac = 12;
+                    break;
+                case "Cleric":
+                    ac = 13;
+                    break;
+                case "Monk":
+                    ac = 10;
+                    break;
+                default:
+                    ac = 12;
+                    break;
+            }
+
+            return ac;
         }
+        
         public int GetCoins()
         {
             int upper = 25 * mods + 101;

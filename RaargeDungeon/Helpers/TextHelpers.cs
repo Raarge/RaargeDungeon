@@ -289,36 +289,6 @@ namespace RaargeDungeon.Helpers
 
         }
 
-        public static string GetName()
-        {
-            Console.WriteLine("Made it to Get Name");
-            string creature = "";
-            switch (Randomizer.GetRandomNumber(5, 0))
-            {
-                case 0:
-                    creature = "Skeleton";
-                    break;
-                case 1:
-                    creature = "Kobold";
-                    break;
-                case 2:
-                    creature = "Ogre";
-                    break;
-                case 3:
-                    creature = "Bugbear";
-                    break;
-                case 4:
-                    creature = "Madman";
-                    break;
-                default:
-                    creature = "Elemental";
-                    break;
-
-            }
-
-            return creature;
-        }
-
         public static string GetWeapon()
         {
             string weapon = "";

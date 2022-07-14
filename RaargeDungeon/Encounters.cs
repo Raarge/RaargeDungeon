@@ -23,8 +23,10 @@ namespace RaargeDungeon
         #endregion
 
         #region Encounter
-        public static void FirstEncounter()
+        public static void FirstEncounter(Player plyr)
         {
+            //Player plyr = new Player();
+
             string weapon = TextHelpers.GetWeapon();
             if (Program.currentPlayer.currentClass == Player.PlayerClass.Mage)
             {
@@ -49,7 +51,7 @@ namespace RaargeDungeon
                 Console.WriteLine("You quickly regain control and charge you captor...");
                 Console.WriteLine(" ");
 
-                Program.currentPlayer.spells.Add(MagicMissile);
+                plyr.spells.Add(MagicMissile);
 
                 // test
                 //Console.WriteLine("You know the following spells:");
@@ -71,78 +73,85 @@ namespace RaargeDungeon
             
             
             Console.ReadKey();
-            Combat(false, "Human Rogue", 1, 4);
+            Combat(false, plyr);
         }
 
-        public static void BasicFightEncounter()
+        public static void BasicFightEncounter(Player plyr)
         {
             Console.Clear();
             UIHelpers.Print("You turn the corner and there you see a ....");
             Console.ReadKey();
-            Combat(true, "", 0, 0);
+            Combat(true, plyr);
         }
 
-        public static void WizardEncounter()
+        public static void WizardEncounter(Player p)
         {
             Console.Clear();
             UIHelpers.Print("The door slowly creaks open as you peer into the dark room.  You see a tall man with a");
             UIHelpers.Print("long beard looking at a large tome.  He looks up from his tome and stares at you menacingly....");
             Console.ReadKey();
-            Combat(false, "Dark Wizard", rand.Next((1 + Program.currentPlayer.mods),(4 + Program.currentPlayer.mods)), rand.Next((4 + Program.currentPlayer.mods), 
-                ((2 * Program.currentPlayer.mods) + 7)));
+            Combat(false, p);
         }
         #endregion
 
         #region EncounterTools
         //Encounter Tools
-        public static void RandomEncounter()
+        public static void RandomEncounter(Player player)
         {
-            switch(rand.Next(0, 2))
-            {
-                case 0:
-                    BasicFightEncounter();
-                    break;
-                case 1:
-                    WizardEncounter();
-                    break;
-            }
+            //switch(rand.Next(0, 2))
+            //{
+                //case 0:
+                    BasicFightEncounter(player);
+                    //break;
+                //case 1:
+                  //  WizardEncounter(player);
+                  //  break;
+            //}
         }
-        public static void Combat(bool random, string name, int power, int health)
+
+        public static void Combat(bool random, Player plyr)
         {
-            string nm = "";
-            int pwr = 0;
-            int hlt = 0;
-            int baseHlt = 0;
-            
+            Monster mstr = new Monster();
+
+            mstr.strength = Randomizer.GetPlayerStats();
+            mstr.constitution = Randomizer.GetPlayerStats();
+            mstr.dexterity = Randomizer.GetPlayerStats();
+            mstr.intelligence = Randomizer.GetPlayerStats();
+            mstr.wisdom = Randomizer.GetPlayerStats();
+            mstr.charisma = Randomizer.GetPlayerStats();
+            mstr.level = Randomizer.GetRandomNumber(plyr.level + 2);
 
             if (random)
             {
                 //Console.WriteLine("Made it to Combat");
-
-                nm = TextHelpers.GetName();
-                pwr = Program.currentPlayer.GetPower() + ((nm == "Bugbear" || nm == "Ogre")?2:0);
-                hlt = Program.currentPlayer.GetHealth() + ((nm == "Bugbear" || nm == "Ogre")?Program.currentPlayer.mods * 2: 0);
-                baseHlt = hlt;
+                mstr.name = Monster.GetMonsterName();
+                mstr = Monster.GetCombatStats(mstr);
+                mstr.baseHealth = Randomizer.GetHealth(mstr.hitDice, mstr.hitDice, Monster.GetModifier(mstr.constitution));
+                mstr.health = mstr.baseHealth;                
+                
             }
             else
             {
-                nm = name;
-                pwr = power;
-                hlt = health;
-                baseHlt = hlt;
+                
+
+                mstr.name = "Evil Human Rogue";
+                mstr = Monster.GetCombatStats(mstr);
+                mstr.baseHealth = Randomizer.GetHealth(mstr.hitDice, mstr.numberHitDie, Monster.GetModifier(mstr.constitution));
+                mstr.health = mstr.baseHealth;                
 
             }
-            string leaderMob = TextHelpers.GetLeader(pwr);
+            
+            string leaderMob = TextHelpers.GetLeader(mstr.level);
             bool monsterAlive = true;
 
-            while (hlt > 0)
+            while (mstr.health > 0)
             {
                 Console.Clear();
-                Console.WriteLine($" A {leaderMob} {nm} is here, looking menacingly at you");
-                Console.Write($" {nm}'s Health Bar: ");
+                Console.WriteLine($" A {leaderMob} {mstr.name} is here, looking menacingly at you");
+                Console.Write($" {mstr.name}'s Health Bar: ");
                 Console.Write("[");
                 Console.ForegroundColor = ConsoleColor.Red;
-                Program.MonsterBar("<", "-", ((decimal)hlt / (decimal)baseHlt), 25);
+                Program.MonsterBar("<", "-", ((decimal)mstr.health / (decimal)mstr.baseHealth), 25);
                 Console.ResetColor();
                 Console.WriteLine("]");
                 Console.WriteLine(" ");
@@ -159,17 +168,17 @@ namespace RaargeDungeon
                 Console.WriteLine(" | (H)eal    (M)Mana  |");
                 Console.WriteLine(" |                    |");
                 Console.WriteLine(" =====================");
-                Console.WriteLine($" Level: {Program.currentPlayer.level} Class: {Program.currentPlayer.currentClass} Coins: {Program.currentPlayer.coins}");
-                Console.WriteLine($" Potions: {Program.currentPlayer.potion} Mana Potions: {Program.currentPlayer.manaPotion}");
+                Console.WriteLine($" Level: {plyr.level} Class: {plyr.currentClass} Coins: {plyr.coins}");
+                Console.WriteLine($" Potions: {plyr.potion} Mana Potions: {plyr.manaPotion}");
 
                 // -- Health Bar --
-                UIHelpers.GenerateStatusBar("Health", "<", "-", ConsoleColor.Red, Program.currentPlayer.health, Program.currentPlayer.baseHealth);
+                UIHelpers.GenerateStatusBar("Health", "<", "-", ConsoleColor.Red, plyr.health, plyr.baseHealth);
                 
                 // -- Experiance Bar --
-                UIHelpers.GenerateStatusBar("XP", ">", "-", ConsoleColor.Yellow, Program.currentPlayer.xp, Program.currentPlayer.GetLevelUpValue());
+                UIHelpers.GenerateStatusBar("XP", ">", "-", ConsoleColor.Yellow, plyr.xp, plyr.GetLevelUpValue());
 
                 // -- Mana Bar --
-                UIHelpers.GenerateStatusBar(Program.currentPlayer.manaType.ToString(), "*", " ", ConsoleColor.Blue, Program.currentPlayer.energy, Program.currentPlayer.baseEnergy);
+                UIHelpers.GenerateStatusBar(plyr.manaType.ToString(), "*", " ", ConsoleColor.Blue, plyr.energy, plyr.baseEnergy);
 
                 //Console.WriteLine($"XP:{Program.currentPlayer.xp} Needed XP: {Program.currentPlayer.GetLevelUpValue()} ");
                 string action = Console.ReadLine().ToLower();
@@ -196,22 +205,14 @@ namespace RaargeDungeon
                 bool monsterCrit = false;
                 int critCheck = rand.Next(1, 7);
 
+                damage = Randomizer.GetRandomDieRoll(mstr.wisdom, mstr.numberAttackDice);
                 // Monster Damage
-                if(critCheck == 3)
-                {
-                    damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
+                if (critCheck == 3)
+                {                    
                     damage = damage * 2;
-                    if (damage < 0) damage = 0;
                     monsterCrit = true;
                 }
-                else
-                {
-                    damage = rand.Next(1, pwr) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
-                    if (damage < 0) damage = 0;
-
-                }
                 
-
                 if (action.ToLower() == "a")
                 {
 
@@ -222,7 +223,7 @@ namespace RaargeDungeon
                     string spellType = "";
 
 
-
+//****************************************ReWrite All of this****************************************************************************************
 
                     // Ranger, Halfling, Elf 33% Crit Chance, 2X Damage
                     if ((Program.currentPlayer.currentClass == Player.PlayerClass.Ranger || Program.currentPlayer.race == Player.Race.Halfling ||
@@ -237,15 +238,15 @@ namespace RaargeDungeon
                         style = TextHelpers.GetWeaponAttackStyle();
 
                         // attack flavor text 
-                        UIHelpers.Print($"{leader}, {style} at {nm}, who attacks in return.");
-                        TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                        UIHelpers.Print($"{leader}, {style} at {mstr.name}, who attacks in return.");
+                        TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
 
                         Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine($"**Critical Hit ** you deal {attack} damage to {nm}.");
+                        Console.WriteLine($"**Critical Hit ** you deal {attack} damage to {mstr.name}.");
                         Console.ResetColor();
 
-                        hlt -= attack;
-                        if (hlt <= 0)
+                        mstr.health -= attack;
+                        if (mstr.health <= 0)
                         {
                             //Console.WriteLine($"{nm} was Slain!!");
                             monsterAlive = false;
@@ -264,15 +265,15 @@ namespace RaargeDungeon
 
 
                         // attack flavor text 
-                        UIHelpers.Print($"{leader}, {style} at {nm}, who attacks in return.");
-                        TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                        UIHelpers.Print($"{leader}, {style} at {mstr.name}, who attacks in return.");
+                        TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
 
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"**Critical Hit ** you deal {attack} damage to {nm}.");
+                        Console.WriteLine($"**Critical Hit ** you deal {attack} damage to {mstr.name}.");
                         Console.ResetColor();
 
-                        hlt -= attack;
-                        if (hlt <= 0)
+                        mstr.health -= attack;
+                        if (mstr.health <= 0)
                         {
                             //Console.WriteLine($"{nm} was Slain!!");
                             monsterAlive = false;
@@ -288,15 +289,15 @@ namespace RaargeDungeon
                         style = TextHelpers.GetWeaponAttackStyle();
 
                         // attack flavor text 
-                        UIHelpers.Print($"{leader}, {style} at {nm}, who attacks in return.");
-                        TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                        UIHelpers.Print($"{leader}, {style} at {mstr.name}, who attacks in return.");
+                        TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
 
                         Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine($"**Critical Hit ** you deal {attack} damage to {nm}.");
+                        Console.WriteLine($"**Critical Hit ** you deal {attack} damage to {mstr.name}.");
                         Console.ResetColor();
 
-                        hlt -= attack;
-                        if (hlt <= 0)
+                        mstr.health -= attack;
+                        if (mstr.health <= 0)
                         {
                             // Console.WriteLine($"{nm} was Slain!!");
                             monsterAlive = false;
@@ -311,35 +312,35 @@ namespace RaargeDungeon
                         style = TextHelpers.GetWeaponAttackStyle();
 
                         // attack  
-                        UIHelpers.Print($"{leader}, {style} at {nm}, who attacks in return.");
-                        Console.WriteLine($"You deal {attack} damage to {nm}.");
-                        TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                        UIHelpers.Print($"{leader}, {style} at {mstr.name}, who attacks in return.");
+                        Console.WriteLine($"You deal {attack} damage to {mstr.name}.");
+                        TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
 
-                        hlt -= attack;
-                        if (hlt <= 0)
+                        mstr.health -= attack;
+                        if (mstr.health <= 0)
                         {
                             //Console.WriteLine($"{nm} was Slain!!");
                             monsterAlive = false;
                         }
                     }
-
+//*****************************************************************************************************************************************************************************
                     // Rogue backstab
-                    Skills.BackStab(nm, ref hlt, ref monsterAlive, attack, ref leader, ref style);
+                    Skills.BackStab(mstr.name, mstr.health, ref monsterAlive, attack, ref leader, ref style);
 
                     // Ranger Animal Call 25% chance
-                    Skills.AnimalCall(nm, ref hlt, ref monsterAlive, attack, ref leader, ref style, ref companion);
+                    Skills.AnimalCall(mstr.name, mstr.health, ref monsterAlive, attack, ref leader, ref style, ref companion);
 
                     // Mage SpellBlast 
-                    Skills.SpellBlast(nm, ref hlt, ref monsterAlive, attack, ref leader, ref style, ref spellType);
+                    Skills.SpellBlast(mstr.name, mstr.health, ref monsterAlive, attack, ref leader, ref style, ref spellType);
 
                     // Combat Stealing
-                    Skills.CombatStealing(nm);
+                    Skills.CombatStealing(mstr.name);
 
                     // Monk Chi Strike
-                    Skills.ChiStrike(nm, ref hlt, ref monsterAlive, attack, ref leader, ref style);
+                    Skills.ChiStrike(mstr.name, mstr.health, ref monsterAlive, attack, ref leader, ref style);
 
                     // Cleric Holy Strike
-                    Skills.HolyStrike(nm, ref hlt, ref monsterAlive, attack, ref leader, ref style);
+                    Skills.HolyStrike(mstr.name, mstr.health, ref monsterAlive, attack, ref leader, ref style);
                 }
                 else if (action.ToLower() == "d")
                 {
@@ -347,12 +348,12 @@ namespace RaargeDungeon
                     int attack = (rand.Next(0, Program.currentPlayer.weaponValue) + rand.Next(1, 4)) / 2; // half damage dealt defending
                     var weapon = TextHelpers.GetWeapon();
 
-                    UIHelpers.Print($"As {nm} moves forward to attack, you ready your {weapon} to defend.");
-                    Console.WriteLine($"You deal {attack} damage to {nm}.");
-                    TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                    UIHelpers.Print($"As {mstr.name} moves forward to attack, you ready your {weapon} to defend.");
+                    Console.WriteLine($"You deal {attack} damage to {mstr.name}.");
+                    TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
 
-                    hlt -= attack;
-                    if (hlt <= 0)
+                    mstr.health -= attack;
+                    if (mstr.health <= 0)
                     {
                         
                         monsterAlive = false;
@@ -396,22 +397,22 @@ namespace RaargeDungeon
 
                         Console.WriteLine($"You begin casting {chosenSpell.Name}, you thrust your hand forward and");
                         Console.WriteLine(chosenSpell.flavorText);
-                        Console.WriteLine($"A {nm} attacks in return.");
-                        Console.WriteLine($"You deal {spellAttack} {chosenSpell.type} damage to the {nm}.");
+                        Console.WriteLine($"A {mstr.name} attacks in return.");
+                        Console.WriteLine($"You deal {spellAttack} {chosenSpell.type} damage to the {mstr.name}.");
                         
                     }
                     
 
-                    TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                    TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
                     Console.ReadKey();
 
                     Program.currentPlayer.energy -= chosenSpell.SpellCost;
-                    Program.currentPlayer.spellCasting = Checkers.GetSkillXPGain(pwr, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "cast");
-                    Program.currentPlayer.spellChanneling = Checkers.GetSkillXPGain(pwr, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "channel");
-                    Program.currentPlayer.magicMastery = Checkers.GetSkillXPGain(pwr, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "magic");
+                    Program.currentPlayer.spellCasting = Checkers.GetSkillXPGain(mstr.level, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "cast");
+                    Program.currentPlayer.spellChanneling = Checkers.GetSkillXPGain(mstr.level, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "channel");
+                    Program.currentPlayer.magicMastery = Checkers.GetSkillXPGain(mstr.level, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "magic");
 
-                    hlt -= spellAttack;
-                    if (hlt <= 0)
+                    mstr.health -= spellAttack;
+                    if (mstr.health <= 0)
                     {
                         //Console.WriteLine($"{nm} was Slain!!");
                         monsterAlive = false;
@@ -424,14 +425,14 @@ namespace RaargeDungeon
                     if (Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0, 2) == 0 &&
                         Program.currentPlayer.race != Player.Race.Halfling && Program.currentPlayer.race != Player.Race.Elf)
                     {
-                        UIHelpers.Print($"As you sprint away from {nm}, its strike catched you in the back, knocking you down.");
-                        TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                        UIHelpers.Print($"As you sprint away from {mstr.name}, its strike catched you in the back, knocking you down.");
+                        TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
                         Console.ReadKey();
                         Program.currentPlayer.health -= damage;
                     }
                     else
                     {
-                        UIHelpers.Print($"You use your crazy moves to evade the {nm} and you successfully escape!");
+                        UIHelpers.Print($"You use your crazy moves to evade the {mstr.name} and you successfully escape!");
                         Console.ReadKey();
                         Shop.loadShop(Program.currentPlayer);
                     };
@@ -440,14 +441,14 @@ namespace RaargeDungeon
                 {
                     if (Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0, 3) == 0)
                     {
-                        UIHelpers.Print($"As you sprint away from {nm}, its strike catched you in the back, knocking you down.");
-                        TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action.ToLower());
+                        UIHelpers.Print($"As you sprint away from {mstr.name}, its strike catched you in the back, knocking you down.");
+                        TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
                         Console.ReadKey();
                         Program.currentPlayer.health -= damage;
                     }
                     else
                     {
-                        UIHelpers.Print($"You use your crazy moves to evade the {nm} and you successfully escape!");
+                        UIHelpers.Print($"You use your crazy moves to evade the {mstr.name} and you successfully escape!");
                         Console.ReadKey();
                         Shop.loadShop(Program.currentPlayer);
                     };
@@ -455,7 +456,7 @@ namespace RaargeDungeon
                 else if (action.ToLower() == "h")
                 {
                     // heal
-                    PotionHealing(nm, pwr, monsterCrit, action.ToLower(), "health");
+                    PotionHealing(mstr.name, mstr.level, monsterCrit, action.ToLower(), "health");
 
                     if (monsterAlive)
                     {
@@ -465,24 +466,24 @@ namespace RaargeDungeon
                 }
                 else if (action.ToLower() == "m")
                 {
-                    PotionHealing(nm, pwr, monsterCrit, action.ToLower(), "mana");
+                    PotionHealing(mstr.name, mstr.level, monsterCrit, action.ToLower(), "mana");
 
                     if (monsterAlive)
                     {
                         Console.ReadKey();
                     }
                 }
-                CheckForDeath(nm);
+                CheckForDeath(mstr.name);
 
                 if (monsterAlive)
                     Console.ReadKey();
             }
 
-            Console.WriteLine($"{nm} was Slain!!");
+            Console.WriteLine($"{mstr.name} was Slain!!");
 
             int xp = Program.currentPlayer.GetXP();
             int cn = Program.currentPlayer.GetCoins();
-            UIHelpers.Print($"As you stand victorious over the {nm}, its body dissolves into {cn} gold coins!");
+            UIHelpers.Print($"As you stand victorious over the {mstr.name}, its body dissolves into {cn} gold coins!");
             Console.ForegroundColor = ConsoleColor.Yellow;
             UIHelpers.Print($"You gain {xp} XP!");
             Console.WriteLine($"You quickly pocket {cn} coins and go down a long hall");

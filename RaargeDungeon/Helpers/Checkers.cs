@@ -46,28 +46,7 @@ namespace RaargeDungeon.Helpers
             return skillXPGain;
         }
 
-        public static Player GetStartingHealth(Player p)
-        {
-            // add a section to get con modifier to enhance hp
-
-            if(p.currentClass == Player.PlayerClass.Mage)
-            {
-                p.baseHealth = Randomizer.GetRandomDieRoll(6);                
-            }
-            else if (p.currentClass == Player.PlayerClass.Ranger || p.currentClass == Player.PlayerClass.Warrior)
-            {
-                p.baseHealth = Randomizer.GetRandomDieRoll(10);
-
-            }
-            else if(p.currentClass == Player.PlayerClass.Rogue || p.currentClass == Player.PlayerClass.Cleric || p.currentClass == Player.PlayerClass.Monk)
-            {
-                p.baseHealth = Randomizer.GetRandomDieRoll(8);
-            }
-
-
-            p.health = p.baseHealth;
-
-            return p;
-        }
+        
+        
     }
 }

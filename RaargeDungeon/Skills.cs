@@ -39,7 +39,7 @@ namespace RaargeDungeon
             }
         }
 
-        public static void BackStab(string nm, ref int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style)
+        public static void BackStab(string nm, int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style)
         {
             if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && Program.currentPlayer.rand.Next(1, 6) == 5)
             {
@@ -80,7 +80,7 @@ namespace RaargeDungeon
             }
         }
 
-        public static void SpellBlast(string nm, ref int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style, ref string spellType)
+        public static void SpellBlast(string nm, int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style, ref string spellType)
         {
             // mage spell blast 25% chance
             if (Program.currentPlayer.currentClass == Player.PlayerClass.Mage && Randomizer.GetRandomNumber(5) == 3)
@@ -156,7 +156,7 @@ namespace RaargeDungeon
             }
         }
 
-        public static void AnimalCall(string nm, ref int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style, ref string companion)
+        public static void AnimalCall(string nm, int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style, ref string companion)
         {
             if (Program.currentPlayer.currentClass == Player.PlayerClass.Ranger && Randomizer.GetRandomNumber(5) == 3)
             {
@@ -208,7 +208,7 @@ namespace RaargeDungeon
             }
         }
 
-        public static void ChiStrike(string nm, ref int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style)
+        public static void ChiStrike(string nm, int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style)
         {
             if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk && Program.currentPlayer.rand.Next(1, 6) == 5)
             {
@@ -249,7 +249,7 @@ namespace RaargeDungeon
             }
         }
 
-        public static void HolyStrike(string nm, ref int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style)
+        public static void HolyStrike(string nm, int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style)
         {
             if (Program.currentPlayer.currentClass == Player.PlayerClass.Cleric && Program.currentPlayer.rand.Next(1, 6) == 5)
             {

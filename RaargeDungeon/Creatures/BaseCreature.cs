@@ -16,7 +16,7 @@ namespace RaargeDungeon.Creatures
         public int wisdom { get; set; }
         public int charisma { get; set; }
 
-        public int GetModifier(int stat)
+        public static int GetModifier(int stat)
         {
             int modifier = 0;
 
