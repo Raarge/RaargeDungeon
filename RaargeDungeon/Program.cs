@@ -120,21 +120,9 @@ namespace RaargeDungeon
                 }
             }
 
-
-            // Get Stats
-            p.strength = Randomizer.GetPlayerStats();
-            p.constitution = Randomizer.GetPlayerStats();
-            p.dexterity = Randomizer.GetPlayerStats();
-            p.intelligence = Randomizer.GetPlayerStats();
-            p.wisdom = Randomizer.GetPlayerStats();
-            p.charisma = Randomizer.GetPlayerStats();
-
-            // Hit Points Setter
-            p.hitDice = Player.GetPlayerHitDice(p.currentClass.ToString());
-            p.numberHitDice = p.level;
-            p.baseHealth = Randomizer.GetHealth(p.hitDice, p.numberHitDice, Player.GetModifier(p.constitution));
-            p.health = p.baseHealth;
-
+            // Finish Player Buildout
+            p = Player.BuildOutPlayer(p);
+            
                             
             // Damage Resistance Setter
             if (p.currentClass == Player.PlayerClass.Warrior || p.race == Player.Race.Dwarf || p.race == Player.Race.Halfling ||
@@ -148,24 +136,24 @@ namespace RaargeDungeon
             // Armor Setter
             if (p.currentClass == Player.PlayerClass.Cleric)
             {
-                p.armorValue = Player.GetPlayerArmorClass(p.currentClass.ToString()) + Player.GetModifier(p.dexterity);
+                p.armorValue = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity);
                 p.armorValue += 2; //shield
             }
             if (p.currentClass == Player.PlayerClass.Warrior)
             {
-                p.armorValue = Player.GetPlayerArmorClass(p.currentClass.ToString()) + 2; // +2 shield
+                p.armorValue = Player.GetPlayerArmorClass(p) + 2; // +2 shield
             }
             if (p.currentClass == Player.PlayerClass.Mage)
             {
-                p.armorValue = Player.GetPlayerArmorClass(p.currentClass.ToString()) + Player.GetModifier(p.dexterity);
+                p.armorValue = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity);
             }
             if (p.currentClass == Player.PlayerClass.Monk)
             {
-                p.armorValue = Player.GetPlayerArmorClass(p.currentClass.ToString() + Player.GetModifier(p.dexterity) + Player.GetModifier(p.wisdom));
+                p.armorValue = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity) + Player.GetModifier(p.wisdom);
             }
             if (p.currentClass == Player.PlayerClass.Ranger || p.currentClass == Player.PlayerClass.Rogue)
             {
-                p.armorValue = Player.GetPlayerArmorClass(p.currentClass.ToString()) + Player.GetModifier(p.dexterity);
+                p.armorValue = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity);
             }
 
 

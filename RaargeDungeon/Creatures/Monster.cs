@@ -12,6 +12,7 @@ namespace RaargeDungeon.Creatures
     { 
 
         public List<SpellScroll> spells = new List<SpellScroll>();
+
         // Need to build
         public int coins { get; set; }
         public int level { get; set; }
@@ -25,7 +26,8 @@ namespace RaargeDungeon.Creatures
         public int numberAttackDice = 1;
         public int armorclass { get; set; }
         public int hitDice { get; set; }
-        public int numberHitDie = 1;    
+        public int numberHitDie = 1;
+        public bool IsAlive { get; set; }
                
 
         public enum monsterRace { Orc, Goblin, Ogre, Madman, Kobold, Wolf, Imp, Spider, Skeleton, Sprite, Zombie }
@@ -35,15 +37,55 @@ namespace RaargeDungeon.Creatures
         {
             string name = "";
 
-            string[] raceList = Enum.GetValues(typeof(monsterRace)).Cast<string>().ToArray();
+            string[] mRaces = Enum.GetNames(typeof(monsterRace));
+            
+            int indexer = Randomizer.GetRandomNumber(mRaces.Length - 1,0);
 
-            name = raceList[Randomizer.GetRandomNumber(0, raceList.Length - 1)];
+            name = mRaces[indexer];
 
             return name;
         }
         
+        public static Monster SpawnMonster(Monster mstr, bool random, int plrLevel)
+        {
+            mstr.strength = Randomizer.GetPlayerStats();
+            mstr.constitution = Randomizer.GetPlayerStats();
+            mstr.dexterity = Randomizer.GetPlayerStats();
+            mstr.intelligence = Randomizer.GetPlayerStats();
+            mstr.wisdom = Randomizer.GetPlayerStats();
+            mstr.charisma = Randomizer.GetPlayerStats();
+            mstr.level = Randomizer.GetRandomNumber(plrLevel + 2);
+
+            if (random)
+            {
+                //Console.WriteLine("Made it to Combat");
+                mstr.name = Monster.GetMonsterName();
+                mstr = Monster.GetCombatStats(mstr);
+                mstr.baseHealth = Randomizer.GetHealth(mstr.hitDice, mstr.hitDice, Monster.GetModifier(mstr.constitution));
+                mstr.health = mstr.baseHealth;
+
+            }
+            else
+            {
+
+
+                mstr.name = "Evil Human Rogue";
+                mstr = Monster.GetCombatStats(mstr);
+                mstr.baseHealth = Randomizer.GetHealth(mstr.hitDice, mstr.numberHitDie, Monster.GetModifier(mstr.constitution));
+                mstr.health = mstr.baseHealth;
+
+            }
+            mstr.spellDcCheck = Monster.GetSpellDcCheck(mstr.intelligence, mstr.level);
+            mstr.IsAlive = true;
+
+            return mstr;
+        }
+            
+
         public static Monster GetCombatStats(Monster m)
         {
+            // Fix to randomize this choice
+
             switch (m.name.ToString())
             {
                 case "Orc":
@@ -51,7 +93,7 @@ namespace RaargeDungeon.Creatures
                     m.armorclass = 13;
                     m.damageResist = 1;
                     m.hitDice = 8;
-                    m.numberHitDie = 2;
+                    m.numberHitDie = 1;
                     break;
                 case "Goblin":
                     m.attackDice = 6;
@@ -61,8 +103,8 @@ namespace RaargeDungeon.Creatures
                     m.numberHitDie = 2;
                     break;
                 case "Ogre":
-                    m.attackDice = 8;
-                    m.numberAttackDice = 2;
+                    m.attackDice = 12;
+                    m.numberAttackDice = 1;
                     m.armorclass = 11;
                     m.damageResist = 1;
                     m.hitDice = 10;

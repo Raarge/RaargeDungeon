@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RaargeDungeon.Helpers;
+using RaargeDungeon.Combat;
 
 namespace RaargeDungeon.Creatures
 {
@@ -15,6 +17,20 @@ namespace RaargeDungeon.Creatures
         public int intelligence { get; set; }
         public int wisdom { get; set; }
         public int charisma { get; set; }
+        public int currentInitiative { get; set; }
+        public int currentCombatOrder { get; set; }
+        public int spellDcCheck { get; set; }
+
+        public HitChecks hitChecks { get; set; }
+
+        public static int GetSpellDcCheck(int intelligence, int level, int MagicMastery = 0)
+        {
+            int dc = 0;
+
+            dc = 12 + level + MagicMastery;
+
+            return dc;
+        }
 
         public static int GetModifier(int stat)
         {

@@ -148,7 +148,10 @@ namespace RaargeDungeon.Shops
                 else if (item == "weapon")
                     p.weaponValue++;
                 else if (item == "armor")
+                {
                     p.armorValue++;
+                    p.armorclass += p.armorValue;
+                }
                 else if (item == "diff")
                     p.mods++;
                 else if (item == "health")

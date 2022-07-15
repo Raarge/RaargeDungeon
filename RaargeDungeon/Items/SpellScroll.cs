@@ -11,6 +11,7 @@ namespace RaargeDungeon.Items
         public int damage;
         public string type;
         public int critMultiplier;
+        public int dcCheck { get; set; }
 
         
 

@@ -28,6 +28,7 @@ namespace RaargeDungeon.Creatures
         public int baseEnergy = 30;
         public int damage = 1;
         public int armorValue = 0;
+        public int armorclass { get; set; }
         public int potion = 5;
         public int manaPotion = 5;
         public int weaponValue = 1;
@@ -35,6 +36,9 @@ namespace RaargeDungeon.Creatures
         public int favors = 0;
         public int lifetimeFavors = 0;
         public int deaths = 0;
+        public int attackDie { get; set; }
+        public int numberAttackDie { get; set; }
+        
 
         public int hitDice { get; set; }
         public int numberHitDice { get; set; }
@@ -54,11 +58,120 @@ namespace RaargeDungeon.Creatures
         public enum ManaType { Mana, Chi, Kri, Rage }
         public ManaType manaType = ManaType.Mana;
 
-        public static int GetPlayerHitDice(string plrClass)
+        public static Player BuildOutPlayer(Player p)
+        {
+            // Get Stats
+            p.strength = Randomizer.GetPlayerStats();
+            p.constitution = Randomizer.GetPlayerStats();
+            p.dexterity = Randomizer.GetPlayerStats();
+            p.intelligence = Randomizer.GetPlayerStats();
+            p.wisdom = Randomizer.GetPlayerStats();
+            p.charisma = Randomizer.GetPlayerStats();
+
+            // Hit Points Setter
+            p.hitDice = GetPlayerHitDice(p);
+            p.numberHitDice = p.level;
+            p.baseHealth = Randomizer.GetHealth(p.hitDice, p.numberHitDice, Player.GetModifier(p.constitution));
+            p.health = p.baseHealth;
+
+            // Set Armor Class
+            p.armorValue = GetPlayerArmorClass(p);
+
+            // Set Spell DC 
+            p.spellDcCheck = GetSpellDcCheck(p.intelligence, p.level, (int)p.magicMastery);
+
+            // Set Attack Die
+            p = GetAttackDie(p);
+
+            return p;
+        }
+
+        public static Player GetAttackDie(Player p)
+        {
+            
+
+            switch (p.currentClass.ToString())
+            {
+                case "Mage":
+                    p.attackDie = 6;
+                    p.numberAttackDie = 1;
+                    break;
+                case "Ranger":
+                    p.attackDie = 8;
+                    p.numberAttackDie = 1;
+                    break;
+                case "Warrior":
+                    p.attackDie = 6;
+                    p.numberAttackDie = 2;
+                    break;
+                case "Rogue":
+                    p.attackDie = 4;
+                    p.numberAttackDie = 2;
+                    break;
+                case "Cleric":
+                    p.attackDie = 6;
+                    p.numberAttackDie = 1;
+                    break;
+                case "Monk":
+                    p = GetMonkAttackDie(p);
+                    break;
+                default:
+                    p.attackDie = 6;
+                    p.numberAttackDie = 1;
+                    break;
+            }
+            return p;
+        }
+
+        public static Player GetMonkAttackDie(Player p)
+        {
+            switch (p.level)
+            {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    p.attackDie = 4;
+                    p.numberAttackDie = 1;
+                    break;
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                    p.attackDie = 6;
+                    p.numberAttackDie = 1;
+                    break;
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                    p.attackDie = 8;
+                    p.numberAttackDie = 1;
+                    break;
+                case 17:
+                case 18:
+                case 19:
+                case 20:
+                    p.attackDie = 10;
+                    p.numberAttackDie = 1;
+                    break;
+                default:
+                    p.attackDie = 12;
+                    p.numberAttackDie = 1 + (p.level / 2);
+                    break;
+            }
+            return p;
+        }
+
+        public static int GetPlayerHitDice(Player p)
         {
             int hd = 0;
 
-            switch (plrClass)
+            switch (p.currentClass.ToString())
             {
                 case "Mage":
                     hd = 6;
@@ -86,11 +199,11 @@ namespace RaargeDungeon.Creatures
             return hd;
         }
 
-        public static int GetPlayerArmorClass(string plyrClass)
+        public static int GetPlayerArmorClass(Player p)
         {
             int ac = 0;
 
-            switch (plyrClass)
+            switch (p.currentClass.ToString())
             {
                 case "Mage":
                     ac = 11;

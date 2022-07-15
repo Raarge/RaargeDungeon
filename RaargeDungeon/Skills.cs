@@ -39,15 +39,15 @@ namespace RaargeDungeon
             }
         }
 
-        public static void BackStab(string nm, int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style)
+        public static Monster BackStab(Monster m, Player p, ref string leader, ref string style)
         {
             if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue && Program.currentPlayer.rand.Next(1, 6) == 5)
             {
                 int backStabDamage = 0;
 
-                backStabDamage = Randomizer.GetRandomDieRoll(Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
+                backStabDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, Player.GetModifier(p.dexterity)) + (p.level/3) + (p.weaponValue/2);
 
-                leader = TextHelpers.GetAttackStart(attack);
+                leader = TextHelpers.GetAttackStart(backStabDamage);
                 style = TextHelpers.GetWeaponAttackStyle();
 
                 if (Program.currentPlayer.rand.Next(1, 4) == 3)
@@ -57,30 +57,26 @@ namespace RaargeDungeon
                     // attack
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("** Critical Backstab! **");
-                    Console.ResetColor();
+                    Console.ResetColor();                    
                     
-                    hlt -= attack;
-                    if (hlt <= 0)
-                    {
-                        
-                        monsterAlive = false;
-                    }
                 }
                 
-                hlt -= attack;
-                if (hlt <= 0)
+                m.health -= backStabDamage;
+                if (m.health <= 0)
                 {
 
-                    monsterAlive = false;
+                    m.IsAlive = false;
                 }
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                UIHelpers.Print($"Quickly stepping behind, {style} at {nm} dealing {backStabDamage} damage.");
+                UIHelpers.Print($"Quickly stepping behind, {style} at {m.name} dealing {backStabDamage} damage.");
                 Console.ResetColor();
             }
+            return m;
         }
 
-        public static void SpellBlast(string nm, int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style, ref string spellType)
+
+        public static Monster SpellBlast(Monster m, Player p, ref string leader, ref string style, ref string spellType)
         {
             // mage spell blast 25% chance
             if (Program.currentPlayer.currentClass == Player.PlayerClass.Mage && Randomizer.GetRandomNumber(5) == 3)
@@ -106,7 +102,7 @@ namespace RaargeDungeon
                         spellDamage = spellDamage * 4;
                     }
 
-                    leader = TextHelpers.GetAttackStart(attack);
+                    leader = TextHelpers.GetAttackStart(spellDamage);
                     style = TextHelpers.GetWeaponAttackStyle();
                     spellType = TextHelpers.GetSpellType();
 
@@ -115,14 +111,14 @@ namespace RaargeDungeon
                     Console.WriteLine($"** Critical {spellType} spell attack! **");
                     Console.ResetColor();
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    UIHelpers.Print($"You gesture chanting a cantrip, a pulse of arcane energy strikes a {nm} for ");
+                    UIHelpers.Print($"You gesture chanting a cantrip, a pulse of arcane energy strikes a {m.name} for ");
                     UIHelpers.Print($"{spellDamage} damage.");
                     Console.ResetColor();
-                    hlt -= attack;
-                    if (hlt <= 0)
+                    m.health -= spellDamage;
+                    if (m.health <= 0)
                     {
                         //Console.WriteLine($"{nm} was Slain!!");
-                        monsterAlive = false;
+                        m.IsAlive = false;
                     }
                 }
                 else
@@ -137,26 +133,27 @@ namespace RaargeDungeon
                     }
 
 
-                    leader = TextHelpers.GetAttackStart(attack);
+                    leader = TextHelpers.GetAttackStart(spellDamage);
                     style = TextHelpers.GetWeaponAttackStyle();
                     spellType = TextHelpers.GetSpellType();
 
                     // attack
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    UIHelpers.Print($"You gesture chanting loudly, a {spellType} materializes striking a {nm} dealing ");
+                    UIHelpers.Print($"You gesture chanting loudly, a {spellType} materializes striking a {m.name} dealing ");
                     UIHelpers.Print($"{spellDamage} damage.");
                     Console.ResetColor();
-                    hlt -= attack;
-                    if (hlt <= 0)
+                    m.health -= spellDamage;
+                    if (m.health <= 0)
                     {
                         //Console.WriteLine($"{nm} was Slain!!");
-                        monsterAlive = false;
+                        m.IsAlive = false;
                     }
                 }
             }
+            return m;
         }
 
-        public static void AnimalCall(string nm, int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style, ref string companion)
+        public static Monster AnimalCall(Monster m, ref string leader, ref string style, ref string companion)
         {
             if (Program.currentPlayer.currentClass == Player.PlayerClass.Ranger && Randomizer.GetRandomNumber(5) == 3)
             {
@@ -166,7 +163,7 @@ namespace RaargeDungeon
                     animalCallDamage = Randomizer.GetRandomNumber(Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
                     animalCallDamage = animalCallDamage * 2;
 
-                    leader = TextHelpers.GetAttackStart(attack);
+                    leader = TextHelpers.GetAttackStart(animalCallDamage);
                     style = TextHelpers.GetWeaponAttackStyle();
                     companion = TextHelpers.GetAnimalCompanion();
 
@@ -175,40 +172,41 @@ namespace RaargeDungeon
                     Console.WriteLine($"** Critical {companion} attack! **");
                     Console.ResetColor();
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    UIHelpers.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {nm} dealing ");
+                    UIHelpers.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {m.name} dealing ");
                     UIHelpers.Print($"{animalCallDamage} damage.");
                     Console.ResetColor();
-                    hlt -= attack;
-                    if (hlt <= 0)
+                    m.health -= animalCallDamage;
+                    if (m.health <= 0)
                     {
                         // Console.WriteLine($"{nm} was Slain!!");
-                        monsterAlive = false;
+                        m.IsAlive = false;
                     }
                 }
                 else
                 {
                     animalCallDamage = Randomizer.GetRandomNumber(Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
 
-                    leader = TextHelpers.GetAttackStart(attack);
+                    leader = TextHelpers.GetAttackStart(animalCallDamage);
                     style = TextHelpers.GetWeaponAttackStyle();
                     companion = TextHelpers.GetAnimalCompanion();
 
                     // attack
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    UIHelpers.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {nm} dealing ");
+                    UIHelpers.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {m.name} dealing ");
                     UIHelpers.Print($"{animalCallDamage} damage.");
                     Console.ResetColor();
-                    hlt -= attack;
-                    if (hlt <= 0)
+                    m.health -= animalCallDamage;
+                    if (m.health <= 0)
                     {
                         //Console.WriteLine($"{nm} was Slain!!");
-                        monsterAlive = false;
+                        m.IsAlive = false;
                     }
                 }
             }
+            return m;
         }
 
-        public static void ChiStrike(string nm, int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style)
+        public static Monster ChiStrike(Monster m, ref string leader, ref string style)
         {
             if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk && Program.currentPlayer.rand.Next(1, 6) == 5)
             {
@@ -216,7 +214,7 @@ namespace RaargeDungeon
 
                 chiStrikeDamage = Randomizer.GetRandomNumber(Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
 
-                leader = TextHelpers.GetAttackStart(attack);
+                leader = TextHelpers.GetAttackStart(chiStrikeDamage);
                 style = TextHelpers.GetWeaponAttackStyle();
 
                 if (Program.currentPlayer.rand.Next(1, 4) == 3)
@@ -228,28 +226,29 @@ namespace RaargeDungeon
                     Console.WriteLine("** Critical Chi Strike! **");
                     Console.ResetColor();
 
-                    hlt -= attack;
-                    if (hlt <= 0)
+                    m.health -= chiStrikeDamage;
+                    if (m.health <= 0)
                     {
 
-                        monsterAlive = false;
+                        m.IsAlive = false;
                     }
 }
 
-                hlt -= attack;
-                if (hlt <= 0)
+                m.health -= chiStrikeDamage;
+                if (m.health <= 0)
                 {
 
-                    monsterAlive = false;
+                    m.IsAlive = false;
                 }
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                UIHelpers.Print($"In a blur of motion, {style} at {nm} dealing {chiStrikeDamage} damage.");
+                UIHelpers.Print($"In a blur of motion, {style} at {m.name} dealing {chiStrikeDamage} damage.");
                 Console.ResetColor();
             }
+            return m;
         }
 
-        public static void HolyStrike(string nm, int hlt, ref bool monsterAlive, int attack, ref string leader, ref string style)
+        public static Monster HolyStrike(Monster m, ref string leader, ref string style)
         {
             if (Program.currentPlayer.currentClass == Player.PlayerClass.Cleric && Program.currentPlayer.rand.Next(1, 6) == 5)
             {
@@ -257,7 +256,7 @@ namespace RaargeDungeon
 
                 holyStrikeDamage = Randomizer.GetRandomNumber(Program.currentPlayer.weaponValue) + Program.currentPlayer.level;
 
-                leader = TextHelpers.GetAttackStart(attack);
+                leader = TextHelpers.GetAttackStart(holyStrikeDamage);
                 style = TextHelpers.GetWeaponAttackStyle();
 
                 if (Program.currentPlayer.rand.Next(1, 4) == 3)
@@ -269,25 +268,26 @@ namespace RaargeDungeon
                     Console.WriteLine("** Critical Holy Strike! **");
                     Console.ResetColor();
 
-                    hlt -= attack;
-                    if (hlt <= 0)
+                    m.health -= holyStrikeDamage;
+                    if (m.health <= 0)
                     {
 
-                        monsterAlive = false;
+                        m.IsAlive = false;
                     }
                 }
 
-                hlt -= attack;
-                if (hlt <= 0)
+                m.health -= holyStrikeDamage;
+                if (m.health <= 0)
                 {
 
-                    monsterAlive = false;
+                    m.IsAlive = false;
                 }
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                UIHelpers.Print($"You thrust your chest forward light erupting from you, {style} at {nm} dealing {holyStrikeDamage} damage.");
+                UIHelpers.Print($"You thrust your chest forward light erupting from you, {style} at {m.name} dealing {holyStrikeDamage} damage.");
                 Console.ResetColor();
             }
+            return m;
         }
     }
 }
