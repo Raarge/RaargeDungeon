@@ -34,7 +34,7 @@ namespace RaargeDungeon.Combat
                 m.currentCombatOrder = 1;
                 p.currentCombatOrder = 2;
             }
-            
+
             // extract below here into another method
             //****************************************
 
@@ -42,53 +42,35 @@ namespace RaargeDungeon.Combat
 
 
             //check hits first 
-            if(plryAtkType == "melee" && p.currentInitiative != 0)
-            {
-                if (plryAtkType == "melee")
-                {
-                    plyrHit = CheckHit(m.armorclass, p.strength);
-                }
-                else if (plryAtkType == "spell")
-                {
-                    plyrHit = CheckMagicHit(p.spellDcCheck, m.intelligence);
-                }
-            }
+            plyrHit = PlyrHitTry(p, m, plyrHit, plryAtkType);
+            mstrHit = MstrHitTry(p, m, mstrHit, mstrAtkType);
 
-            if(mstrAtkType == "melee" && m.currentCombatOrder != 0)
-            {
-                if (mstrAtkType == "melee")
-                    mstrHit = CheckHit(p.armorclass, m.strength);
-                else if (mstrAtkType == "spell")
-                    mstrHit = CheckMagicHit(m.spellDcCheck, m.intelligence);
-            }
-
-            
             bool monsterCrit = false;
             bool playerCrit = false;
             int plyrDamage = 0;
             int mstrDamage = 0;
-            
+
 
             //rewrite line below ******************************************************
             //damage = Randomizer.GetRandomDieRoll(mstr.wisdom, mstr.numberAttackDice);
 
-            if(plyrHit.AttackHits)
+            if (plyrHit.AttackHits)
             {
                 if (plyrHit.ToHitRoll == 20)
                     playerCrit = true;
 
-                if(plryAtkType == "melee")
+                if (plryAtkType == "melee")
                 {
                     if (p.currentClass == Player.PlayerClass.Monk || p.currentClass == Player.PlayerClass.Rogue)
-                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.dexterity)) + (p.weaponValue/2);
+                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.dexterity)) + (p.weaponValue / 2);
                     else
-                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.strength)) + (p.weaponValue/2);
+                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.strength)) + (p.weaponValue / 2);
                 }
                 else
                 {
                     // add spell damage here 
 
-                    
+
                 }
                 if (playerCrit)
                     plyrDamage *= 2;
@@ -96,28 +78,11 @@ namespace RaargeDungeon.Combat
                 if (plyrDamage < 0)
                     plyrDamage = 0;
             }
-
-            if(mstrHit.AttackHits)
+            if (mstrHit.AttackHits)
             {
-                if (mstrHit.ToHitRoll == 20)
-                    monsterCrit = true;
+                MonsterHits(m, mstrHit, mstrAtkType, ref monsterCrit, ref mstrDamage);
+            }
 
-                if(mstrAtkType == "melee")
-                {
-                    mstrDamage = Randomizer.GetRandomDieRoll(m.attackDice, m.numberAttackDice,BaseCreature.GetModifier(m.strength));                    
-                }
-                else
-                {
-                    // add spell damage here
-                    
-                }
-
-                if (monsterCrit)
-                    mstrDamage *= 2;
-
-                if (mstrDamage < 0)
-                    mstrDamage = 0;
-}
             // add spell text in here
             if (plyrHit.AttackHits)
             {
@@ -161,7 +126,61 @@ namespace RaargeDungeon.Combat
             return combatants;
         }
 
-        private static string GetMonsterAttackType(Monster m)
+        public static void MonsterHits(Monster m, HitChecks mstrHit, string mstrAtkType, ref bool monsterCrit, ref int mstrDamage)
+        {
+
+            if (mstrHit.ToHitRoll == 20)
+                monsterCrit = true;
+
+            if (mstrAtkType == "melee")
+            {
+                mstrDamage = Randomizer.GetRandomDieRoll(m.attackDice, m.numberAttackDice, BaseCreature.GetModifier(m.strength));
+            }
+            else
+            {
+                // add spell damage here
+
+            }
+
+            if (monsterCrit)
+                mstrDamage *= 2;
+
+            if (mstrDamage < 0)
+                mstrDamage = 0;
+
+        }
+
+        public static HitChecks MstrHitTry(Player p, Monster m, HitChecks mstrHit, string mstrAtkType)
+        {
+            if (mstrAtkType == "melee" && m.currentCombatOrder != 0)
+            {
+                if (mstrAtkType == "melee")
+                    mstrHit = CheckHit(p.armorclass, m.strength);
+                else if (mstrAtkType == "spell")
+                    mstrHit = CheckMagicHit(m.spellDcCheck, m.intelligence);
+            }
+
+            return mstrHit;
+        }
+
+        public static HitChecks PlyrHitTry(Player p, Monster m, HitChecks plyrHit, string plryAtkType)
+        {
+            if (plryAtkType == "melee" && p.currentInitiative != 0)
+            {
+                if (plryAtkType == "melee")
+                {
+                    plyrHit = CheckHit(m.armorclass, p.strength);
+                }
+                else if (plryAtkType == "spell")
+                {
+                    plyrHit = CheckMagicHit(p.spellDcCheck, m.intelligence);
+                }
+            }
+
+            return plyrHit;
+        }
+
+        public static string GetMonsterAttackType(Monster m)
         {
             string type = "";
 
@@ -185,7 +204,7 @@ namespace RaargeDungeon.Combat
             bool didHit;
             int atkRoll = Randomizer.GetRandomDieRoll(20) + BaseCreature.GetModifier(Str);
 
-            if(atkRoll > opossingAC) 
+            if (atkRoll > opossingAC)
                 didHit = true;
             else
                 didHit = false;
@@ -202,10 +221,10 @@ namespace RaargeDungeon.Combat
             bool didHit;
             int spellSaveRoll = Randomizer.GetRandomDieRoll(20) + BaseCreature.GetModifier(saveStat);
 
-            if(spellSaveRoll > dcCheck)
-                didHit=true;
+            if (spellSaveRoll > dcCheck)
+                didHit = true;
             else
-                didHit=false;
+                didHit = false;
 
             hitCheck.AttackHits = didHit;
             hitCheck.ToHitRoll = spellSaveRoll;

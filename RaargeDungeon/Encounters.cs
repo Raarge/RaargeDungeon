@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
-using RaargeDungeon.Helpers;
-using RaargeDungeon.Shops;
-using RaargeDungeon.Items;
-using System.Threading;
-using System.Collections;
+﻿using RaargeDungeon.Combat;
 using RaargeDungeon.Creatures;
-using RaargeDungeon.Combat;
+using RaargeDungeon.Helpers;
+using RaargeDungeon.Items;
+using RaargeDungeon.Shops;
+using System;
 
 namespace RaargeDungeon
 {
@@ -195,22 +188,22 @@ namespace RaargeDungeon
 
 
                     // Rogue backstab
-                    mstr = Skills.BackStab(mstr, ref leader, ref style);
+                    mstr = Skills.BackStab(mstr, plyr, ref leader, ref style);
 
                     // Ranger Animal Call 25% chance
-                    mstr = Skills.AnimalCall(mstr, ref leader, ref style, ref companion);
+                    mstr = Skills.AnimalCall(mstr, plyr, ref leader, ref style, ref companion);
 
                     // Mage SpellBlast 
-                    mstr = Skills.SpellBlast(mstr, ref leader, ref style, ref spellType);
+                    mstr = Skills.SpellBlast(mstr, plyr, ref leader, ref style, ref spellType);
 
                     // Combat Stealing
                     Skills.CombatStealing(mstr.name);
 
                     // Monk Chi Strike
-                    mstr = Skills.ChiStrike(mstr, ref leader, ref style);
+                    mstr = Skills.ChiStrike(mstr, plyr, ref leader, ref style);
 
                     // Cleric Holy Strike
-                    mstr = Skills.HolyStrike(mstr, ref leader, ref style);
+                    mstr = Skills.HolyStrike(mstr, plyr, ref leader, ref style);
                 }
                 else if (action.ToLower() == "d")
                 {
@@ -240,8 +233,22 @@ namespace RaargeDungeon
                     chosenSpell = Pickers.GetChosenSpell();
                     int spellCost = Checkers.GetSpellCost(chosenSpell);
 
-                    int spellAttack = (int)(Math.Ceiling((decimal)Randomizer.GetRandomDieRoll(chosenSpell.damage) + Program.currentPlayer.magicMastery)); 
+                    int spellAttack = (int)(Math.Ceiling((decimal)Randomizer.GetRandomDieRoll(chosenSpell.damage, 1, Player.GetModifier(plyr.intelligence)) + Program.currentPlayer.magicMastery)) * ((plyr.level/2)+1);
+
                     // monster damage
+                    
+                    HitChecks monsterHitTry = new HitChecks();
+                    monsterHitTry = MartialCombat.MstrHitTry(plyr, mstr, monsterHitTry, MartialCombat.GetMonsterAttackType(mstr) );
+
+                    bool monsterCrit = false;
+                    int msterDamage = 0;
+
+                    if (monsterHitTry.AttackHits)
+                    {                        
+
+                        MartialCombat.MonsterHits(mstr, monsterHitTry, "Melee", ref monsterCrit, ref msterDamage);
+                    }              
+
 
                     if (rand.Next(0, upper) == 0)
                         spellFail = true;
@@ -269,7 +276,15 @@ namespace RaargeDungeon
                         Console.WriteLine(chosenSpell.flavorText);
                         Console.WriteLine($"A {mstr.name} attacks in return.");
                         Console.WriteLine($"You deal {spellAttack} {chosenSpell.type} damage to the {mstr.name}.");
-                        
+
+                        if (monsterHitTry.AttackHits)
+                        {
+                            UIHelpers.Print($"A {mstr.name} growls and swings landing a blow to you.");
+                            TextHelpers.GetMonsterHitLine(mstr.name, msterDamage, monsterCrit, action.ToLower());
+                        }
+                        else
+                            Console.WriteLine($"A {mstr.name} swings wildly at you but misses.");
+
                     }
                     
 
@@ -277,9 +292,9 @@ namespace RaargeDungeon
                     Console.ReadKey();
 
                     Program.currentPlayer.energy -= chosenSpell.SpellCost;
-                    Program.currentPlayer.spellCasting = Checkers.GetSkillXPGain(mstr.level, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "cast");
-                    Program.currentPlayer.spellChanneling = Checkers.GetSkillXPGain(mstr.level, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "channel");
-                    Program.currentPlayer.magicMastery = Checkers.GetSkillXPGain(mstr.level, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "magic");
+                    Program.currentPlayer.spellCasting += Checkers.GetSkillXPGain(mstr.level, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "cast");
+                    Program.currentPlayer.spellChanneling += Checkers.GetSkillXPGain(mstr.level, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "channel");
+                    Program.currentPlayer.magicMastery += Checkers.GetSkillXPGain(mstr.level, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "magic");
 
                     mstr.health -= spellAttack;
                     if (mstr.health <= 0)
@@ -326,7 +341,7 @@ namespace RaargeDungeon
                 else if (action.ToLower() == "h")
                 {
                     bool monsterCrit = false;
-                    // heal
+ //Fix Monstercrit  // heal
                     PotionHealing(mstr.name, mstr.level, monsterCrit, action.ToLower(), "health");
 
                     if (mstr.IsAlive)
@@ -337,7 +352,9 @@ namespace RaargeDungeon
                 }
                 else if (action.ToLower() == "m")
                 {
- //                   PotionHealing(mstr.name, mstr.level, monsterCrit, action.ToLower(), "mana");
+                    bool monsterCrit = false;
+//Fix monstercrit
+                    PotionHealing(mstr.name, mstr.level, monsterCrit, action.ToLower(), "mana");
 
                     if (mstr.IsAlive)
                     {
@@ -426,7 +443,7 @@ namespace RaargeDungeon
                     if (Program.currentPlayer.energy > Program.currentPlayer.baseEnergy)
                         Program.currentPlayer.energy = Program.currentPlayer.baseEnergy;
 
-                    Program.currentPlayer.potion -= 1;
+                    Program.currentPlayer.manaPotion -= 1;
                 }
                 
 
