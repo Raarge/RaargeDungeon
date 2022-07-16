@@ -231,10 +231,10 @@ namespace RaargeDungeon.Creatures
             return ac;
         }
         
-        public int GetCoins()
+        public int GetCoins(Monster m)
         {
-            int upper = 25 * mods + 101;
-            int lower = 15 * mods + 21;
+            int upper = 3 * (m.xpGiven + 1);
+            int lower = 1 * m.xpGiven;
             return rand.Next(lower, upper);
         }
 
@@ -257,21 +257,54 @@ namespace RaargeDungeon.Creatures
             return rand.Next(lower, upper);
         }
 
-        public int GetXP()
+        public int GetXP(Monster m)
         {
-            int upper = 20 * mods + 50 + level;
-            int lower = 15 * mods + 10 + level;
-            return rand.Next(lower, upper);
+            return m.xpGiven;
         }
 
-        public int GetLevelUpValue()
+        public int GetLevelUpValue(int currentLevel)
         {
-            return 100 * level + 400;
+            int xpneeded = 0;
+
+            Dictionary<int, int> xpNeeded = new Dictionary<int, int>()
+            {
+                {1, 300 },
+                {2, 900 },
+                {3, 2700 },
+                {4, 6500 },
+                {5, 14000 },
+                {6, 23000 },
+                {7, 34000 },
+                {8, 48000 },
+                {9, 64000 },
+                {10, 85000 },
+                {11, 100000 },
+                {12, 120000 },
+                {13, 140000 },
+                {14, 165000 },
+                {15, 195000 },
+                {16, 225000 },
+                {17, 265000 },
+                {18, 305000 },
+                {19, 355000 }
+            };
+
+            foreach (var index in xpNeeded)
+            {
+                if(index.Key == currentLevel)
+                {
+                    xpneeded = index.Value;
+                    break;
+                }
+                    
+            }
+
+            return xpneeded;
         }
 
-        public bool CanLevelUp()
+        public bool CanLevelUp(int currentlvl)
         {
-            if (xp >= GetLevelUpValue())
+            if (xp >= GetLevelUpValue(currentlvl))
             {
                 return true;
             }
@@ -280,45 +313,102 @@ namespace RaargeDungeon.Creatures
         }
 
         #region PlayerLevelUp
-        public void LevelUp()
+        public Player LevelUp(Player p)
         {
-            while (CanLevelUp())
-            {
-                xp -= GetLevelUpValue();
-                level++;
-                baseHealth++;
 
-                switch (level)
+            while (CanLevelUp(p.level))
+            {
+                
+                p.level++;
+                p.baseHealth += Randomizer.GetRandomDieRoll(p.hitDice, 1, Player.GetModifier(p.constitution));
+
+                // add extra attack dice in the switch for levels based on class
+
+                switch (p.level)
                 {
                     case 3:
-                        baseHealth++;
+                        if (p.currentClass == PlayerClass.Warrior || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
+                            p.numberAttackDie++;
                         break;
                     case 4:
+                        if (p.currentClass == PlayerClass.Warrior)
+                            p.strength++;
+                        if (p.currentClass == PlayerClass.Cleric)
+                            p.wisdom++;
+                        if (p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
+                            p.dexterity++;
+                        if (p.currentClass == PlayerClass.Mage)
+                            p.intelligence++;
                         mods++;
                         break;
                     case 6:
-                        baseHealth++;
+                        if (p.currentClass == PlayerClass.Warrior)
+                            p.constitution++;
+                        if (p.currentClass == PlayerClass.Cleric || p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Mage)
+                            p.numberAttackDie++;
                         break;
                     case 8:
+                        if (p.currentClass == PlayerClass.Warrior)
+                            p.strength++;
+                        if (p.currentClass == PlayerClass.Cleric || p.currentClass == PlayerClass.Mage)
+                            p.constitution++;
+                        if (p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Ranger)
+                            p.wisdom++;
+                        if (p.currentClass == PlayerClass.Rogue)
+                            p.intelligence++;
                         mods++;
                         break;
                     case 9:
-                        baseHealth++;
+                        break;
+                    case 11:
+                        if (p.currentClass == PlayerClass.Warrior || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Ranger)
+                            p.numberAttackDie++;
                         break;
                     case 12:
+                        if (p.currentClass == PlayerClass.Warrior)
+                            p.constitution++;
+                        if (p.currentClass == PlayerClass.Cleric)
+                            p.wisdom++;
+                        if (p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
+                            p.dexterity++;
+                        if (p.currentClass == PlayerClass.Mage)
+                            p.intelligence++;
                         mods++;
-                        baseHealth++;
+                        break;
+                    case 14:
+                        if (p.currentClass == PlayerClass.Warrior)
+                            p.strength++;
                         break;
                     case 15:
-                        baseHealth++;
                         break;
                     case 16:
+                        if (p.currentClass == PlayerClass.Warrior)
+                            p.constitution++;
+                        if (p.currentClass == PlayerClass.Cleric || p.currentClass == PlayerClass.Mage)
+                            p.constitution++;
+                        if (p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Ranger)
+                            p.wisdom++;
+                        if (p.currentClass == PlayerClass.Rogue)
+                            p.intelligence++;
                         mods++;
                         break;
                     case 18:
-                        baseHealth++;
+                        if (p.currentClass == PlayerClass.Cleric || p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Mage)
+                            p.numberAttackDie++;
+                        break;
+                    case 19:
+                        if (p.currentClass == PlayerClass.Warrior)
+                            p.strength++;
+                        if (p.currentClass == PlayerClass.Cleric)
+                            p.wisdom++;
+                        if (p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
+                            p.dexterity++;
+                        if (p.currentClass == PlayerClass.Mage)
+                            p.intelligence++;
                         break;
                     case 20:
+                        if (p.currentClass == PlayerClass.Warrior || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
+                            p.numberAttackDie++;
                         mods++;
                         break;
                     default:
@@ -326,13 +416,15 @@ namespace RaargeDungeon.Creatures
 
                 }
 
-
+                
             }
 
-            health = baseHealth;
+            p.health = p.baseHealth;
             Console.ForegroundColor = ConsoleColor.Green;
-            UIHelpers.Print($"Ding!!!! You are now level {level}! ");
+            UIHelpers.Print($"Ding!!!! You are now level {p.level}! ");
             Console.ResetColor();
+
+            return p;
         }
         #endregion
 

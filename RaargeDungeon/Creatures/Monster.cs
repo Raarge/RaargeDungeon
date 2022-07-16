@@ -30,9 +30,11 @@ namespace RaargeDungeon.Creatures
         public bool IsAlive { get; set; }
                
 
-        public enum monsterRace { Orc, Goblin, Ogre, Madman, Kobold, Wolf, Imp, Spider, Skeleton, Sprite, Zombie }
+        public enum monsterRace { Orc, Goblin, Ogre, Madman, Kobold, Wolf, Imp, Spider, Skeleton, Sprite, Zombie, Merfolk, Monodrone, TwigBlight, Mastiff, Snake, Blight,
+        Bullywug, WildGnoll, Svirfnebliin, WarGoblin, DeepGnome, DustMephit, GasSpore, Gnoll, Hobgoblin, Worg}
         public monsterRace race = monsterRace.Sprite;
 
+        
         public static string GetMonsterName()
         {
             string name = "";
@@ -46,7 +48,7 @@ namespace RaargeDungeon.Creatures
             return name;
         }
         
-        public static Monster SpawnMonster(Monster mstr, bool random, int plrLevel)
+        public static Monster SpawnMonster(Monster mstr, bool random, int plrLevel, int eclChosen)
         {
             mstr.strength = Randomizer.GetPlayerStats();
             mstr.constitution = Randomizer.GetPlayerStats();
@@ -56,10 +58,13 @@ namespace RaargeDungeon.Creatures
             mstr.charisma = Randomizer.GetPlayerStats();
             mstr.level = Randomizer.GetRandomNumber(plrLevel + 2);
 
+            // build list of acceptable monsters
+            mstr = FinishMonsterBuildOut(mstr, eclChosen);
+
             if (random)
             {
                 //Console.WriteLine("Made it to Combat");
-                mstr.name = Monster.GetMonsterName();
+                mstr.race = (monsterRace)Enum.Parse(typeof(monsterRace), mstr.name);
                 mstr = Monster.GetCombatStats(mstr);
                 mstr.baseHealth = Randomizer.GetHealth(mstr.hitDice, mstr.hitDice, Monster.GetModifier(mstr.constitution));
                 mstr.health = mstr.baseHealth;
@@ -80,7 +85,83 @@ namespace RaargeDungeon.Creatures
 
             return mstr;
         }
+
+        public static Monster FinishMonsterBuildOut(Monster mstr, int eclChosen)
+        {
+            // get a initial list of monsters by xp level
+            List<Monster> mstrList = new List<Monster>();
+
+            mstrList.Add(new Monster() { name = "Orc", xpGiven = 100 });
+            mstrList.Add(new Monster() { name = "Goblin", xpGiven = 50 });
+            mstrList.Add(new Monster() { name = "Ogre", xpGiven = 450 });
+            mstrList.Add(new Monster() { name = "Madman", xpGiven = 50 });
+            mstrList.Add(new Monster() { name = "Kobold", xpGiven = 25 });
+            mstrList.Add(new Monster() { name = "Wolf", xpGiven = 50 });
+            mstrList.Add(new Monster() { name = "Imp", xpGiven = 200 });
+            mstrList.Add(new Monster() { name = "Spider", xpGiven = 200 });
+            mstrList.Add(new Monster() { name = "Skeleton", xpGiven = 50 });
+            mstrList.Add(new Monster() { name = "Sprite", xpGiven = 50 });
+            mstrList.Add(new Monster() { name = "Zombie", xpGiven = 50 });
+            mstrList.Add(new Monster() { name = "Merfolk", xpGiven = 25 });
+            mstrList.Add(new Monster() { name = "Monodrone", xpGiven = 25 });
+            mstrList.Add(new Monster() { name = "TwigBlight", xpGiven = 25 });
+            mstrList.Add(new Monster() { name = "Mastiff", xpGiven = 25 });
+            mstrList.Add(new Monster() { name = "Snake", xpGiven = 25 });
+            mstrList.Add(new Monster() { name = "Blight", xpGiven = 75 });
+            mstrList.Add(new Monster() { name = "Bullywug", xpGiven = 75 });
+            mstrList.Add(new Monster() { name = "WildGnoll", xpGiven = 75 });
+            mstrList.Add(new Monster() { name = "Svirfneblin", xpGiven = 75 });
+            mstrList.Add(new Monster() { name = "WarGoblin", xpGiven = 75 });
+            mstrList.Add(new Monster() { name = "DeepGnome", xpGiven = 100 });
+            mstrList.Add(new Monster() { name = "DustMephit", xpGiven = 100 });
+            mstrList.Add(new Monster() { name = "GasSpore", xpGiven = 100 });
+            mstrList.Add(new Monster() { name = "Gnoll", xpGiven = 100 });
+            mstrList.Add(new Monster() { name = "Hobgoblin", xpGiven = 100 });
+            mstrList.Add(new Monster() { name = "Worg", xpGiven = 100 });
+            // Need 150's
+            // Need 225's
+
+
+
+
+//Add more monsters after level 2
+
+            mstrList = GetEncounterLevelChosenList(mstrList, eclChosen);
+
+            // pick monster from list
+            mstr = GetMonsterFromList(mstrList);
+
+            // return monster
+            return mstr;
+        }
+
+        public static Monster GetMonsterFromList(List<Monster> mList)
+        {
+            Monster[] monsters = new Monster[mList.Count];
+
+            monsters = mList.ToArray();
+
+            int pick = Randomizer.GetRandomNumber(monsters.Length) - 1;
+
+            return monsters[pick];
+
             
+
+        }
+
+        public static List<Monster> GetEncounterLevelChosenList(List<Monster> mstrList, int eclChosen)
+        {
+            List<Monster> FullListMonster = new List<Monster>();
+
+            foreach (Monster m in mstrList)
+            {
+                if(eclChosen == m.xpGiven)
+                    FullListMonster.Add(m);
+
+            }
+            
+            return mstrList;
+        }
 
         public static Monster GetCombatStats(Monster m)
         {
@@ -95,6 +176,49 @@ namespace RaargeDungeon.Creatures
                     m.hitDice = 8;
                     m.numberHitDie = 1;
                     break;
+                case "Svirfneblin":
+                    m.attackDice = 8;
+                    m.armorclass = 15;
+                    m.damageResist = 1;
+                    m.hitDice = 4;
+                    m.numberHitDie = 3;
+                    break;
+                case "DeepGnome":
+                    m.attackDice = 8;
+                    m.armorclass = 15;
+                    m.damageResist = 1;
+                    m.hitDice = 6;
+                    m.numberHitDie = 3;
+                    break;
+                case "DustMephit":
+                    m.attackDice = 4;
+                    m.armorclass = 12;
+                    m.damageResist = 1;
+                    m.hitDice = 6;
+                    m.numberHitDie = 5;
+                    break;
+                case "Worg":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 13;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 4;
+                    break;
+                case "Gnoll":
+                    m.attackDice = 8;
+                    m.armorclass = 15;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 5;
+                    break;
+                case "GasSpore":
+                    m.attackDice = 8;
+                    m.armorclass = 5;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 1;
+                    break;
                 case "Goblin":
                     m.attackDice = 6;
                     m.armorclass = 15;
@@ -102,13 +226,82 @@ namespace RaargeDungeon.Creatures
                     m.hitDice = 6;
                     m.numberHitDie = 2;
                     break;
+                case "Hobgoblin":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 18;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 2;
+                    break;
+                case "WarGoblin":
+                    m.attackDice = 4;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 16;
+                    m.damageResist = 1;
+                    m.hitDice = 6;
+                    m.numberHitDie = 3;
+                    break;
+                case "WildGnoll":
+                    m.attackDice = 8;
+                    m.armorclass = 14;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 3;
+                    break;
                 case "Ogre":
                     m.attackDice = 12;
-                    m.numberAttackDice = 1;
+                    m.numberAttackDice = 2;
                     m.armorclass = 11;
                     m.damageResist = 1;
                     m.hitDice = 10;
                     m.numberHitDie = 7;
+                    break;
+                case "TwigBlight":
+                    m.attackDice = 4;
+                    m.armorclass = 13;
+                    m.damageResist = 1;
+                    m.hitDice = 6;
+                    break;
+                case "Mastiff":
+                    m.attackDice = 6;
+                    m.armorclass = 12;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    break;
+                case "Snake":
+                    m.attackDice = 4;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 13;
+                    m.damageResist = 1;
+                    m.hitDice = 4;
+                    break;
+                case "Blight":
+                    m.attackDice = 4;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 12;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 3;
+                    break;
+                case "Bullywig":
+                    m.attackDice = 8;
+                    m.armorclass = 12;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    break;
+                case "Merfolk":
+                    m.attackDice = 6;
+                    m.armorclass = 11;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 2;
+                    break;
+                case "Monodrone":
+                    m.attackDice = 4;
+                    m.armorclass = 15;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
                     break;
                 case "Madman":
                     m.attackDice = 6;
@@ -151,12 +344,14 @@ namespace RaargeDungeon.Creatures
                     m.damageResist = 1;
                     m.hitDice = 8;
                     m.numberHitDie = 2;
+                    
                     break;
                 case "Sprite":
                     m.attackDice = 4;
                     m.armorclass = 15;
                     m.damageResist = 1;
                     m.hitDice = 4;
+                    
                     break;
                 case "Zombie":
                     m.attackDice = 6;
@@ -164,12 +359,14 @@ namespace RaargeDungeon.Creatures
                     m.damageResist = 1;
                     m.hitDice = 8;
                     m.numberHitDie = 3;
+                    m.xpGiven = 50;
                     break;
                 default:
                     m.attackDice = 6;
                     m.armorclass = 12;
                     m.damageResist = 1;
                     m.hitDice = 10;
+                    m.xpGiven = 25;
                     break;
             }
 

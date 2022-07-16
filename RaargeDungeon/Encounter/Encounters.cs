@@ -4,8 +4,9 @@ using RaargeDungeon.Helpers;
 using RaargeDungeon.Items;
 using RaargeDungeon.Shops;
 using System;
+using System.Collections.Generic;
 
-namespace RaargeDungeon
+namespace RaargeDungeon.Encounter
 {
 
     public class Encounters
@@ -62,10 +63,10 @@ namespace RaargeDungeon
                 UIHelpers.Print($"You throw open the door, grab a {weapon} ");
                 UIHelpers.Print("laying on the table by the door and charge your captor...");
             }
-                
 
-            
-            
+
+
+
             Console.ReadKey();
             Combat(false, plyr);
         }
@@ -94,12 +95,12 @@ namespace RaargeDungeon
         {
             //switch(rand.Next(0, 2))
             //{
-                //case 0:
-                    BasicFightEncounter(player);
-                    //break;
-                //case 1:
-                  //  WizardEncounter(player);
-                  //  break;
+            //case 0:
+            BasicFightEncounter(player);
+            //break;
+            //case 1:
+            //  WizardEncounter(player);
+            //  break;
             //}
         }
 
@@ -107,10 +108,15 @@ namespace RaargeDungeon
         {
             Monster mstr = new Monster();
 
-            mstr = Monster.SpawnMonster(mstr, random, plyr.level);
+            var encounterLvls = GetXPThresholdsByLevel(plyr.level);
+
+            int encounterLevelChosen = GetCurrentEncounterXPLevel(encounterLvls);
+
+            mstr = Monster.SpawnMonster(mstr, random, plyr.level, encounterLevelChosen);
+
             
             string leaderMob = TextHelpers.GetLeader(mstr.level);
-            
+
 
             while (mstr.health > 0)
             {
@@ -119,18 +125,18 @@ namespace RaargeDungeon
                 Console.Write($" {mstr.name}'s Health Bar: ");
                 Console.Write("[");
                 Console.ForegroundColor = ConsoleColor.Red;
-                Program.MonsterBar("<", "-", ((decimal)mstr.health / (decimal)mstr.baseHealth), 25);
+                Program.MonsterBar("<", "-", mstr.health / (decimal)mstr.baseHealth, 25);
                 Console.ResetColor();
                 Console.WriteLine("]");
                 Console.WriteLine(" ");
                 Console.WriteLine(" =====================");
                 Console.WriteLine(" | (A)ttack  (D)efend |");
 
-                if(Program.currentPlayer.currentClass == Player.PlayerClass.Mage)
+                if (Program.currentPlayer.currentClass == Player.PlayerClass.Mage)
                 {
-                    Console.WriteLine(" | (C)ast             |");
+                    Console.WriteLine(" | (C)ast  (S)tats    |");
                 }
-                
+
 
                 Console.WriteLine(" | (R)un              |");
                 Console.WriteLine(" | (H)eal    (M)Mana  |");
@@ -141,9 +147,9 @@ namespace RaargeDungeon
 
                 // -- Health Bar --
                 UIHelpers.GenerateStatusBar("Health", "<", "-", ConsoleColor.Red, plyr.health, plyr.baseHealth);
-                
+
                 // -- Experiance Bar --
-                UIHelpers.GenerateStatusBar("XP", ">", "-", ConsoleColor.Yellow, plyr.xp, plyr.GetLevelUpValue());
+                UIHelpers.GenerateStatusBar("XP", ">", "-", ConsoleColor.Yellow, plyr.xp, plyr.GetLevelUpValue(plyr.level));
 
                 // -- Mana Bar --
                 UIHelpers.GenerateStatusBar(plyr.manaType.ToString(), "*", " ", ConsoleColor.Blue, plyr.energy, plyr.baseEnergy);
@@ -151,7 +157,7 @@ namespace RaargeDungeon
                 //Console.WriteLine($"XP:{Program.currentPlayer.xp} Needed XP: {Program.currentPlayer.GetLevelUpValue()} ");
                 string action = Console.ReadLine().ToLower();
 
-                if(Program.currentPlayer.currentClass != Player.PlayerClass.Mage)
+                if (Program.currentPlayer.currentClass != Player.PlayerClass.Mage)
                 {
                     while (action != "a" && action != "d" && action != "r" && action != "h" && action != "m" && action.Length > 1)
                     {
@@ -159,7 +165,7 @@ namespace RaargeDungeon
                         action = Console.ReadLine();
                     }
                 }
-                else 
+                else
                 {
                     while (action != "a" && action != "d" && action != "r" && action != "h" && action != "m" && action != "c" && action.Length > 1)
                     {
@@ -169,8 +175,8 @@ namespace RaargeDungeon
                 }
 
 
-                
-                
+
+
                 if (action.ToLower() == "a")
                 {
 
@@ -213,12 +219,12 @@ namespace RaargeDungeon
 
                     UIHelpers.Print($"As {mstr.name} moves forward to attack, you ready your {weapon} to defend.");
                     Console.WriteLine($"You deal {attack} damage to {mstr.name}.");
-    //                TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
+                    //                TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
 
                     mstr.health -= attack;
                     if (mstr.health <= 0)
                     {
-                        
+
                         mstr.IsAlive = false;
                     }
                 }
@@ -228,32 +234,32 @@ namespace RaargeDungeon
                     bool spellCrit = false;
                     bool spellFail = false;
                     int upper = Checkers.GetSpellFailUpper();
-                    
+
 
                     chosenSpell = Pickers.GetChosenSpell();
                     int spellCost = Checkers.GetSpellCost(chosenSpell);
 
-                    int spellAttack = (int)(Math.Ceiling((decimal)Randomizer.GetRandomDieRoll(chosenSpell.damage, 1, Player.GetModifier(plyr.intelligence)) + Program.currentPlayer.magicMastery)) * ((plyr.level/2)+1);
+                    int spellAttack = (int)Math.Ceiling(Randomizer.GetRandomDieRoll(chosenSpell.damage, 1, BaseCreature.GetModifier(plyr.intelligence)) + Program.currentPlayer.magicMastery) * (plyr.level / 2 + 1);
 
                     // monster damage
-                    
+
                     HitChecks monsterHitTry = new HitChecks();
-                    monsterHitTry = MartialCombat.MstrHitTry(plyr, mstr, monsterHitTry, MartialCombat.GetMonsterAttackType(mstr) );
+                    monsterHitTry = MartialCombat.MstrHitTry(plyr, mstr, monsterHitTry, MartialCombat.GetMonsterAttackType(mstr));
 
                     bool monsterCrit = false;
                     int msterDamage = 0;
 
                     if (monsterHitTry.AttackHits)
-                    {                        
+                    {
 
                         MartialCombat.MonsterHits(mstr, monsterHitTry, "Melee", ref monsterCrit, ref msterDamage);
-                    }              
+                    }
 
 
                     if (rand.Next(0, upper) == 0)
                         spellFail = true;
 
-                    if (rand.Next(1,11) == 3)
+                    if (rand.Next(1, 11) == 3)
                         spellCrit = true;
                     // check for spell failure
 
@@ -286,9 +292,9 @@ namespace RaargeDungeon
                             Console.WriteLine($"A {mstr.name} swings wildly at you but misses.");
 
                     }
-                    
 
- //                   TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
+
+                    //                   TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
                     Console.ReadKey();
 
                     Program.currentPlayer.energy -= chosenSpell.SpellCost;
@@ -311,9 +317,9 @@ namespace RaargeDungeon
                         Program.currentPlayer.race != Player.Race.Halfling && Program.currentPlayer.race != Player.Race.Elf)
                     {
                         UIHelpers.Print($"As you sprint away from {mstr.name}, its strike catched you in the back, knocking you down.");
- //                       TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
+                        //                       TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
                         Console.ReadKey();
- //                       Program.currentPlayer.health -= damage;
+                        //                       Program.currentPlayer.health -= damage;
                     }
                     else
                     {
@@ -327,9 +333,9 @@ namespace RaargeDungeon
                     if (Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0, 3) == 0)
                     {
                         UIHelpers.Print($"As you sprint away from {mstr.name}, its strike catched you in the back, knocking you down.");
-  //                      TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
+                        //                      TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
                         Console.ReadKey();
-  //                      Program.currentPlayer.health -= damage;
+                        //                      Program.currentPlayer.health -= damage;
                     }
                     else
                     {
@@ -341,7 +347,7 @@ namespace RaargeDungeon
                 else if (action.ToLower() == "h")
                 {
                     bool monsterCrit = false;
- //Fix Monstercrit  // heal
+                    //Fix Monstercrit  // heal
                     PotionHealing(mstr.name, mstr.level, monsterCrit, action.ToLower(), "health");
 
                     if (mstr.IsAlive)
@@ -353,7 +359,7 @@ namespace RaargeDungeon
                 else if (action.ToLower() == "m")
                 {
                     bool monsterCrit = false;
-//Fix monstercrit
+                    //Fix monstercrit
                     PotionHealing(mstr.name, mstr.level, monsterCrit, action.ToLower(), "mana");
 
                     if (mstr.IsAlive)
@@ -361,6 +367,11 @@ namespace RaargeDungeon
                         Console.ReadKey();
                     }
                 }
+                else if (action.ToLower() == "s")
+                {
+                    UIHelpers.DisplayStats(plyr);
+                }
+
                 CheckForDeath(mstr.name);
 
                 if (mstr.IsAlive)
@@ -369,8 +380,8 @@ namespace RaargeDungeon
 
             Console.WriteLine($"{mstr.name} was Slain!!");
 
-            int xp = plyr.GetXP();
-            int cn = plyr.GetCoins();
+            int xp = plyr.GetXP(mstr);
+            int cn = plyr.GetCoins(mstr);
             UIHelpers.Print($"As you stand victorious over the {mstr.name}, its body dissolves into {cn} gold coins!");
             Console.ForegroundColor = ConsoleColor.Yellow;
             UIHelpers.Print($"You gain {xp} XP!");
@@ -379,18 +390,76 @@ namespace RaargeDungeon
             plyr.coins += cn;
             plyr.xp += xp;
 
-            if (Program.currentPlayer.CanLevelUp())
-                Program.currentPlayer.LevelUp();
+            if (plyr.CanLevelUp(plyr.level))
+                plyr = plyr.LevelUp(plyr);
 
             Console.ReadKey();
-        }                
+        }
 
+        public static int GetCurrentEncounterXPLevel(EncounterLevels encounterLvls)
+        {
+            int xpLevelFight = 0;
+            var levelChosen = Randomizer.GetRandomNumber(4);
+
+            if (levelChosen == 1)
+                xpLevelFight = encounterLvls.Easy;
+            else if (levelChosen == 2)
+                xpLevelFight = encounterLvls.Medium;
+            else if (levelChosen == 3)
+                xpLevelFight = encounterLvls.Hard;
+
+            return xpLevelFight;
+
+        }
+
+        public static EncounterLevels GetXPThresholdsByLevel(int level)
+        {
+            EncounterLevels ecl = new EncounterLevels();
+
+            var encounterLevls = new Dictionary<int, EncounterLevels>()
+            {
+                {1, new EncounterLevels { Easy = 25, Medium = 50, Hard = 75 } },
+                {2, new EncounterLevels { Easy = 50, Medium = 100, Hard = 150} },
+                {3, new EncounterLevels { Easy = 75, Medium = 150, Hard = 200} },
+                {4, new EncounterLevels { Easy = 125, Medium = 200, Hard = 450} },
+                {5, new EncounterLevels { Easy = 200, Medium = 450, Hard = 700} },
+                {6, new EncounterLevels { Easy = 450, Medium = 700, Hard = 700} },
+                {7, new EncounterLevels { Easy = 350, Medium = 700, Hard = 1100} },
+                {8, new EncounterLevels { Easy = 450, Medium = 700, Hard = 1100} },
+                {9, new EncounterLevels { Easy = 450, Medium = 1100, Hard = 1800} },
+                {10, new EncounterLevels { Easy = 700, Medium = 1100, Hard = 1800} },
+                {11, new EncounterLevels { Easy = 700, Medium = 1800, Hard = 2300} },
+                {12, new EncounterLevels { Easy = 1100, Medium = 1800, Hard = 2900} },
+                {13, new EncounterLevels { Easy = 1100, Medium = 2300, Hard = 2900} },
+                {14, new EncounterLevels { Easy = 1100, Medium = 2300, Hard = 3900} },
+                {15, new EncounterLevels { Easy = 1100, Medium = 2300, Hard = 3900} },
+                {16, new EncounterLevels { Easy = 1800, Medium = 2900, Hard = 5000} },
+                {17, new EncounterLevels { Easy = 1800, Medium = 3900, Hard = 5900} },
+                {18, new EncounterLevels { Easy = 1800, Medium = 3900, Hard = 5900} },
+                {19, new EncounterLevels { Easy = 2300, Medium = 5000, Hard = 7200} },
+                {20, new EncounterLevels { Easy = 2900, Medium = 5900, Hard = 8400} }
+
+            };
+
+            foreach(var index in encounterLevls)
+            {
+                if (index.Key == level)
+                {
+                    ecl.Easy = index.Value.Easy;
+                    ecl.Medium = index.Value.Medium;
+                    ecl.Hard = index.Value.Hard;
+                }
+            }
+            return ecl;
+        }
+// Rewrite this fixing the attack attempt by the opponent
+//*******************************************************
         private static void PotionHealing(string nm, int pwr, bool monsterCrit, string action, string type)
         {
             if (Program.currentPlayer.potion == 0)
             {
                 // out of potions
-                int damage = (pwr / 2) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
+                int damage = pwr / 2 - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
                 if (damage < 0)
                     damage = 0;
 
@@ -401,7 +470,7 @@ namespace RaargeDungeon
             else
             {
                 // have potions
-                int damage = (pwr / 2) - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
+                int damage = pwr / 2 - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
                 if (damage < 0)
                     damage = 0;
 
@@ -445,7 +514,7 @@ namespace RaargeDungeon
 
                     Program.currentPlayer.manaPotion -= 1;
                 }
-                
+
 
                 if (rand.Next(0, 2) == 0)
                 {
@@ -470,7 +539,7 @@ namespace RaargeDungeon
                 UIHelpers.Print($"As the {nm} delivers a massive blow you collapse to the floor.  Your conciousness fades, you have been slain!");
                 Console.ReadKey();
 
-                if(Program.currentPlayer.favors > 0)
+                if (Program.currentPlayer.favors > 0)
                 {
                     UIHelpers.Print("You are suddenly surrounded by a blinding light. You are lifted into the air and given");
                     UIHelpers.Print("a new lease on life!");
@@ -482,7 +551,7 @@ namespace RaargeDungeon
                     CheckPlayAgain();
 
             }
-        }  
+        }
         #endregion
 
         public static void CheckPlayAgain()
@@ -493,19 +562,19 @@ namespace RaargeDungeon
 
             bool tester = false;
 
-            while(tester == false)
-            if (answer == "yes" || answer == "y")
-            {
-                    System.Diagnostics.Process.Start(System.AppDomain.CurrentDomain.FriendlyName);
+            while (tester == false)
+                if (answer == "yes" || answer == "y")
+                {
+                    System.Diagnostics.Process.Start(AppDomain.CurrentDomain.FriendlyName);
                     Environment.Exit(0);
-            }
-            else if (answer == "no" || answer == "n")
-            {
-                UIHelpers.Print("Thank you for playing. Goodbye!");
-                System.Environment.Exit(0);
-            }
-            else 
-                System.Environment.Exit(0);
+                }
+                else if (answer == "no" || answer == "n")
+                {
+                    UIHelpers.Print("Thank you for playing. Goodbye!");
+                    Environment.Exit(0);
+                }
+                else
+                    Environment.Exit(0);
         }
     }
 }

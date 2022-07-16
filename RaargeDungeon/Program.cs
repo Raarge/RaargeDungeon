@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using RaargeDungeon.Helpers;
 using System.Threading;
 using RaargeDungeon.Creatures;
+using RaargeDungeon.Encounter;
 
 namespace RaargeDungeon
 {
