@@ -65,6 +65,9 @@ namespace RaargeDungeon.Helpers
             Console.WriteLine($" {p.manaType} Casting:    {p.spellCasting:0.####}    ");
             Console.WriteLine($" {p.manaType} Mastery:    {p.magicMastery:0.####}    ");
             Console.WriteLine($" {p.manaType} Channeling: {p.spellChanneling:0.####}");
+            Console.WriteLine($" Armor Mastery:  {p.armorMastery:0.####}");
+            Console.WriteLine($" Weapon Mastery: {p.weaponMastery:0.####}");
+            Console.WriteLine($" Evasion:       {p.evasion:0.####}");
             Console.WriteLine("==============================================");
             Console.ReadKey();
 

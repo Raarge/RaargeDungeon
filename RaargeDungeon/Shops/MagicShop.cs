@@ -27,7 +27,7 @@ namespace RaargeDungeon.Shops
             UIHelpers.GenerateStatusBar("Health", "<", "-", ConsoleColor.Red, p.health, p.baseHealth);
 
             // -- Experiance Bar --
-            UIHelpers.GenerateStatusBar("XP", ">", "-", ConsoleColor.Yellow, p.xp, p.GetLevelUpValue());
+            UIHelpers.GenerateStatusBar("XP", ">", "-", ConsoleColor.Yellow, p.xp, p.GetLevelUpValue(p.level));
 
             // -- Mana Bar --
             UIHelpers.GenerateStatusBar(p.manaType.ToString(), "*", " ", ConsoleColor.Blue, p.energy, p.baseEnergy);

@@ -45,7 +45,7 @@ namespace RaargeDungeon.Shops
                 Console.WriteLine("=========================================================");
                 Console.WriteLine($" (W)eapon:      ${weaponP} (A)rmor:       ${armorP}   ");
                 Console.WriteLine($" (D)ifficulty:  ${diffP}   (P)otions:     ${potionP}");
-                Console.WriteLine($" (M)ana Potion: ${potionP} (H)ealth:      ${healthP}   ");
+                Console.WriteLine($" (M){p.manaType} Potion: ${potionP} (H)ealth:      ${healthP}   ");
                 Console.WriteLine($" (L)ifesage:    ${lsP}    ");
                 Console.WriteLine("=========================================================");
                 Console.WriteLine("  Magic (S)hop - Coming soon Stat (T)raining - Comming soon");
@@ -68,8 +68,8 @@ namespace RaargeDungeon.Shops
 
                 Console.WriteLine("==============================================================");
                 Console.WriteLine($" Current Health: {p.health} Base Health: {p.baseHealth}");
-                Console.WriteLine($" Current Coins: {p.coins}");
-                Console.WriteLine($" Weapon Strength: {p.weaponValue} Armor Class: {p.armorValue}   ");
+                Console.WriteLine($" Current Coins: {p.coins}   Armor Value: {p.armorValue}");
+                Console.WriteLine($" Weapon Strength: {p.weaponValue} Armor Class: {p.armorclass}   ");
                 Console.WriteLine($" Favors: {p.favors} Lifetime Favors: {p.lifetimeFavors}   ");
                 Console.WriteLine($" Healing Potions: {p.potion} {p.manaType} Potions: {p.manaPotion}   ");
                 Console.WriteLine($" Difficulty Mods: {p.mods}    ");

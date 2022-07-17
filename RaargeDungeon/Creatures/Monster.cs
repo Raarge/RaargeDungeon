@@ -31,7 +31,7 @@ namespace RaargeDungeon.Creatures
                
 
         public enum monsterRace { Orc, Goblin, Ogre, Madman, Kobold, Wolf, Imp, Spider, Skeleton, Sprite, Zombie, Merfolk, Monodrone, TwigBlight, Mastiff, Snake, Blight,
-        Bullywug, WildGnoll, Svirfnebliin, WarGoblin, DeepGnome, DustMephit, GasSpore, Gnoll, Hobgoblin, Worg}
+        Bullywug, WildGnoll, Svirfneblin, WarGoblin, DeepGnome, DustMephit, GasSpore, Gnoll, Hobgoblin, Worg}
         public monsterRace race = monsterRace.Sprite;
 
         

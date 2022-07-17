@@ -137,24 +137,24 @@ namespace RaargeDungeon
             // Armor Setter
             if (p.currentClass == Player.PlayerClass.Cleric)
             {
-                p.armorValue = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity);
-                p.armorValue += 2; //shield
+                p.armorclass = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity);
+                p.armorclass += 2; //shield
             }
             if (p.currentClass == Player.PlayerClass.Warrior)
             {
-                p.armorValue = Player.GetPlayerArmorClass(p) + 2; // +2 shield
+                p.armorclass = Player.GetPlayerArmorClass(p) + 2; // +2 shield
             }
             if (p.currentClass == Player.PlayerClass.Mage)
             {
-                p.armorValue = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity);
+                p.armorclass = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity);
             }
             if (p.currentClass == Player.PlayerClass.Monk)
             {
-                p.armorValue = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity) + Player.GetModifier(p.wisdom);
+                p.armorclass = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity) + Player.GetModifier(p.wisdom);
             }
             if (p.currentClass == Player.PlayerClass.Ranger || p.currentClass == Player.PlayerClass.Rogue)
             {
-                p.armorValue = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity);
+                p.armorclass = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity);
             }
 
 

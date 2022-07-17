@@ -143,7 +143,7 @@ namespace RaargeDungeon.Encounter
                 Console.WriteLine(" |                    |");
                 Console.WriteLine(" =====================");
                 Console.WriteLine($" Level: {plyr.level} Class: {plyr.currentClass} Coins: {plyr.coins}");
-                Console.WriteLine($" Potions: {plyr.potion} Mana Potions: {plyr.manaPotion}");
+                Console.WriteLine($" Potions: {plyr.potion} {plyr.manaType} Potions: {plyr.manaPotion}");
 
                 // -- Health Bar --
                 UIHelpers.GenerateStatusBar("Health", "<", "-", ConsoleColor.Red, plyr.health, plyr.baseHealth);
@@ -399,15 +399,41 @@ namespace RaargeDungeon.Encounter
         public static int GetCurrentEncounterXPLevel(EncounterLevels encounterLvls)
         {
             int xpLevelFight = 0;
-            var levelChosen = Randomizer.GetRandomNumber(4);
+            var levelChosen = Randomizer.GetRandomNumber(21);
 
-            if (levelChosen == 1)
-                xpLevelFight = encounterLvls.Easy;
-            else if (levelChosen == 2)
-                xpLevelFight = encounterLvls.Medium;
-            else if (levelChosen == 3)
-                xpLevelFight = encounterLvls.Hard;
-
+            switch (levelChosen)
+            {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                case 12:
+                    xpLevelFight = encounterLvls.Easy;
+                    break;
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                case 18:
+                    xpLevelFight = encounterLvls.Medium;
+                    break;
+                case 19:
+                case 20:
+                    xpLevelFight = encounterLvls.Hard;
+                    break;
+                default:
+                    xpLevelFight = encounterLvls.Easy;
+                    break;                    
+            }            
+            
             return xpLevelFight;
 
         }

@@ -27,7 +27,7 @@ namespace RaargeDungeon.Creatures
         public int energy = 30;
         public int baseEnergy = 30;
         public int damage = 1;
-        public int armorValue = 0;
+        public int armorValue { get; set; }
         public int armorclass { get; set; }
         public int potion = 5;
         public int manaPotion = 5;
@@ -46,6 +46,12 @@ namespace RaargeDungeon.Creatures
         public decimal magicMastery = 0.0m;
         public decimal spellCasting = 0.0m;
         public decimal spellChanneling = 0.0m;
+        public decimal weaponMastery = 0.0m;
+        public decimal evasion = 0.0m;
+        public decimal armorMastery = 0.0m;
+
+        public enum skillCombatType { armor, evasion, weapon};
+        public skillCombatType sct = skillCombatType.armor;
 
         public enum Race { Human, Elf, Dwarf, Gnome, Halfling, HalfOrc, Erudite }
         public Race race = Race.Human;
@@ -75,7 +81,7 @@ namespace RaargeDungeon.Creatures
             p.health = p.baseHealth;
 
             // Set Armor Class
-            p.armorValue = GetPlayerArmorClass(p);
+            p.armorclass = GetPlayerArmorClass(p);
 
             // Set Spell DC 
             p.spellDcCheck = GetSpellDcCheck(p.intelligence, p.level, (int)p.magicMastery);

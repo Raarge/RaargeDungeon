@@ -62,9 +62,11 @@ namespace RaargeDungeon.Combat
                 if (plryAtkType == "melee")
                 {
                     if (p.currentClass == Player.PlayerClass.Monk || p.currentClass == Player.PlayerClass.Rogue)
-                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.dexterity)) + (p.weaponValue / 2);
+                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.dexterity)) + (p.weaponValue / 2) + ((int)p.weaponMastery / 2);
                     else
-                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.strength)) + (p.weaponValue / 2);
+                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.strength)) + (p.weaponValue / 2) + ((int)p.weaponMastery / 2);
+
+                    p.weaponMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.weapon.ToString());
                 }
                 else
                 {
@@ -81,6 +83,7 @@ namespace RaargeDungeon.Combat
             if (mstrHit.AttackHits)
             {
                 MonsterHits(m, mstrHit, mstrAtkType, ref monsterCrit, ref mstrDamage);
+                p.armorMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.armor.ToString());
             }
 
             // add spell text in here
@@ -107,9 +110,15 @@ namespace RaargeDungeon.Combat
             {
                 UIHelpers.Print($"A {m.name} growls and swings landing a blow to you.");
                 TextHelpers.GetMonsterHitLine(m.name, mstrDamage, monsterCrit, action.ToLower());
+                string typeXP = Player.skillCombatType.evasion.ToString();
+                p.armorMastery += Checkers.GetCombatSkillGain(m, p, typeXP);
             }
             else
+            {
                 Console.WriteLine($"A {m.name} swings wildly at you but misses.");
+                p.evasion += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.evasion.ToString());
+            }
+                
 
             m.health -= plyrDamage;
 
@@ -155,9 +164,12 @@ namespace RaargeDungeon.Combat
             if (mstrAtkType == "melee" && m.currentCombatOrder != 0)
             {
                 if (mstrAtkType == "melee")
+                {
+                    int modifiedAC = p.armorclass + (int)((p.evasion + p.armorMastery) / 4m);
                     mstrHit = CheckHit(p.armorclass, m.strength);
+                }                    
                 else if (mstrAtkType == "spell")
-                    mstrHit = CheckMagicHit(m.spellDcCheck, m.intelligence);
+                    mstrHit = CheckMagicHit(m.spellDcCheck, p.intelligence);
             }
 
             return mstrHit;
@@ -169,11 +181,13 @@ namespace RaargeDungeon.Combat
             {
                 if (plryAtkType == "melee")
                 {
+                    int modifiedStr = p.strength + (int)(p.weaponMastery / 2m);
                     plyrHit = CheckHit(m.armorclass, p.strength);
                 }
                 else if (plryAtkType == "spell")
                 {
-                    plyrHit = CheckMagicHit(p.spellDcCheck, m.intelligence);
+                    int modifiedDcCheck = p.spellDcCheck + (int)(p.magicMastery / 2m); 
+                    plyrHit = CheckMagicHit(modifiedDcCheck, m.intelligence);
                 }
             }
 

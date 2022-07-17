@@ -46,6 +46,26 @@ namespace RaargeDungeon.Helpers
             return skillXPGain;
         }
 
+        public static decimal GetCombatSkillGain(Monster m, Player p, string typeXP)
+        {
+            decimal gain = 0.0m;
+
+            if(typeXP == "evasion")
+            {
+                gain = ((decimal)(m.level / 2)) + (1.395m / (decimal)p.armorclass);
+            }
+            if(typeXP == "armor")
+            {
+                gain = ((decimal)(m.level / 2)) + (1.395m / (decimal)p.armorclass);
+            }
+            if(typeXP == "weapon")
+            {
+                gain = ((decimal)(m.level * .024) + ((decimal)(p.attackDie + p.numberAttackDie) * 0.007007m));
+            }
+
+            return gain;
+        }
+
         
         
     }
