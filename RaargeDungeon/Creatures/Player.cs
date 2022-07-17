@@ -55,6 +55,7 @@ namespace RaargeDungeon.Creatures
 
         public enum Race { Human, Elf, Dwarf, Gnome, Halfling, HalfOrc, Erudite }
         public Race race = Race.Human;
+        public string RaceModComment { get; set; }
 
         public int mods = 0;
 
@@ -81,6 +82,7 @@ namespace RaargeDungeon.Creatures
             p.health = p.baseHealth;
             p.baseEnergy += (Randomizer.GetRandomNumber(p.intelligence) * 3) + (Player.GetModifier(p.intelligence) * 2) + ((int)(p.spellChanneling / 2) * 2);
             p.energy = p.baseEnergy;
+            p = GetRacialStatMods(p);
 
 
             // Set Armor Class
@@ -524,6 +526,49 @@ namespace RaargeDungeon.Creatures
             }
 
             return favorEarned;
+        }
+        #endregion
+
+        #region Racial Stat Modifiers
+        public static Player GetRacialStatMods(Player p)
+        {
+            switch (p.race.ToString())
+            {
+                case "Human":
+                    p.strength += 1;
+                    p.constitution += 1;
+                    p.dexterity += 1;
+                    p.intelligence += 1;
+                    p.wisdom += 1;
+                    p.charisma += 1;
+                    p.RaceModComment = "+1 All";
+                    break;
+                case "Elf":
+                case "Halfling":
+                    p.dexterity += 2;
+                    p.RaceModComment = "+2 Dex";
+                    break;
+                case "Gnome":
+                case "Erudite":
+                    p.intelligence += 2;
+                    p.RaceModComment = "+2 Int";
+                    break;
+                case "Dwarf":
+                    p.constitution += 2;
+                    p.RaceModComment = "+2 Con";
+                    break;
+                case "HalfOrc":
+                    p.strength += 2;
+                    p.constitution += 1;
+                    p.RaceModComment = "+2 Str, +1 Con";
+                    break;
+                default:
+                    p.RaceModComment = "No Mod Found Error";
+                    break;
+            }
+
+
+            return p;
         }
         #endregion
     }

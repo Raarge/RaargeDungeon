@@ -135,6 +135,42 @@ namespace RaargeDungeon.Combat
             return combatants;
         }
 
+        public static Player DoMonsterSoloCombat(Monster m, Player p, string action)
+        {
+            HitChecks mstrHit = new HitChecks();
+            string mstrAtkType = GetMonsterAttackType(m);
+            
+            bool monsterCrit = false;
+            int mstrDamage = 0;
+
+            mstrHit = MstrHitTry(p, m, mstrHit, mstrAtkType);
+
+            if (mstrHit.AttackHits)
+            {
+                MonsterHits(m, mstrHit, mstrAtkType, ref monsterCrit, ref mstrDamage);
+                p.armorMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.armor.ToString());
+            }
+
+            if (action == "d" && mstrDamage > 0)
+                mstrDamage = mstrDamage / 2;
+
+            if (mstrHit.AttackHits)
+            {
+                UIHelpers.Print($"A {m.name} growls and swings landing a blow to you.");
+                TextHelpers.GetMonsterHitLine(m, mstrDamage, monsterCrit, p, action.ToLower());
+                string typeXP = Player.skillCombatType.evasion.ToString();
+                p.armorMastery += Checkers.GetCombatSkillGain(m, p, typeXP);
+            }
+            else
+            {
+                Console.WriteLine($"A {m.name} swings wildly at you but misses.");
+                p.evasion += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.evasion.ToString());
+            }
+
+
+            return p;
+        }
+
         public static void MonsterHits(Monster m, HitChecks mstrHit, string mstrAtkType, ref bool monsterCrit, ref int mstrDamage)
         {
 
@@ -166,7 +202,7 @@ namespace RaargeDungeon.Combat
                 if (mstrAtkType == "melee")
                 {
                     int modifiedAC = p.armorclass + (int)((p.evasion + p.armorMastery) / 4m);
-                    mstrHit = CheckHit(p.armorclass, m.strength);
+                    mstrHit = CheckHit(modifiedAC, m.strength);
                 }                    
                 else if (mstrAtkType == "spell")
                     mstrHit = CheckMagicHit(m.spellDcCheck, p.intelligence);
@@ -198,16 +234,16 @@ namespace RaargeDungeon.Combat
         {
             string type = "";
 
-            if (m.spells.Count != 0)
+            //if (m.spells.Count != 0)
                 type = "melee";
-            else
-            {
-                int randChk = Randomizer.GetRandomNumber(4);
-                if (randChk == 3)
-                    type = "spell";
-                else
-                    type = "melee";
-            }
+            //else
+            //{
+            //    int randChk = Randomizer.GetRandomNumber(4);
+            //    if (randChk == 3)
+            //        type = "spell";
+            //    else
+            //        type = "melee";
+            //}
 
             return type;
         }

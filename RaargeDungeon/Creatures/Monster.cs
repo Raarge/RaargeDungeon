@@ -31,7 +31,8 @@ namespace RaargeDungeon.Creatures
                
 
         public enum monsterRace { Orc, Goblin, Ogre, Madman, Kobold, Wolf, Imp, Spider, Skeleton, Sprite, Zombie, Merfolk, Monodrone, TwigBlight, Mastiff, Snake, Blight,
-        Bullywug, WildGnoll, Svirfneblin, WarGoblin, DeepGnome, DustMephit, GasSpore, Gnoll, Hobgoblin, Worg}
+        Bullywug, WildGnoll, Svirfneblin, WarGoblin, DeepGnome, DustMephit, GasSpore, Gnoll, Hobgoblin, Worg, Bugbear, DireWolf, Dryad, Ghoul, HalfOgre, Spectre, Centaur,
+        Gargoyle, Griffon, SpinedDevil, Wererat, Basilisk, BugbearChief, Grell, HellHound, Manticore, Minotaur, Mummy, Owlbear, Yeti}
         public monsterRace race = monsterRace.Sprite;
 
         
@@ -118,13 +119,28 @@ namespace RaargeDungeon.Creatures
             mstrList.Add(new Monster() { name = "Gnoll", xpGiven = 100 });
             mstrList.Add(new Monster() { name = "Hobgoblin", xpGiven = 100 });
             mstrList.Add(new Monster() { name = "Worg", xpGiven = 100 });
-            // Need 150's
-            // Need 225's
+            mstrList.Add(new Monster() { name = "Bugbear", xpGiven = 200 });
+            mstrList.Add(new Monster() { name = "DireWolf", xpGiven = 200 });
+            mstrList.Add(new Monster() { name = "Dryad", xpGiven = 200 });
+            mstrList.Add(new Monster() { name = "Ghoul", xpGiven = 200 });
+            mstrList.Add(new Monster() { name = "HalfOgre", xpGiven = 200 });
+            mstrList.Add(new Monster() { name = "Spectre", xpGiven = 200 });
+            mstrList.Add(new Monster() { name = "Centaur", xpGiven = 450 });
+            mstrList.Add(new Monster() { name = "Gargoyle", xpGiven = 450 });
+            mstrList.Add(new Monster() { name = "Griffon", xpGiven = 450 });
+            mstrList.Add(new Monster() { name = "SpinedDevil", xpGiven = 450 });
+            mstrList.Add(new Monster() { name = "Wererat", xpGiven = 450 });
+            mstrList.Add(new Monster() { name = "Basilisk", xpGiven = 700 });
+            mstrList.Add(new Monster() { name = "BugbearChief", xpGiven = 700 });
+            mstrList.Add(new Monster() { name = "Grell", xpGiven = 700 });
+            mstrList.Add(new Monster() { name = "HellHound", xpGiven = 700 });
+            mstrList.Add(new Monster() { name = "Manticore", xpGiven = 700 });
+            mstrList.Add(new Monster() { name = "Minotaur", xpGiven = 700 });
+            mstrList.Add(new Monster() { name = "Mummy", xpGiven = 700 });
+            mstrList.Add(new Monster() { name = "Owlbear", xpGiven = 700 });
+            mstrList.Add(new Monster() { name = "Yeti", xpGiven = 700 });
 
-
-
-
-//Add more monsters after level 2
+            //Add more monsters after level 2
 
             mstrList = GetEncounterLevelChosenList(mstrList, eclChosen);
 
@@ -360,6 +376,166 @@ namespace RaargeDungeon.Creatures
                     m.hitDice = 8;
                     m.numberHitDie = 3;
                     m.xpGiven = 50;
+                    break;
+                case "Bugbear":
+                    m.attackDice = 8;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 16;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 5;
+                    break;
+                case "DireWolf":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 14;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 5;
+                    break;
+                case "Dryad":
+                    m.attackDice = 8;
+                    m.numberAttackDice = 1;
+                    m.armorclass = 11;
+                    m.damageResist = 2;
+                    m.hitDice = 8;
+                    m.numberHitDie = 5;
+                    break;
+                case "Ghoul":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 12;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 5;
+                    break;
+                case "HalfOgre":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 3;
+                    m.armorclass = 18;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 7;
+                    break;
+                case "Specter":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 3;
+                    m.armorclass = 12;
+                    m.damageResist = 2;
+                    m.hitDice = 8;
+                    m.numberHitDie = 5;
+                    break;
+                case "Centaur":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 3;
+                    m.armorclass = 12;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 6;
+                    break;
+                case "Gargoyle":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 15;
+                    m.damageResist = 2;
+                    m.hitDice = 8;
+                    m.numberHitDie = 8;
+                    break;
+                case "Griffon":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 3;
+                    m.armorclass = 12;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 8;
+                    break;
+                case "SpinedDevil":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 13;
+                    m.damageResist = 1;
+                    m.hitDice = 6;
+                    m.numberHitDie = 5;
+                    break;
+                case "Wererat":
+                    m.attackDice = 4;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 12;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 6;
+                    break;
+                case "Basilisk":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 15;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 9;
+                    break;
+                case "BugbearChief":
+                    m.attackDice = 8;
+                    m.numberAttackDice = 3;
+                    m.armorclass = 17;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 11;
+                    break;
+                case "Grell":
+                    m.attackDice = 10;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 12;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 10;
+                    break;
+                case "HellHound":
+                    m.attackDice = 8;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 15;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 8;
+                    break;
+                case "Manticore":
+                    m.attackDice = 8;
+                    m.numberAttackDice = 3;
+                    m.armorclass = 14;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 9;
+                    break;
+                case "Minotaur":
+                    m.attackDice = 12;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 14;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 10;
+                    break;
+                case "Mummy":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 11;
+                    m.damageResist = 2;
+                    m.hitDice = 8;
+                    m.numberHitDie = 10;
+                    break;
+                case "Owlbear":
+                    m.attackDice = 10;
+                    m.numberAttackDice = 3;
+                    m.armorclass = 13;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 8;
+                    break;
+                case "Yeti":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 2;
+                    m.armorclass = 12;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 6;
                     break;
                 default:
                     m.attackDice = 6;

@@ -213,11 +213,42 @@ namespace RaargeDungeon.Encounter
                 }
                 else if (action.ToLower() == "d")
                 {
+                    bool playerHitTry = false;
+                    HitChecks hitChecks = new HitChecks();
+                    int attack = 0;
+
+                    //attackhits bool and roll
+                    hitChecks = MartialCombat.PlyrHitTry(plyr, mstr, hitChecks, "Melee");
+                    
+                    if(hitChecks.AttackHits == false)
+                    {
+                        Console.WriteLine($"You swing barely missing the {mstr.name}.");
+                    }
+                    else if (hitChecks.AttackHits == true)
+                    {
+                        attack = Randomizer.GetRandomDieRoll(plyr.attackDie, (plyr.numberAttackDie / 2)); // half damage dealt defending
+                    }
+
+                    if (hitChecks.AttackHits == true && hitChecks.ToHitRoll == 20)
+                    {
+                        attack *= 2;
+                    }
+                        
+
+
                     // defend
-                    int attack = Randomizer.GetRandomDieRoll(plyr.attackDie, plyr.numberAttackDie) / 2; // half damage dealt defending
+
                     var weapon = TextHelpers.GetWeapon();
+                    mstr.currentCombatOrder = 1;
+                    plyr = MartialCombat.DoMonsterSoloCombat(mstr, plyr, action.ToLower());
 
                     UIHelpers.Print($"As {mstr.name} moves forward to attack, you ready your {weapon} to defend.");
+                    if (hitChecks.AttackHits == true && hitChecks.ToHitRoll == 20)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("You deal a critical hit!");
+                        Console.ResetColor();
+                    }
                     Console.WriteLine($"You deal {attack} damage to {mstr.name}.");
                     //                TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
 
@@ -317,9 +348,9 @@ namespace RaargeDungeon.Encounter
                         Program.currentPlayer.race != Player.Race.Halfling && Program.currentPlayer.race != Player.Race.Elf)
                     {
                         UIHelpers.Print($"As you sprint away from {mstr.name}, its strike catched you in the back, knocking you down.");
-                        //                       TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
+                        MartialCombat.DoMonsterSoloCombat(mstr, plyr, action.ToLower());
                         Console.ReadKey();
-                        //                       Program.currentPlayer.health -= damage;
+                        
                     }
                     else
                     {
@@ -333,7 +364,7 @@ namespace RaargeDungeon.Encounter
                     if (Program.currentPlayer.currentClass != Player.PlayerClass.Ranger && rand.Next(0, 3) == 0)
                     {
                         UIHelpers.Print($"As you sprint away from {mstr.name}, its strike catched you in the back, knocking you down.");
-                        //                      TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
+                        MartialCombat.DoMonsterSoloCombat(mstr, plyr, action.ToLower());
                         Console.ReadKey();
                         //                      Program.currentPlayer.health -= damage;
                     }
@@ -445,9 +476,9 @@ namespace RaargeDungeon.Encounter
             var encounterLevls = new Dictionary<int, EncounterLevels>()
             {
                 {1, new EncounterLevels { Easy = 25, Medium = 50, Hard = 75 } },
-                {2, new EncounterLevels { Easy = 50, Medium = 100, Hard = 150} },
-                {3, new EncounterLevels { Easy = 75, Medium = 150, Hard = 200} },
-                {4, new EncounterLevels { Easy = 125, Medium = 200, Hard = 450} },
+                {2, new EncounterLevels { Easy = 50, Medium = 75, Hard = 100} },
+                {3, new EncounterLevels { Easy = 75, Medium = 100, Hard = 200} },
+                {4, new EncounterLevels { Easy = 100, Medium = 200, Hard = 450} },
                 {5, new EncounterLevels { Easy = 200, Medium = 450, Hard = 700} },
                 {6, new EncounterLevels { Easy = 450, Medium = 700, Hard = 700} },
                 {7, new EncounterLevels { Easy = 350, Medium = 700, Hard = 1100} },

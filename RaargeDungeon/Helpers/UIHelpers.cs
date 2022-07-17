@@ -61,6 +61,10 @@ namespace RaargeDungeon.Helpers
             Console.WriteLine($" Wisdom:       {p.wisdom} Modifier: {Player.GetModifier(p.wisdom)}");
             Console.WriteLine($" Charisma:     {p.charisma} Modifier: {Player.GetModifier(p.charisma)}");
             Console.WriteLine("==============================================");
+            Console.WriteLine("        Armor and Weapons ");
+            Console.WriteLine($"  Armor Class: {p.armorclass}");
+            Console.WriteLine($"  Weapon Damage: {p.attackDie * p.numberAttackDie} ");
+            Console.WriteLine("==============================================");
             Console.WriteLine("        Learned Skills                        ");
             Console.WriteLine($" {p.manaType} Casting:    {p.spellCasting:0.####}    ");
             Console.WriteLine($" {p.manaType} Mastery:    {p.magicMastery:0.####}    ");
