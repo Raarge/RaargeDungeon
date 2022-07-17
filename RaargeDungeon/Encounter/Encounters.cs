@@ -286,7 +286,7 @@ namespace RaargeDungeon.Encounter
                         if (monsterHitTry.AttackHits)
                         {
                             UIHelpers.Print($"A {mstr.name} growls and swings landing a blow to you.");
-                            TextHelpers.GetMonsterHitLine(mstr.name, msterDamage, monsterCrit, action.ToLower());
+                            TextHelpers.GetMonsterHitLine(mstr, msterDamage, monsterCrit, plyr, action.ToLower());
                         }
                         else
                             Console.WriteLine($"A {mstr.name} swings wildly at you but misses.");
@@ -348,7 +348,7 @@ namespace RaargeDungeon.Encounter
                 {
                     bool monsterCrit = false;
                     //Fix Monstercrit  // heal
-                    PotionHealing(mstr.name, mstr.level, monsterCrit, action.ToLower(), "health");
+                    PotionHealing(mstr, plyr, monsterCrit, action.ToLower(), "health");
 
                     if (mstr.IsAlive)
                     {
@@ -360,7 +360,7 @@ namespace RaargeDungeon.Encounter
                 {
                     bool monsterCrit = false;
                     //Fix monstercrit
-                    PotionHealing(mstr.name, mstr.level, monsterCrit, action.ToLower(), "mana");
+                    PotionHealing(mstr, plyr, monsterCrit, action.ToLower(), "mana");
 
                     if (mstr.IsAlive)
                     {
@@ -480,23 +480,24 @@ namespace RaargeDungeon.Encounter
         }
 // Rewrite this fixing the attack attempt by the opponent
 //*******************************************************
-        private static void PotionHealing(string nm, int pwr, bool monsterCrit, string action, string type)
+        private static void PotionHealing(Monster m, Player p, bool monsterCrit, string action, string type)
         {
             if (Program.currentPlayer.potion == 0)
             {
                 // out of potions
-                int damage = pwr / 2 - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
+                int damage = m.level / 2 - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
                 if (damage < 0)
                     damage = 0;
 
                 UIHelpers.Print("You feel around but find no potions!");
-                Console.WriteLine($"The {nm} strikes you with a blow and you lose {damage} health!");
+                Console.WriteLine($"The {m.name} strikes you with a blow and you lose {damage} health!");
                 Program.currentPlayer.health -= damage;
+                p.armorMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.armor.ToString());
             }
             else
             {
                 // have potions
-                int damage = pwr / 2 - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
+                int damage = m.level / 2 - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
                 if (damage < 0)
                     damage = 0;
 
@@ -544,13 +545,14 @@ namespace RaargeDungeon.Encounter
 
                 if (rand.Next(0, 2) == 0)
                 {
-                    UIHelpers.Print($"As you were occupied {nm} advanced and attacked you.");
-                    TextHelpers.GetMonsterHitLine(nm, damage, monsterCrit, action);
+                    UIHelpers.Print($"As you were occupied {m.name} advanced and attacked you.");
+                    TextHelpers.GetMonsterHitLine(m, damage, monsterCrit, p, action);
                 }
                 else
                 {
-                    UIHelpers.Print($"As you were occupied {nm} advanced and attacked you.");
+                    UIHelpers.Print($"As you were occupied {m.name} advanced and attacked you.");
                     Console.WriteLine($"You quickly step out of the way.");
+                    p.evasion = Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.evasion.ToString());
                 }
 
                 //Program.currentPlayer.health -= damage;

@@ -151,7 +151,7 @@ namespace RaargeDungeon.Shops
                 else if (item == "armor")
                 {
                     p.armorValue++;
-                    p.armorclass += p.armorValue;
+                    p.armorclass += (p.armorValue/4);
                 }
                 else if (item == "diff")
                     p.mods++;

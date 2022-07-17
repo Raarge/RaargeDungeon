@@ -68,6 +68,10 @@ namespace RaargeDungeon
                     m.IsAlive = false;
                 }
 
+                p.magicMastery = Checkers.GetSkillXPGain(m.level, 3, 1, "magic");
+                p.spellChanneling = Checkers.GetSkillXPGain(m.level, 3, 1, "channel");
+                p.spellCasting = Checkers.GetSkillXPGain(m.level, 3, 1, "cast");
+
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 UIHelpers.Print($"Quickly stepping behind, {style} at {m.name} dealing {backStabDamage} damage.");
                 Console.ResetColor();
@@ -112,6 +116,10 @@ namespace RaargeDungeon
                     UIHelpers.Print($"You gesture chanting a cantrip, a pulse of arcane energy strikes a {m.name} for ");
                     UIHelpers.Print($"{spellDamage} damage.");
                     Console.ResetColor();
+
+                    p.magicMastery = Checkers.GetSkillXPGain(m.level, 3, 1, "magic");
+                    p.spellChanneling = Checkers.GetSkillXPGain(m.level, 3, 1, "channel");
+                    p.spellCasting = Checkers.GetSkillXPGain(m.level, 3, 1, "cast");
                     m.health -= spellDamage;
                     if (m.health <= 0)
                     {
@@ -188,6 +196,10 @@ namespace RaargeDungeon
                     UIHelpers.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {m.name} dealing ");
                     UIHelpers.Print($"{animalCallDamage} damage.");
                     Console.ResetColor();
+
+                    p.magicMastery = Checkers.GetSkillXPGain(m.level, 3, 1, "magic");
+                    p.spellChanneling = Checkers.GetSkillXPGain(m.level, 3, 1, "channel");
+                    p.spellCasting = Checkers.GetSkillXPGain(m.level, 3, 1, "cast");
                     if (animalCallDamage > m.health)
                         animalCallDamage = m.health;
                     m.health -= animalCallDamage;
@@ -237,6 +249,10 @@ namespace RaargeDungeon
                     m.IsAlive = false;
                 }
 
+                p.magicMastery = Checkers.GetSkillXPGain(m.level, 3, 1, "magic");
+                p.spellChanneling = Checkers.GetSkillXPGain(m.level, 3, 1, "channel");
+                p.spellCasting = Checkers.GetSkillXPGain(m.level, 3, 1, "cast");
+
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 UIHelpers.Print($"In a blur of motion, {style} at {m.name} dealing {chiStrikeDamage} damage.");
                 Console.ResetColor();
@@ -275,6 +291,10 @@ namespace RaargeDungeon
 
                     m.IsAlive = false;
                 }
+
+                p.magicMastery = Checkers.GetSkillXPGain(m.level, 3, 1, "magic");
+                p.spellChanneling = Checkers.GetSkillXPGain(m.level, 3, 1, "channel");
+                p.spellCasting = Checkers.GetSkillXPGain(m.level, 3, 1, "cast");
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 UIHelpers.Print($"You thrust your chest forward light erupting from you, {style} at {m.name} dealing {holyStrikeDamage} damage.");

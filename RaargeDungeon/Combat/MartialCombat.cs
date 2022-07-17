@@ -109,7 +109,7 @@ namespace RaargeDungeon.Combat
             if (mstrHit.AttackHits)
             {
                 UIHelpers.Print($"A {m.name} growls and swings landing a blow to you.");
-                TextHelpers.GetMonsterHitLine(m.name, mstrDamage, monsterCrit, action.ToLower());
+                TextHelpers.GetMonsterHitLine(m, mstrDamage, monsterCrit, p, action.ToLower());
                 string typeXP = Player.skillCombatType.evasion.ToString();
                 p.armorMastery += Checkers.GetCombatSkillGain(m, p, typeXP);
             }

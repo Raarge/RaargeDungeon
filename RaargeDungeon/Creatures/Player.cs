@@ -24,7 +24,7 @@ namespace RaargeDungeon.Creatures
         public int xp = 0;
         public int health = 0;
         public int baseHealth = 0;
-        public int energy = 30;
+        public int energy {get; set;}
         public int baseEnergy = 30;
         public int damage = 1;
         public int armorValue { get; set; }
@@ -79,6 +79,9 @@ namespace RaargeDungeon.Creatures
             p.numberHitDice = p.level;
             p.baseHealth = Randomizer.GetHealth(p.hitDice, p.numberHitDice, Player.GetModifier(p.constitution));
             p.health = p.baseHealth;
+            p.baseEnergy += (Randomizer.GetRandomNumber(p.intelligence) * 3) + (Player.GetModifier(p.intelligence) * 2) + ((int)(p.spellChanneling / 2) * 2);
+            p.energy = p.baseEnergy;
+
 
             // Set Armor Class
             p.armorclass = GetPlayerArmorClass(p);
@@ -327,6 +330,7 @@ namespace RaargeDungeon.Creatures
                 
                 p.level++;
                 p.baseHealth += Randomizer.GetRandomDieRoll(p.hitDice, 1, Player.GetModifier(p.constitution));
+                p.baseEnergy += (Randomizer.GetRandomNumber(p.intelligence) * 3) + (Player.GetModifier(p.intelligence) * 2) + ((int)(p.spellChanneling / 2) * 2);
 
                 // add extra attack dice in the switch for levels based on class
 
@@ -426,6 +430,7 @@ namespace RaargeDungeon.Creatures
             }
 
             p.health = p.baseHealth;
+            p.energy = p.baseEnergy;
             Console.ForegroundColor = ConsoleColor.Green;
             UIHelpers.Print($"Ding!!!! You are now level {p.level}! ");
             Console.ResetColor();

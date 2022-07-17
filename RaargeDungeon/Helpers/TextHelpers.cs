@@ -217,14 +217,14 @@ namespace RaargeDungeon.Helpers
             return style;
         }
 
-        public static void GetMonsterHitLine(string nm, int damage, bool monsterCrit, string action)
+        public static void GetMonsterHitLine(Monster m, int damage, bool monsterCrit, Player p, string action)
         {
             if (monsterCrit == true)
             {
                 if (damage != 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"{nm} delivers a **Critical Hit**");
+                    Console.WriteLine($"{m.name} delivers a **Critical Hit**");
                     Console.ResetColor();
                 }
 
@@ -234,20 +234,35 @@ namespace RaargeDungeon.Helpers
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
+                {
                     UIHelpers.Print("You quickly dodge out of the way.");
+                    p.evasion += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.evasion.ToString());
+                }
                 else if (Program.currentPlayer.currentClass == Player.PlayerClass.Rogue || Program.currentPlayer.currentClass == Player.PlayerClass.Ranger)
+                {
                     UIHelpers.Print("At the last second, you lean out of the way of the incomming blow.");
+                    p.evasion += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.evasion.ToString());
+                }
                 else
+                {
                     UIHelpers.Print("However, your armor protects you.");
+                    p.armorMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.armor.ToString());
+                }
+                    
                 Console.ResetColor();
             }
 
             if (action == "r")
             {
                 Console.WriteLine($"You lose {damage} health and are unable to escape");
+                p.armorMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.armor.ToString());
             }
             else
+            {
                 Console.WriteLine($"You lose {damage} health. ");
+                p.armorMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.armor.ToString());
+            }
+                
 
             Program.currentPlayer.health -= damage;
         }
