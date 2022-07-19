@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RaargeDungeon.Helpers;
 using RaargeDungeon.Creatures;
+using RaargeDungeon.Tests;
 using System.Collections;
 
 namespace RaargeDungeon.Combat
@@ -142,6 +143,7 @@ namespace RaargeDungeon.Combat
             
             bool monsterCrit = false;
             int mstrDamage = 0;
+            m.currentCombatOrder = 1;
 
             mstrHit = MstrHitTry(p, m, mstrHit, mstrAtkType);
 
@@ -207,6 +209,8 @@ namespace RaargeDungeon.Combat
                 else if (mstrAtkType == "spell")
                     mstrHit = CheckMagicHit(m.spellDcCheck, p.intelligence);
             }
+
+            //CombatTests.DisplayMstrHitTry(p, m, mstrHit, mstrAtkType);
 
             return mstrHit;
         }

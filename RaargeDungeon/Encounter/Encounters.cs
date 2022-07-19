@@ -274,17 +274,17 @@ namespace RaargeDungeon.Encounter
 
                     // monster damage
 
-                    HitChecks monsterHitTry = new HitChecks();
-                    monsterHitTry = MartialCombat.MstrHitTry(plyr, mstr, monsterHitTry, MartialCombat.GetMonsterAttackType(mstr));
+                    //HitChecks monsterHitTry = new HitChecks();
+                    //monsterHitTry = MartialCombat.MstrHitTry(plyr, mstr, monsterHitTry, MartialCombat.GetMonsterAttackType(mstr));
 
-                    bool monsterCrit = false;
-                    int msterDamage = 0;
+                    //bool monsterCrit = false;
+                    //int msterDamage = 0;
 
-                    if (monsterHitTry.AttackHits)
-                    {
+                    //if (monsterHitTry.AttackHits)
+                    //{
 
-                        MartialCombat.MonsterHits(mstr, monsterHitTry, "Melee", ref monsterCrit, ref msterDamage);
-                    }
+                    //    MartialCombat.MonsterHits(mstr, monsterHitTry, "Melee", ref monsterCrit, ref msterDamage);
+                    //}
 
 
                     if (rand.Next(0, upper) == 0)
@@ -314,14 +314,14 @@ namespace RaargeDungeon.Encounter
                         Console.WriteLine($"A {mstr.name} attacks in return.");
                         Console.WriteLine($"You deal {spellAttack} {chosenSpell.type} damage to the {mstr.name}.");
 
-                        if (monsterHitTry.AttackHits)
-                        {
-                            UIHelpers.Print($"A {mstr.name} growls and swings landing a blow to you.");
-                            TextHelpers.GetMonsterHitLine(mstr, msterDamage, monsterCrit, plyr, action.ToLower());
-                        }
-                        else
-                            Console.WriteLine($"A {mstr.name} swings wildly at you but misses.");
-
+                        //if (monsterHitTry.AttackHits)
+                        //{
+                        //    UIHelpers.Print($"A {mstr.name} growls and swings landing a blow to you.");
+                        //    TextHelpers.GetMonsterHitLine(mstr, msterDamage, monsterCrit, plyr, action.ToLower());
+                        //}
+                        //else
+                        //    Console.WriteLine($"A {mstr.name} swings wildly at you but misses.");
+                        plyr = MartialCombat.DoMonsterSoloCombat(mstr, plyr, MartialCombat.GetMonsterAttackType(mstr));
                     }
 
 
@@ -583,7 +583,7 @@ namespace RaargeDungeon.Encounter
                 {
                     UIHelpers.Print($"As you were occupied {m.name} advanced and attacked you.");
                     Console.WriteLine($"You quickly step out of the way.");
-                    p.evasion = Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.evasion.ToString());
+                    p.evasion += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.evasion.ToString());
                 }
 
                 //Program.currentPlayer.health -= damage;
