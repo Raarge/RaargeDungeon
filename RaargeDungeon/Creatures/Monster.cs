@@ -176,7 +176,7 @@ namespace RaargeDungeon.Creatures
 
             }
             
-            return mstrList;
+            return FullListMonster;
         }
 
         public static Monster GetCombatStats(Monster m)

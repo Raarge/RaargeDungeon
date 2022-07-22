@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using RaargeDungeon.Classes;
+using RaargeDungeon.Tests;
 
 namespace RaargeDungeon.Creatures
 {
@@ -39,6 +41,7 @@ namespace RaargeDungeon.Creatures
         public int attackDie { get; set; }
         public int numberAttackDie { get; set; }
         
+        
 
         public int hitDice { get; set; }
         public int numberHitDice { get; set; }
@@ -65,6 +68,8 @@ namespace RaargeDungeon.Creatures
         public enum ManaType { Mana, Chi, Kri, Rage }
         public ManaType manaType = ManaType.Mana;
 
+        public List<string> saveThrowProf { get; set; }
+
         public static Player BuildOutPlayer(Player p)
         {
             // Get Stats
@@ -83,8 +88,16 @@ namespace RaargeDungeon.Creatures
             p.baseEnergy += (Randomizer.GetRandomNumber(p.intelligence) * 3) + (Player.GetModifier(p.intelligence) * 2) + ((int)(p.spellChanneling / 2) * 2);
             p.energy = p.baseEnergy;
             p = GetRacialStatMods(p);
+            p.proficiencyBonus = GetProficiencyBonus(p);
+            p.saveThrowProf = GetBonusSavingThrows(p);
 
-
+            p.strengthSave = GetSavingThrowModifier(p, "strength");
+            p.constitutionSave = GetSavingThrowModifier(p, "constitution");
+            p.dexteritySave = GetSavingThrowModifier(p, "dexterity");
+            p.intelligenceSave = GetSavingThrowModifier(p, "intelligence");
+            p.wisdomSave = GetSavingThrowModifier(p, "wisdom");
+            p.charisma = GetSavingThrowModifier(p, "charisma");
+            
             // Set Armor Class
             p.armorclass = GetPlayerArmorClass(p);
 
@@ -94,7 +107,103 @@ namespace RaargeDungeon.Creatures
             // Set Attack Die
             p = GetAttackDie(p);
 
+            //StatTests.DisplayProficiencyAndSaveScoresCalculated(p);
+
             return p;
+        }
+
+        public static int GetSavingThrowModifier(Player p, string typeSave)
+        {
+            bool proficientSave = false;
+            int statScore = 0;
+            int saveModifier = 0;
+
+            foreach(string save in p.saveThrowProf)
+            {
+                if(save.ToLower() == typeSave)
+                {
+                    proficientSave = true;                    
+                }
+            }
+
+            if (typeSave == "strength")
+                statScore = p.strength;
+            else if (typeSave == "constitution")
+                statScore = p.constitution;
+            else if (typeSave == "dexterity")
+                statScore = p.dexterity;
+            else if (typeSave == "intelligence")
+                statScore = p.intelligence;
+            else if (typeSave == "wisdom")
+                statScore = p.wisdom;
+            else if (typeSave == "charisma")
+                statScore = p.charisma;
+
+
+            if (proficientSave)
+                saveModifier = p.proficiencyBonus + GetModifier(statScore);
+            else
+                saveModifier = GetModifier(statScore);
+
+            return saveModifier;
+        }
+
+        public static List<string> GetBonusSavingThrows(Player p)
+        {
+            switch (p.currentClass.ToString().ToLower())
+            {
+                case "cleric":
+                    p.saveThrowProf = ClericClass.getSaveThrowProficiencies();
+                    break;
+                case "mage":
+                    p.saveThrowProf = MageClass.getSaveThrowProficiencies();
+                    break;
+                case "ranger":
+                    p.saveThrowProf = RangerClass.getSaveThrowProficiencies();
+                    break;
+                case "warrior":
+                    p.saveThrowProf = WarriorClass.getSaveThrowProficiencies();
+                    break;
+                case "rogue":
+                    p.saveThrowProf = RogueClass.getSaveThrowProficiencies();
+                    break;
+                case "monk":
+                    p.saveThrowProf = MonkClass.getSaveThrowProficiencies();
+                    break;
+                default:
+                    break;
+            }
+            return p.saveThrowProf;
+        } 
+
+        public static int GetProficiencyBonus(Player p)
+        {
+            switch (p.currentClass.ToString().ToLower())
+            {
+                case "cleric":
+                    p.proficiencyBonus = ClericClass.getProficiencyBonus(p.level);
+                    break;
+                case "mage":
+                    p.proficiencyBonus = MageClass.getProficiencyBonus(p.level);
+                    break;
+                case "ranger":
+                    p.proficiencyBonus = RangerClass.getProficiencyBonus(p.level);
+                    break;
+                case "warrior":
+                    p.proficiencyBonus = WarriorClass.getProficiencyBonus(p.level);
+                    break;
+                case "rogue":
+                    p.proficiencyBonus = RogueClass.getProficiencyBonus(p.level);
+                    break;
+                case "monk":
+                    p.proficiencyBonus = MonkClass.getProficiencyBonus(p.level);
+                    break;
+                default:
+                    p.proficiencyBonus = 0;
+                    break;                                 
+            }
+
+            return p.proficiencyBonus;
         }
 
         public static Player GetAttackDie(Player p)
@@ -334,7 +443,16 @@ namespace RaargeDungeon.Creatures
                 p.baseHealth += Randomizer.GetRandomDieRoll(p.hitDice, 1, Player.GetModifier(p.constitution));
                 p.baseEnergy += (Randomizer.GetRandomNumber(p.intelligence) * 3) + (Player.GetModifier(p.intelligence) * 2) + ((int)(p.spellChanneling / 2) * 2);
 
-                // add extra attack dice in the switch for levels based on class
+                // recalculate proficiency bonus
+                p.proficiencyBonus = GetProficiencyBonus(p);
+
+                //recalculate saves modifiers
+                p.strengthSave = GetSavingThrowModifier(p, "strength");
+                p.constitutionSave = GetSavingThrowModifier(p, "constitution");
+                p.dexteritySave = GetSavingThrowModifier(p, "dexterity");
+                p.intelligenceSave = GetSavingThrowModifier(p, "intelligence");
+                p.wisdomSave = GetSavingThrowModifier(p, "wisdom");
+                p.charisma = GetSavingThrowModifier(p, "charisma");
 
                 switch (p.level)
                 {
@@ -436,6 +554,8 @@ namespace RaargeDungeon.Creatures
             Console.ForegroundColor = ConsoleColor.Green;
             UIHelpers.Print($"Ding!!!! You are now level {p.level}! ");
             Console.ResetColor();
+
+            //StatTests.DisplayProficiencyAndSaveScoresCalculated(p);
 
             return p;
         }

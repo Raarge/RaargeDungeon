@@ -63,9 +63,9 @@ namespace RaargeDungeon.Combat
                 if (plryAtkType == "melee")
                 {
                     if (p.currentClass == Player.PlayerClass.Monk || p.currentClass == Player.PlayerClass.Rogue)
-                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.dexterity)) + (p.weaponValue / 2) + ((int)p.weaponMastery / 2);
+                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.dexterity)) + (p.proficiencyBonus) + (p.weaponValue / 2) + ((int)p.weaponMastery / 2);
                     else
-                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.strength)) + (p.weaponValue / 2) + ((int)p.weaponMastery / 2);
+                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.strength)) + (p.proficiencyBonus) + (p.weaponValue / 2) + ((int)p.weaponMastery / 2);
 
                     p.weaponMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.weapon.ToString());
                 }

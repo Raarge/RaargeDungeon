@@ -21,6 +21,15 @@ namespace RaargeDungeon.Creatures
         public int currentCombatOrder { get; set; }
         public int spellDcCheck { get; set; }
 
+        public int strengthSave { get; set; }
+        public int constitutionSave { get; set; }
+        public int dexteritySave { get; set; }
+        public int intelligenceSave { get; set; }
+        public int wisdomSave { get; set; }
+        public int charismaSave { get; set; }
+        public int proficiencyBonus { get; set; }
+
+
         public HitChecks hitChecks { get; set; }
 
         public static int GetSpellDcCheck(int intelligence, int level, int MagicMastery = 0)
