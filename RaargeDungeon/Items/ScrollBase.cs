@@ -14,8 +14,8 @@ namespace RaargeDungeon.Items
         public int RequiredLevel;
         public int SpellCost;
         public int CurrentSpellCost;
-        public int minCost;
-        public string flavorText;
+        public int MinCost;
+        public string FlavorText;
 
     }
 }

@@ -27,7 +27,8 @@ namespace RaargeDungeon.Creatures
         public int health = 0;
         public int baseHealth = 0;
         public int energy {get; set;}
-        public int baseEnergy = 30;
+        public int spellLevelDenominator { get; set; }
+        public int baseEnergy { get; set; }
         public int damage = 1;
         public int armorValue { get; set; }
         public int armorclass { get; set; }
@@ -46,6 +47,7 @@ namespace RaargeDungeon.Creatures
         public int hitDice { get; set; }
         public int numberHitDice { get; set; }
 
+        // learning skills
         public decimal magicMastery = 0.0m;
         public decimal spellCasting = 0.0m;
         public decimal spellChanneling = 0.0m;
@@ -87,6 +89,8 @@ namespace RaargeDungeon.Creatures
             p.health = p.baseHealth;
             p.baseEnergy += (Randomizer.GetRandomNumber(p.intelligence) * 3) + (Player.GetModifier(p.intelligence) * 2) + ((int)(p.spellChanneling / 2) * 2);
             p.energy = p.baseEnergy;
+            p.spellLevelDenominator = GetDenominator(p);
+
             p = GetRacialStatMods(p);
             p.proficiencyBonus = GetProficiencyBonus(p);
             p.saveThrowProf = GetBonusSavingThrows(p);
@@ -110,6 +114,20 @@ namespace RaargeDungeon.Creatures
             //StatTests.DisplayProficiencyAndSaveScoresCalculated(p);
 
             return p;
+        }
+
+        public static int GetDenominator(Player p)
+        {
+            int denominator = 0;
+
+            if (p.currentClass == PlayerClass.Mage)
+                denominator = 2;
+            else if (p.currentClass == PlayerClass.Cleric)
+                denominator = 2;
+            else
+                denominator = 0;
+
+            return denominator;
         }
 
         public static int GetSavingThrowModifier(Player p, string typeSave)
@@ -453,7 +471,7 @@ namespace RaargeDungeon.Creatures
                 p.intelligenceSave = GetSavingThrowModifier(p, "intelligence");
                 p.wisdomSave = GetSavingThrowModifier(p, "wisdom");
                 p.charisma = GetSavingThrowModifier(p, "charisma");
-
+                p = LevelSpells(p);
                 switch (p.level)
                 {
                     case 3:
@@ -558,6 +576,24 @@ namespace RaargeDungeon.Creatures
             //StatTests.DisplayProficiencyAndSaveScoresCalculated(p);
 
             return p;
+        }
+
+        public Player LevelSpells(Player p)
+        {
+            SpellScroll[] spells = p.spells.ToArray();
+
+            for(var i = 0; i <= spells.Length -1 ; i++)
+            {
+                if(p.level % p.spellLevelDenominator == 0)
+                {
+                    var spellName = spells[i].Name;
+                    var numDice = spells[i].spellNumberDamageDice;
+                    p.spells.Find(s => s.Name == spellName).spellNumberDamageDice = numDice + 1;
+                }
+            }
+
+            return p;
+        
         }
         #endregion
 

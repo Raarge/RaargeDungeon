@@ -23,30 +23,27 @@ namespace RaargeDungeon.Encounter
             //Player plyr = new Player();
 
             string weapon = TextHelpers.GetWeapon();
-            if (Program.currentPlayer.currentClass == Player.PlayerClass.Mage)
+            if (plyr.currentClass == Player.PlayerClass.Mage || plyr.currentClass == Player.PlayerClass.Cleric)
             {
-                SpellScroll MagicMissile = new SpellScroll();
-                MagicMissile.Name = "Magic Missile";
-                MagicMissile.ShortName = "mm";
-                MagicMissile.Description = "Arcane missiles that do not miss.";
-                MagicMissile.RequiredLevel = 1;
-                MagicMissile.damage = 4;
-                MagicMissile.type = "Arcane";
-                MagicMissile.critMultiplier = 3;
-                MagicMissile.SpellCost = 10;
-                MagicMissile.minCost = 6;
-                MagicMissile.flavorText = $"bolts of {MagicMissile.type} energy slam into your opponent.";
-                MagicMissile.CurrentSpellCost = MagicMissile.SpellCost;
+                var scrollName = "";
+
+                if (plyr.currentClass == Player.PlayerClass.Mage)
+                    plyr = SpellScroll.GetSpellScroll(plyr, "Magic Missile");
+                else if (plyr.currentClass == Player.PlayerClass.Cleric)
+                    plyr = SpellScroll.GetSpellScroll(plyr, "Inflict Wounds");
+
+                foreach (var spell in plyr.spells)
+                    scrollName = spell.Name;
 
                 UIHelpers.Print($"You throw open the door, grab a {weapon} and a Spell Scroll from a table.");
                 UIHelpers.Print("As your hand touches the scroll it vanishes and you realize you know a spell.");
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("You learn Magic Missile!");
+                Console.WriteLine($"You learn {scrollName}");
                 Console.ResetColor();
                 Console.WriteLine("You quickly regain control and charge you captor...");
                 Console.WriteLine(" ");
 
-                plyr.spells.Add(MagicMissile);
+                
 
                 // test
                 //Console.WriteLine("You know the following spells:");
@@ -132,7 +129,8 @@ namespace RaargeDungeon.Encounter
                 Console.WriteLine(" =====================");
                 Console.WriteLine(" | (A)ttack  (D)efend |");
 
-                if (Program.currentPlayer.currentClass == Player.PlayerClass.Mage)
+                if (plyr.currentClass == Player.PlayerClass.Mage ||
+                    plyr.currentClass == Player.PlayerClass.Cleric)
                 {
                     Console.WriteLine(" | (C)ast  (S)tats    |");
                 }
@@ -270,22 +268,7 @@ namespace RaargeDungeon.Encounter
                     chosenSpell = Pickers.GetChosenSpell();
                     int spellCost = Checkers.GetSpellCost(chosenSpell);
 
-                    int spellAttack = (int)Math.Ceiling(Randomizer.GetRandomDieRoll(chosenSpell.damage, 1, BaseCreature.GetModifier(plyr.intelligence)) + Program.currentPlayer.magicMastery) * (plyr.level / 2 + 1);
-
-                    // monster damage
-
-                    //HitChecks monsterHitTry = new HitChecks();
-                    //monsterHitTry = MartialCombat.MstrHitTry(plyr, mstr, monsterHitTry, MartialCombat.GetMonsterAttackType(mstr));
-
-                    //bool monsterCrit = false;
-                    //int msterDamage = 0;
-
-                    //if (monsterHitTry.AttackHits)
-                    //{
-
-                    //    MartialCombat.MonsterHits(mstr, monsterHitTry, "Melee", ref monsterCrit, ref msterDamage);
-                    //}
-
+                    int spellAttack = (int)Math.Ceiling(Randomizer.GetRandomDieRoll(chosenSpell.spellDamageDice, chosenSpell.spellNumberDamageDice, (chosenSpell.spellDamageModifier * chosenSpell.spellNumberDamageDice)) + Program.currentPlayer.magicMastery) * (plyr.level / 2 + 1);
 
                     if (rand.Next(0, upper) == 0)
                         spellFail = true;
@@ -310,17 +293,10 @@ namespace RaargeDungeon.Encounter
                         }
 
                         Console.WriteLine($"You begin casting {chosenSpell.Name}, you thrust your hand forward and");
-                        Console.WriteLine(chosenSpell.flavorText);
+                        Console.WriteLine(chosenSpell.FlavorText);
                         Console.WriteLine($"A {mstr.name} attacks in return.");
                         Console.WriteLine($"You deal {spellAttack} {chosenSpell.type} damage to the {mstr.name}.");
 
-                        //if (monsterHitTry.AttackHits)
-                        //{
-                        //    UIHelpers.Print($"A {mstr.name} growls and swings landing a blow to you.");
-                        //    TextHelpers.GetMonsterHitLine(mstr, msterDamage, monsterCrit, plyr, action.ToLower());
-                        //}
-                        //else
-                        //    Console.WriteLine($"A {mstr.name} swings wildly at you but misses.");
                         plyr = MartialCombat.DoMonsterSoloCombat(mstr, plyr, MartialCombat.GetMonsterAttackType(mstr));
                     }
 

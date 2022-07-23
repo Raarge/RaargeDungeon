@@ -20,8 +20,8 @@ namespace RaargeDungeon.Helpers
         public static int GetSpellCost(SpellScroll spell)
         {
             int spellCost = (int)Math.Floor((decimal)spell.SpellCost - Program.currentPlayer.spellChanneling);
-            if (spellCost < spell.minCost)
-                spellCost = spell.minCost;
+            if (spellCost < spell.MinCost)
+                spellCost = spell.MinCost;
             return spellCost;
         }
 
