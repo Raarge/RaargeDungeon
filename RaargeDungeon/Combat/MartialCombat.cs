@@ -12,6 +12,79 @@ namespace RaargeDungeon.Combat
 {
     public class MartialCombat
     {
+        public static Combatants DoExtraAttack(Player p, Monster m, string typeAttack, string action)
+        {
+            Combatants combatants = new Combatants();
+            HitChecks plyrHit = new HitChecks();
+            bool playerCrit = false;
+            int plyrDamage = 0;
+
+            string plyrAttackType = typeAttack;
+            p.currentCombatOrder = 1;
+
+            plyrHit = PlyrHitTry(p, m, plyrHit, plyrAttackType);
+
+            if (plyrHit.AttackHits)
+            {
+                if (plyrHit.ToHitRoll == 20)
+                    playerCrit = true;
+
+                if (plyrAttackType == "melee")
+                {
+                    if (p.currentClass == Player.PlayerClass.Monk || p.currentClass == Player.PlayerClass.Rogue)
+                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.dexterity)) + (p.weaponValue / 2) + ((int)p.weaponMastery / 2);
+                    else
+                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.strength)) + (p.weaponValue / 2) + ((int)p.weaponMastery / 2);
+
+                    p.weaponMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.weapon.ToString());
+                }
+
+                if (playerCrit)
+                    plyrDamage *= 2;
+
+                if (plyrDamage < 0)
+                    plyrDamage = 0;
+            }
+
+            if (plyrHit.AttackHits)
+            {
+                string leader = TextHelpers.GetAttackStart(plyrDamage);
+                string style = TextHelpers.GetWeaponAttackStyle();
+
+                if (p.currentClass == Player.PlayerClass.Monk)
+                    UIHelpers.Print("You focus your chi into a physical attack.");
+                UIHelpers.Print($"{leader}, {style} at {m.name}, who attacks in return.");
+                if (playerCrit)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("You land a critical!");
+                    Console.ResetColor();
+                }
+                Console.WriteLine($"You deal {plyrDamage} damage to {m.name}.");
+
+            }
+            else
+                Console.WriteLine($"You swing your {TextHelpers.GetWeapon()} at a {m.name} but miss.");
+
+            m.health -= plyrDamage;
+
+            m.health -= plyrDamage;
+            if (m.health <= 0)
+            {
+
+                m.IsAlive = false;
+                
+            }
+
+            combatants.player = p;
+            combatants.monster = m;
+
+            return combatants;
+
+
+
+
+        }
         public static Combatants DoAttack(Player p, Monster m, string typeAttack, string action)
         {
             Combatants combatants = new Combatants();
@@ -52,9 +125,6 @@ namespace RaargeDungeon.Combat
             int mstrDamage = 0;
 
 
-            //rewrite line below ******************************************************
-            //damage = Randomizer.GetRandomDieRoll(mstr.wisdom, mstr.numberAttackDice);
-
             if (plyrHit.AttackHits)
             {
                 if (plyrHit.ToHitRoll == 20)
@@ -63,9 +133,9 @@ namespace RaargeDungeon.Combat
                 if (plryAtkType == "melee")
                 {
                     if (p.currentClass == Player.PlayerClass.Monk || p.currentClass == Player.PlayerClass.Rogue)
-                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.dexterity)) + (p.proficiencyBonus) + (p.weaponValue / 2) + ((int)p.weaponMastery / 2);
+                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.dexterity)) + (p.weaponValue / 2) + ((int)p.weaponMastery / 2);
                     else
-                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.strength)) + (p.proficiencyBonus) + (p.weaponValue / 2) + ((int)p.weaponMastery / 2);
+                        plyrDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, BaseCreature.GetModifier(p.strength)) + (p.weaponValue / 2) + ((int)p.weaponMastery / 2);
 
                     p.weaponMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.weapon.ToString());
                 }
@@ -119,7 +189,7 @@ namespace RaargeDungeon.Combat
                 Console.WriteLine($"A {m.name} swings wildly at you but misses.");
                 p.evasion += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.evasion.ToString());
             }
-                
+
 
             m.health -= plyrDamage;
 
@@ -140,7 +210,7 @@ namespace RaargeDungeon.Combat
         {
             HitChecks mstrHit = new HitChecks();
             string mstrAtkType = GetMonsterAttackType(m);
-            
+
             bool monsterCrit = false;
             int mstrDamage = 0;
             m.currentCombatOrder = 1;
@@ -204,8 +274,8 @@ namespace RaargeDungeon.Combat
                 if (mstrAtkType == "melee")
                 {
                     int modifiedAC = p.armorclass + (int)((p.evasion + p.armorMastery) / 4m);
-                    mstrHit = CheckHit(modifiedAC, m.strength);
-                }                    
+                    mstrHit = CheckHit(modifiedAC, m.strength, 0);
+                }
                 else if (mstrAtkType == "spell")
                     mstrHit = CheckMagicHit(m.spellDcCheck, p.intelligence);
             }
@@ -222,11 +292,11 @@ namespace RaargeDungeon.Combat
                 if (plryAtkType == "melee")
                 {
                     int modifiedStr = p.strength + (int)(p.weaponMastery / 2m);
-                    plyrHit = CheckHit(m.armorclass, p.strength);
+                    plyrHit = CheckHit(m.armorclass, modifiedStr, p.proficiencyBonus);
                 }
                 else if (plryAtkType == "spell")
                 {
-                    int modifiedDcCheck = p.spellDcCheck + (int)(p.magicMastery / 2m); 
+                    int modifiedDcCheck = p.spellDcCheck + (int)(p.magicMastery / 2m);
                     plyrHit = CheckMagicHit(modifiedDcCheck, m.intelligence);
                 }
             }
@@ -239,7 +309,7 @@ namespace RaargeDungeon.Combat
             string type = "";
 
             //if (m.spells.Count != 0)
-                type = "melee";
+            type = "melee";
             //else
             //{
             //    int randChk = Randomizer.GetRandomNumber(4);
@@ -252,11 +322,11 @@ namespace RaargeDungeon.Combat
             return type;
         }
 
-        public static HitChecks CheckHit(int opossingAC, int Str)
+        public static HitChecks CheckHit(int opossingAC, int Str, int profBonus)
         {
             HitChecks hitCheck = new HitChecks();
             bool didHit;
-            int atkRoll = Randomizer.GetRandomDieRoll(20) + BaseCreature.GetModifier(Str);
+            int atkRoll = Randomizer.GetRandomDieRoll(20) + BaseCreature.GetModifier(Str) + profBonus;
 
             if (atkRoll > opossingAC)
                 didHit = true;

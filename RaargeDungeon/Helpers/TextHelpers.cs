@@ -143,7 +143,7 @@ namespace RaargeDungeon.Helpers
                 style = rando switch
                 {
                     0 => "you thrust your fists forward",
-                    1 => "you spin on your heal",
+                    1 => "you spin on your heel",
                     2 => "you swing your fists in a blurring motion",
                     _ => "you use your body as a weapon",
                 };

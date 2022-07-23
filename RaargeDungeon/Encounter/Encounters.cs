@@ -141,7 +141,10 @@ namespace RaargeDungeon.Encounter
                 Console.WriteLine(" |                    |");
                 Console.WriteLine(" =====================");
                 Console.WriteLine($" Level: {plyr.level} Class: {plyr.currentClass} Coins: {plyr.coins}");
-                Console.WriteLine($" Potions: {plyr.potion} {plyr.manaType} Potions: {plyr.manaPotion}");
+                if (plyr.currentClass == Player.PlayerClass.Monk)
+                    Console.WriteLine($" Potions: {plyr.potion} ");
+                else
+                    Console.WriteLine($" Potions: {plyr.potion} {plyr.manaType} Potions: {plyr.manaPotion}");
 
                 // -- Health Bar --
                 UIHelpers.GenerateStatusBar("Health", "<", "-", ConsoleColor.Red, plyr.health, plyr.baseHealth);
@@ -187,6 +190,42 @@ namespace RaargeDungeon.Encounter
                     Combatants c = new Combatants();
 
                     MartialCombat.DoAttack(plyr, mstr, "melee", action);
+
+                    if (plyr.currentClass == Player.PlayerClass.Monk && plyr.level > 1 && plyr.energy > 0)
+                    {
+                        var input = "";
+                        KiAbilities ability = new KiAbilities();
+
+                        Console.WriteLine("Use Chi Ability? (y or n)");
+                        input = Console.ReadLine();
+
+                        while(input != "y" && input != "n" && input.Length != 1 && input == null)
+                        {
+                            Console.WriteLine("You entered a wrong entry.  Try again.");
+                            Console.WriteLine("Use Chi Ability? (y or n)");
+                            input = Console.ReadLine();
+                        }
+
+                        if (input == "y")
+                        {
+                            ability = Pickers.GetChosenChiAbility(plyr);
+                            int chiCost = ability.CurrentSpellCost;
+
+                            if (plyr.energy >= chiCost)
+                            {
+                                plyr.energy -= chiCost;
+                                Console.WriteLine($"You attack a {mstr.name} using {ability.Name}. ");
+                                for (int i = 1; i <= ability.abilityNumberAttacks; i++)
+                                {
+                                    MartialCombat.DoExtraAttack(plyr, mstr, ability.abilityChiType, action);
+                                }
+                            }
+                            else
+                                Console.WriteLine("You do not have enough Chi to do that!");
+                        }
+                        
+
+                    }
 
                     //special attacks
 
@@ -396,6 +435,9 @@ namespace RaargeDungeon.Encounter
             Console.ResetColor();
             plyr.coins += cn;
             plyr.xp += xp;
+
+            if (plyr.currentClass == Player.PlayerClass.Monk)
+                plyr.energy = plyr.baseEnergy;
 
             if (plyr.CanLevelUp(plyr.level))
                 plyr = plyr.LevelUp(plyr);

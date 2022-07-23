@@ -247,6 +247,7 @@ namespace RaargeDungeon
                 {
 
                     m.IsAlive = false;
+                    
                 }
 
                 p.magicMastery += Checkers.GetSkillXPGain(m.level, 3, 1, "magic");

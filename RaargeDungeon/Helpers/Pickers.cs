@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RaargeDungeon.Items;
+using RaargeDungeon.Creatures;
 
 namespace RaargeDungeon.Helpers
 {
@@ -54,6 +55,53 @@ namespace RaargeDungeon.Helpers
             }
 
             return spellChosen;
+        }
+
+        public static KiAbilities GetChosenChiAbility(Player p)
+        {
+            KiAbilities abilityChosen = new KiAbilities();
+            List<string> shortNames = new List<string>();
+            bool check = false;
+
+            Console.Write("Available Abilities: ");
+            foreach (KiAbilities ability in p.kiAbilities)
+            {
+                Console.Write($"{ability.Name} ({ability.ShortName}), ");
+                shortNames.Add(ability.ShortName);
+            }
+
+            Console.WriteLine(" ");
+            Console.WriteLine("Which ability will you use?");
+            string input = Console.ReadLine().ToLower();
+
+            while (check == false)
+            {
+                foreach (string shortName in shortNames)
+                {
+                    if (shortName == input)
+                    {
+                        check = true;
+                        break;
+                    }
+                }
+
+                if (check == false)
+                {
+                    Console.WriteLine("You didn't choose a valid ability. Enter an ability.");
+                    input = Console.ReadLine().ToLower();
+                }
+            }
+
+            foreach (KiAbilities currentAbility in p.kiAbilities)
+            {
+                if (currentAbility.ShortName == input)
+                {
+                    abilityChosen = currentAbility;
+                    break;
+                }
+            }
+
+            return abilityChosen;
         }
     }
 }

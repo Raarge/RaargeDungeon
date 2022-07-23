@@ -72,6 +72,13 @@ namespace RaargeDungeon.Creatures
 
         public List<string> saveThrowProf { get; set; }
 
+        // Monk Monastatic Tradition
+        public enum MonastaticTradition { OpenHand, Shadow, Elements }
+        public MonastaticTradition tradition { get; set; }
+        
+        public List<KiAbilities> kiAbilities { get; set; }
+
+        #region BuildOutPlayer
         public static Player BuildOutPlayer(Player p)
         {
             // Get Stats
@@ -87,7 +94,10 @@ namespace RaargeDungeon.Creatures
             p.numberHitDice = p.level;
             p.baseHealth = Randomizer.GetHealth(p.hitDice, p.numberHitDice, Player.GetModifier(p.constitution));
             p.health = p.baseHealth;
-            p.baseEnergy += (Randomizer.GetRandomNumber(p.intelligence) * 3) + (Player.GetModifier(p.intelligence) * 2) + ((int)(p.spellChanneling / 2) * 2);
+            if (p.currentClass != PlayerClass.Monk)
+                p.baseEnergy += (Randomizer.GetRandomNumber(p.intelligence) * 3) + (Player.GetModifier(p.intelligence) * 2) + ((int)(p.spellChanneling / 2) * 2);
+            else if (p.currentClass == PlayerClass.Monk)
+                p.baseEnergy = 2;
             p.energy = p.baseEnergy;
             p.spellLevelDenominator = GetDenominator(p);
 
@@ -115,7 +125,9 @@ namespace RaargeDungeon.Creatures
 
             return p;
         }
+        #endregion
 
+        #region Get Denominator
         public static int GetDenominator(Player p)
         {
             int denominator = 0;
@@ -129,7 +141,9 @@ namespace RaargeDungeon.Creatures
 
             return denominator;
         }
+        #endregion
 
+        #region Get Saving Throw Modifier
         public static int GetSavingThrowModifier(Player p, string typeSave)
         {
             bool proficientSave = false;
@@ -165,7 +179,9 @@ namespace RaargeDungeon.Creatures
 
             return saveModifier;
         }
+        #endregion
 
+        #region Get Bonus Saving Throws
         public static List<string> GetBonusSavingThrows(Player p)
         {
             switch (p.currentClass.ToString().ToLower())
@@ -192,8 +208,10 @@ namespace RaargeDungeon.Creatures
                     break;
             }
             return p.saveThrowProf;
-        } 
+        }
+        #endregion
 
+        #region Get Proficiency Bonus
         public static int GetProficiencyBonus(Player p)
         {
             switch (p.currentClass.ToString().ToLower())
@@ -223,7 +241,9 @@ namespace RaargeDungeon.Creatures
 
             return p.proficiencyBonus;
         }
+        #endregion
 
+        #region Get Attack Die
         public static Player GetAttackDie(Player p)
         {
             
@@ -260,7 +280,9 @@ namespace RaargeDungeon.Creatures
             }
             return p;
         }
+        #endregion
 
+        #region Get Monk Attack Die
         public static Player GetMonkAttackDie(Player p)
         {
             switch (p.level)
@@ -304,7 +326,8 @@ namespace RaargeDungeon.Creatures
             }
             return p;
         }
-
+        #endregion
+        
         public static int GetPlayerHitDice(Player p)
         {
             int hd = 0;
@@ -459,7 +482,10 @@ namespace RaargeDungeon.Creatures
                 
                 p.level++;
                 p.baseHealth += Randomizer.GetRandomDieRoll(p.hitDice, 1, Player.GetModifier(p.constitution));
-                p.baseEnergy += (Randomizer.GetRandomNumber(p.intelligence) * 3) + (Player.GetModifier(p.intelligence) * 2) + ((int)(p.spellChanneling / 2) * 2);
+                if (p.currentClass != PlayerClass.Monk)
+                    p.baseEnergy += (Randomizer.GetRandomNumber(p.intelligence) * 3) + (Player.GetModifier(p.intelligence) * 2) + ((int)(p.spellChanneling / 2) * 2);
+                else if (p.currentClass == PlayerClass.Monk)
+                    p.baseEnergy++;
 
                 // recalculate proficiency bonus
                 p.proficiencyBonus = GetProficiencyBonus(p);
@@ -474,9 +500,15 @@ namespace RaargeDungeon.Creatures
                 p = LevelSpells(p);
                 switch (p.level)
                 {
+                    case 2:
+                        if (p.currentClass == PlayerClass.Monk)
+                            p = KiAbilities.GetKiAbilities(p, "Flurry of Blows");
+                        break;
                     case 3:
                         if (p.currentClass == PlayerClass.Warrior || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
                             p.numberAttackDie++;
+                        if (p.currentClass == PlayerClass.Monk)
+                            p.tradition = GetSelectedMonastaticTradition(p);
                         break;
                     case 4:
                         if (p.currentClass == PlayerClass.Warrior)
@@ -571,13 +603,69 @@ namespace RaargeDungeon.Creatures
             p.energy = p.baseEnergy;
             Console.ForegroundColor = ConsoleColor.Green;
             UIHelpers.Print($"Ding!!!! You are now level {p.level}! ");
+            if (p.currentClass == PlayerClass.Monk && p.level == 2)
+                UIHelpers.Print("You feel your Chi enhance with the knowledge of Flurry of Blows");
             Console.ResetColor();
 
             //StatTests.DisplayProficiencyAndSaveScoresCalculated(p);
 
             return p;
         }
+
+        #region Get Selected Monastatic Tradition
+        public MonastaticTradition GetSelectedMonastaticTradition(Player p)
+        {
+            var input = "";
+            MonastaticTradition tradition = MonastaticTradition.Shadow;
+            var hand = "The Way of the Open Hand";
+            var shadow = "The way of Shadow";
+            var elements = "The way of the Four Elements";
+            var chosen = "";
+
+            Console.Clear();
+            UIHelpers.Print("Your mind clears and you hear your sensai speaking to you.");
+            UIHelpers.Print($"{p.name} it is time for you to choose a Monastatic Tradition to follow.");
+            Console.WriteLine("There are three traditions to choose from. ");
+            UIHelpers.Print($" 1. {hand}");
+            UIHelpers.Print($" 2. {shadow}");
+            UIHelpers.Print($" 3. {elements}");
+            Console.WriteLine(" ");
+            UIHelpers.Print("Which will you choose? 1, 2 or 3");
+            input = Console.ReadLine();
+
+            while(input != "1" && input != "2" && input != "3" && input != null)
+            {
+                Console.WriteLine("You did not choose a correct option.");
+                UIHelpers.Print("Which will you choose? 1, 2 or 3");
+                input = Console.ReadLine();
+            }
+
+            if (input == "1")
+            {
+                tradition = MonastaticTradition.OpenHand;
+                chosen = hand;
+            }                
+            else if (input == "2")
+            {
+                tradition = MonastaticTradition.Shadow;
+                chosen = shadow;
+            }                
+            else
+            {
+                tradition = MonastaticTradition.Elements;
+                chosen = elements;
+            }                
+
+            UIHelpers.Print($"You feel your Chi focus as {chosen} reenforces it.");
+            Console.ReadKey();
+            Console.Clear();
+
+            return tradition;
+
         
+        }
+        #endregion
+
         public Player LevelSpells(Player p)
         {
             SpellScroll[] spells = p.spells.ToArray();
