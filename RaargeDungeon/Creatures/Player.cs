@@ -577,7 +577,7 @@ namespace RaargeDungeon.Creatures
 
             return p;
         }
-
+        
         public Player LevelSpells(Player p)
         {
             SpellScroll[] spells = p.spells.ToArray();
