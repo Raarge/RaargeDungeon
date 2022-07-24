@@ -262,9 +262,10 @@ namespace RaargeDungeon.Helpers
                 Console.WriteLine($"You lose {damage} health. ");
                 p.armorMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.armor.ToString());
             }
-                
 
-            Program.currentPlayer.health -= damage;
+            if (damage > p.health)
+                damage = p.health;
+            p.health -= damage;
         }
 
         public static string GetLeader(int pwr)

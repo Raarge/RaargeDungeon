@@ -60,7 +60,8 @@ namespace RaargeDungeon
                     Console.ResetColor();                    
                     
                 }
-                
+                if (m.health < backStabDamage)
+                    backStabDamage = m.health;
                 m.health -= backStabDamage;
                 if (m.health <= 0)
                 {
@@ -143,6 +144,8 @@ namespace RaargeDungeon
                     UIHelpers.Print($"You gesture chanting loudly, a {spellType} materializes striking a {m.name} dealing ");
                     UIHelpers.Print($"{spellDamage} damage.");
                     Console.ResetColor();
+                    if (m.health < spellDamage)
+                        spellDamage = m.health;
                     m.health -= spellDamage;
                     if (m.health <= 0)
                     {
@@ -178,7 +181,10 @@ namespace RaargeDungeon
                     UIHelpers.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {m.name} dealing ");
                     UIHelpers.Print($"{animalCallDamage} damage.");
                     Console.ResetColor();
+                    if (m.health < animalCallDamage)
+                        animalCallDamage = m.health;
                     m.health -= animalCallDamage;
+
                     if (m.health <= 0)
                     {
                         // Console.WriteLine($"{nm} was Slain!!");

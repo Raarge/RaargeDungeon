@@ -66,8 +66,8 @@ namespace RaargeDungeon.Combat
             else
                 Console.WriteLine($"You swing your {TextHelpers.GetWeapon()} at a {m.name} but miss.");
 
-            m.health -= plyrDamage;
-
+            if (m.health < plyrDamage)
+                plyrDamage = m.health;
             m.health -= plyrDamage;
             if (m.health <= 0)
             {
@@ -232,6 +232,7 @@ namespace RaargeDungeon.Combat
                 TextHelpers.GetMonsterHitLine(m, mstrDamage, monsterCrit, p, action.ToLower());
                 string typeXP = Player.skillCombatType.evasion.ToString();
                 p.armorMastery += Checkers.GetCombatSkillGain(m, p, typeXP);
+
             }
             else
             {

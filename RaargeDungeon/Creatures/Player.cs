@@ -496,7 +496,7 @@ namespace RaargeDungeon.Creatures
                 p.dexteritySave = GetSavingThrowModifier(p, "dexterity");
                 p.intelligenceSave = GetSavingThrowModifier(p, "intelligence");
                 p.wisdomSave = GetSavingThrowModifier(p, "wisdom");
-                p.charisma = GetSavingThrowModifier(p, "charisma");
+                p.charismaSave = GetSavingThrowModifier(p, "charisma");
                 p = LevelSpells(p);
                 switch (p.level)
                 {

@@ -527,20 +527,13 @@ namespace RaargeDungeon.Encounter
             }
             return ecl;
         }
-// Rewrite this fixing the attack attempt by the opponent
-//*******************************************************
+
         private static void PotionHealing(Monster m, Player p, bool monsterCrit, string action, string type)
         {
             if (Program.currentPlayer.potion == 0)
             {
-                // out of potions
-                int damage = m.level / 2 - (Program.currentPlayer.armorValue + Program.currentPlayer.damageResit);
-                if (damage < 0)
-                    damage = 0;
-
                 UIHelpers.Print("You feel around but find no potions!");
-                Console.WriteLine($"The {m.name} strikes you with a blow and you lose {damage} health!");
-                Program.currentPlayer.health -= damage;
+                MartialCombat.DoMonsterSoloCombat(m, p, action);
                 p.armorMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.armor.ToString());
             }
             else
@@ -569,6 +562,8 @@ namespace RaargeDungeon.Encounter
                         Program.currentPlayer.health = Program.currentPlayer.baseHealth;
 
                     Program.currentPlayer.potion -= 1;
+
+                    
                 }
                 else if (type == "mana")
                 {
@@ -592,19 +587,19 @@ namespace RaargeDungeon.Encounter
                 }
 
 
-                if (rand.Next(0, 2) == 0)
-                {
-                    UIHelpers.Print($"As you were occupied {m.name} advanced and attacked you.");
-                    TextHelpers.GetMonsterHitLine(m, damage, monsterCrit, p, action);
-                }
-                else
+                if (rand.Next(0, 4) == 0)
                 {
                     UIHelpers.Print($"As you were occupied {m.name} advanced and attacked you.");
                     Console.WriteLine($"You quickly step out of the way.");
                     p.evasion += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.evasion.ToString());
                 }
+                else
+                {
+                    UIHelpers.Print($"As you were occupied {m.name} advanced and attacked you.");
+                    MartialCombat.DoMonsterSoloCombat(m, p, action);
+                }
 
-                //Program.currentPlayer.health -= damage;
+                
             }
         }
 
