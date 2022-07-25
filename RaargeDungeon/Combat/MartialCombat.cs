@@ -12,7 +12,7 @@ namespace RaargeDungeon.Combat
 {
     public class MartialCombat
     {
-        public static Combatants DoExtraAttack(Player p, Monster m, string typeAttack, string action)
+        public static Combatants DoExtraAttack(Player p, Monster m, string typeAttack, string action, string specialAtkShortName)
         {
             Combatants combatants = new Combatants();
             HitChecks plyrHit = new HitChecks();
@@ -61,6 +61,14 @@ namespace RaargeDungeon.Combat
                     Console.ResetColor();
                 }
                 Console.WriteLine($"You deal {plyrDamage} damage to {m.name}.");
+                if(specialAtkShortName == "fb" && p.level >= 3 && p.tradition.ToString() == "OpenHand")
+                {
+                    UIHelpers.Print($"Your knowledge of the Way of the Open Palm disrupts {m.name}'s chi!");
+                    Console.ForegroundColor= ConsoleColor.Yellow;
+                    Console.WriteLine($"{m.name} is stunned!!");
+                    Console.ResetColor();
+                    m.IsStunned = true;
+                }
 
             }
             else
@@ -151,7 +159,8 @@ namespace RaargeDungeon.Combat
                 if (plyrDamage < 0)
                     plyrDamage = 0;
             }
-            if (mstrHit.AttackHits)
+
+            if (mstrHit.AttackHits && m.IsStunned != true)
             {
                 MonsterHits(m, mstrHit, mstrAtkType, ref monsterCrit, ref mstrDamage);
                 p.armorMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.armor.ToString());
@@ -177,12 +186,19 @@ namespace RaargeDungeon.Combat
                 Console.WriteLine($"You swing your {TextHelpers.GetWeapon()} at a {m.name} but miss.");
 
             // add spell text in here
-            if (mstrHit.AttackHits)
+            if (mstrHit.AttackHits && m.IsStunned != true)
             {
                 UIHelpers.Print($"A {m.name} growls and swings landing a blow to you.");
                 TextHelpers.GetMonsterHitLine(m, mstrDamage, monsterCrit, p, action.ToLower());
                 string typeXP = Player.skillCombatType.evasion.ToString();
                 p.armorMastery += Checkers.GetCombatSkillGain(m, p, typeXP);
+            }
+            else if (m.IsStunned == true)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                UIHelpers.Print($"A {m.name} is stunned!!");
+                Console.ResetColor();
+                m.IsStunned = false;
             }
             else
             {
@@ -191,7 +207,8 @@ namespace RaargeDungeon.Combat
             }
 
 
-            m.health -= plyrDamage;
+            if (m.health < plyrDamage)
+                plyrDamage = m.health;
 
             m.health -= plyrDamage;
             if (m.health <= 0)

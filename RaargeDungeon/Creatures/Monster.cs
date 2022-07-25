@@ -26,8 +26,9 @@ namespace RaargeDungeon.Creatures
         public int numberAttackDice = 1;
         public int armorclass { get; set; }
         public int hitDice { get; set; }
-        public int numberHitDie = 1;
+        public int numberHitDie { get; set; } = 1;
         public bool IsAlive { get; set; }
+        public bool IsStunned { get; set; } = false;
                
 
         public enum monsterRace { Orc, Goblin, Ogre, Madman, Kobold, Wolf, Imp, Spider, Skeleton, Sprite, Zombie, Merfolk, Monodrone, TwigBlight, Mastiff, Snake, Blight,

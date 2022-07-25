@@ -137,7 +137,10 @@ namespace RaargeDungeon.Encounter
 
 
                 Console.WriteLine(" | (R)un              |");
-                Console.WriteLine(" | (H)eal    (M)Mana  |");
+                if(plyr.currentClass == Player.PlayerClass.Monk)
+                    Console.WriteLine(" | (H)eal             |");
+                else
+                    Console.WriteLine(" | (H)eal    (M)Mana  |");
                 Console.WriteLine(" |                    |");
                 Console.WriteLine(" =====================");
                 Console.WriteLine($" Level: {plyr.level} Class: {plyr.currentClass} Coins: {plyr.coins}");
@@ -217,7 +220,7 @@ namespace RaargeDungeon.Encounter
                                 Console.WriteLine($"You attack a {mstr.name} using {ability.Name}. ");
                                 for (int i = 1; i <= ability.abilityNumberAttacks; i++)
                                 {
-                                    MartialCombat.DoExtraAttack(plyr, mstr, ability.abilityChiType, action);
+                                    MartialCombat.DoExtraAttack(plyr, mstr, ability.abilityChiType, action, ability.ShortName);
                                 }
                             }
                             else
