@@ -23,11 +23,11 @@ namespace RaargeDungeon.Encounter
             //Player plyr = new Player();
 
             string weapon = TextHelpers.GetWeapon();
-            if (plyr.currentClass == Player.PlayerClass.Mage || plyr.currentClass == Player.PlayerClass.Cleric)
+            if (plyr.currentClass == Player.PlayerClass.Wizard || plyr.currentClass == Player.PlayerClass.Cleric)
             {
                 var scrollName = "";
 
-                if (plyr.currentClass == Player.PlayerClass.Mage)
+                if (plyr.currentClass == Player.PlayerClass.Wizard)
                     plyr = SpellScroll.GetSpellScroll(plyr, "Magic Missile");
                 else if (plyr.currentClass == Player.PlayerClass.Cleric)
                     plyr = SpellScroll.GetSpellScroll(plyr, "Inflict Wounds");
@@ -129,7 +129,7 @@ namespace RaargeDungeon.Encounter
                 Console.WriteLine(" =====================");
                 Console.WriteLine(" | (A)ttack  (D)efend |");
 
-                if (plyr.currentClass == Player.PlayerClass.Mage ||
+                if (plyr.currentClass == Player.PlayerClass.Wizard ||
                     plyr.currentClass == Player.PlayerClass.Cleric)
                 {
                     Console.WriteLine(" | (C)ast  (S)tats    |");
@@ -161,7 +161,7 @@ namespace RaargeDungeon.Encounter
                 //Console.WriteLine($"XP:{Program.currentPlayer.xp} Needed XP: {Program.currentPlayer.GetLevelUpValue()} ");
                 string action = Console.ReadLine().ToLower();
 
-                if (Program.currentPlayer.currentClass != Player.PlayerClass.Mage)
+                if (Program.currentPlayer.currentClass != Player.PlayerClass.Wizard)
                 {
                     while (action != "a" && action != "d" && action != "r" && action != "h" && action != "m" && action.Length > 1)
                     {
@@ -230,6 +230,38 @@ namespace RaargeDungeon.Encounter
 
                     }
 
+                    if (plyr.currentClass == Player.PlayerClass.Fighter || plyr.currentClass == Player.PlayerClass.Ranger || plyr.currentClass == Player.PlayerClass.Rogue)
+                    {
+                        CombatAbilities ability = new CombatAbilities();
+
+
+
+                        if(plyr.level >= 5 && plyr.level < 11)
+                        {
+                            ability = Pickers.GetSelectedCombatAbilityToUse(plyr, "e1");
+                            
+                            MartialCombat.DoExtraAttack(plyr, mstr, ability.abilityCombatType, action, ability.ShortName);
+                        }
+                        else if (plyr.level >= 11 && plyr.level < 20)
+                        {
+                            ability = Pickers.GetSelectedCombatAbilityToUse(plyr, "e2");
+
+                            for (int i = 1; i <= ability.abilityNumberAttacks; i++)
+                            {
+                                MartialCombat.DoExtraAttack(plyr, mstr, ability.abilityCombatType, action, ability.ShortName);
+                            }
+                        }
+                        else if (plyr.level == 20)
+                        {
+                            ability = Pickers.GetSelectedCombatAbilityToUse(plyr, "e3");
+
+                            for (int i = 1; i <= ability.abilityNumberAttacks; i++)
+                            {
+                                MartialCombat.DoExtraAttack(plyr, mstr, ability.abilityCombatType, action, ability.ShortName);
+                            }
+                        }
+                    }
+
                     //special attacks
 
 
@@ -239,7 +271,7 @@ namespace RaargeDungeon.Encounter
                     // Ranger Animal Call 25% chance
                     mstr = Skills.AnimalCall(mstr, plyr, ref leader, ref style, ref companion);
 
-                    // Mage SpellBlast 
+                    // Wizard SpellBlast 
                     mstr = Skills.SpellBlast(mstr, plyr, ref leader, ref style, ref spellType);
 
                     // Combat Stealing

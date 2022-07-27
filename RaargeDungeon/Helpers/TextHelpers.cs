@@ -128,7 +128,7 @@ namespace RaargeDungeon.Helpers
             var style = "";
             var rando = Randomizer.GetRandomNumber(3, 0);
 
-            if (Program.currentPlayer.currentClass.ToString() == "Warrior")
+            if (Program.currentPlayer.currentClass.ToString() == "Fighter")
             {
                 style = rando switch
                 {
@@ -177,7 +177,7 @@ namespace RaargeDungeon.Helpers
                 }
 
             }
-            else if (Program.currentPlayer.currentClass.ToString() == "Mage")
+            else if (Program.currentPlayer.currentClass.ToString() == "Wizard")
             {
                 switch (rando)
                 {
@@ -309,7 +309,7 @@ namespace RaargeDungeon.Helpers
         {
             string weapon = "";
 
-            if (Program.currentPlayer.currentClass.ToString() == "Warrior")
+            if (Program.currentPlayer.currentClass.ToString() == "Fighter")
             {
                 weapon = "sword";
             }
@@ -317,7 +317,7 @@ namespace RaargeDungeon.Helpers
             {
                 weapon = "longbow";
             }
-            else if (Program.currentPlayer.currentClass.ToString() == "Mage")
+            else if (Program.currentPlayer.currentClass.ToString() == "Wizard")
             {
                 weapon = "staff";
             }

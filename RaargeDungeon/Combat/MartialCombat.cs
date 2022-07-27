@@ -53,6 +53,8 @@ namespace RaargeDungeon.Combat
 
                 if (p.currentClass == Player.PlayerClass.Monk)
                     UIHelpers.Print("You focus your chi into a physical attack.");
+                else if (p.currentClass == Player.PlayerClass.Fighter || p.currentClass == Player.PlayerClass.Rogue || p.currentClass == Player.PlayerClass.Ranger)
+                    UIHelpers.Print("You focus your martial prowess into more attacks");
                 UIHelpers.Print($"{leader}, {style} at {m.name}, who attacks in return.");
                 if (playerCrit)
                 {

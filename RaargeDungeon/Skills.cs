@@ -87,8 +87,8 @@ namespace RaargeDungeon
             int regSpellCritTry = Program.currentPlayer.rand.Next(1, 6);
             int gnomeEruditeCritTry = Program.currentPlayer.rand.Next(1, 4);
 
-            // mage spell blast 25% chance
-            if (p.currentClass == Player.PlayerClass.Mage && Randomizer.GetRandomNumber(5) == 3)
+            // Wizard spell blast 25% chance
+            if (p.currentClass == Player.PlayerClass.Wizard && Randomizer.GetRandomNumber(5) == 3)
             {
                 spellDamage = Randomizer.GetRandomDieRoll(p.attackDie, p.numberAttackDie, Player.GetModifier(p.intelligence) + (int)p.magicMastery + (Program.currentPlayer.level / 2));
 

@@ -51,15 +51,15 @@ namespace RaargeDungeon
                 p.name = Console.ReadLine();
             }
 
-            UIHelpers.Print("Class: Mage Ranger Warrior Rogue Cleric Monk");
+            UIHelpers.Print("Class: Wizard Ranger Fighter Rogue Cleric Monk");
             bool flag = false;
             while (flag == false)
             {
                 flag = true;
                 string input = Console.ReadLine().ToLower();
-                if(input == "mage")
+                if(input == "wizard")
                 {
-                    p.currentClass = Player.PlayerClass.Mage;
+                    p.currentClass = Player.PlayerClass.Wizard;
                     p.manaType = Player.ManaType.Mana;
                 }
                 else if (input == "ranger")
@@ -67,9 +67,9 @@ namespace RaargeDungeon
                     p.currentClass = Player.PlayerClass.Ranger;
                     p.manaType = Player.ManaType.Mana;
                 }
-                else if (input == "warrior")
+                else if (input == "fighter")
                 {
-                    p.currentClass = Player.PlayerClass.Warrior;
+                    p.currentClass = Player.PlayerClass.Fighter;
                     p.manaType = Player.ManaType.Rage;
                 }
                 else if (input == "rogue")
@@ -126,7 +126,7 @@ namespace RaargeDungeon
             
                             
             // Damage Resistance Setter
-            if (p.currentClass == Player.PlayerClass.Warrior || p.race == Player.Race.Dwarf || p.race == Player.Race.Halfling ||
+            if (p.currentClass == Player.PlayerClass.Fighter || p.race == Player.Race.Dwarf || p.race == Player.Race.Halfling ||
                 p.race == Player.Race.Elf)
             {
                 p.damageResit = 2;
@@ -140,11 +140,11 @@ namespace RaargeDungeon
                 p.armorclass = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity);
                 p.armorclass += 2; //shield
             }
-            if (p.currentClass == Player.PlayerClass.Warrior)
+            if (p.currentClass == Player.PlayerClass.Fighter)
             {
                 p.armorclass = Player.GetPlayerArmorClass(p) + 2; // +2 shield
             }
-            if (p.currentClass == Player.PlayerClass.Mage)
+            if (p.currentClass == Player.PlayerClass.Wizard)
             {
                 p.armorclass = Player.GetPlayerArmorClass(p) + Player.GetModifier(p.dexterity);
             }

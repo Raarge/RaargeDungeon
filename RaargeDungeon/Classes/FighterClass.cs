@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace RaargeDungeon.Classes
 {
-    public class MageClass : BaseClass
+    public class FighterClass : BaseClass
     {
         public static List<string> getSaveThrowProficiencies()
         {
-            SavingThrowProficiencies.Add("Wisdom");
-            SavingThrowProficiencies.Add("Intelligence");
+            SavingThrowProficiencies.Add("Strength");
+            SavingThrowProficiencies.Add("Constitution");
 
             return SavingThrowProficiencies;
         }

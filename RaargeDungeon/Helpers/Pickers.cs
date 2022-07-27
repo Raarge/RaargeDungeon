@@ -29,25 +29,25 @@ namespace RaargeDungeon.Helpers
 
             while (check == false)
             {
-                foreach(string shortName in shortNames)
+                foreach (string shortName in shortNames)
                 {
-                    if(shortName == input)
+                    if (shortName == input)
                     {
                         check = true;
                         break;
                     }
                 }
 
-                if(check == false)
+                if (check == false)
                 {
                     Console.WriteLine("You didn't choose a valid spell. Enter spell.");
                     input = Console.ReadLine().ToLower();
                 }
             }
 
-            foreach(SpellScroll currentSpell in Program.currentPlayer.spells)
+            foreach (SpellScroll currentSpell in Program.currentPlayer.spells)
             {
-                if(currentSpell.ShortName == input)
+                if (currentSpell.ShortName == input)
                 {
                     spellChosen = currentSpell;
                     break;
@@ -102,6 +102,29 @@ namespace RaargeDungeon.Helpers
             }
 
             return abilityChosen;
+        }
+
+        public static CombatAbilities GetSelectedCombatAbilityToUse(Player p, string shortAbilityNameToGet)
+        {
+            CombatAbilities abilitySelected = new CombatAbilities();
+            List<string> shortNames = new List<string>();
+
+
+            foreach (CombatAbilities ability in p.combatAbilities)
+            {
+                shortNames.Add(ability.ShortName);
+            }
+
+            foreach (CombatAbilities currentAbility in p.combatAbilities)
+            {
+                if (currentAbility.ShortName == shortAbilityNameToGet)
+                {
+                    abilitySelected = currentAbility;
+                    break;
+                }
+            }
+
+            return abilitySelected;
         }
     }
 }

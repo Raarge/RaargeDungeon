@@ -64,8 +64,8 @@ namespace RaargeDungeon.Creatures
 
         public int mods = 0;
 
-        public enum PlayerClass { Mage, Ranger, Warrior, Rogue, Cleric, Monk };
-        public PlayerClass currentClass = PlayerClass.Warrior;
+        public enum PlayerClass { Wizard, Ranger, Fighter, Rogue, Cleric, Monk };
+        public PlayerClass currentClass = PlayerClass.Fighter;
 
         public enum ManaType { Mana, Chi, Kri, Rage }
         public ManaType manaType = ManaType.Mana;
@@ -77,6 +77,8 @@ namespace RaargeDungeon.Creatures
         public MonastaticTradition tradition { get; set; }
         
         public List<KiAbilities> kiAbilities { get; set; }
+
+        public List<CombatAbilities> combatAbilities { get; set; }
 
         #region BuildOutPlayer
         public static Player BuildOutPlayer(Player p)
@@ -132,7 +134,7 @@ namespace RaargeDungeon.Creatures
         {
             int denominator = 0;
 
-            if (p.currentClass == PlayerClass.Mage)
+            if (p.currentClass == PlayerClass.Wizard)
                 denominator = 2;
             else if (p.currentClass == PlayerClass.Cleric)
                 denominator = 2;
@@ -189,14 +191,14 @@ namespace RaargeDungeon.Creatures
                 case "cleric":
                     p.saveThrowProf = ClericClass.getSaveThrowProficiencies();
                     break;
-                case "mage":
-                    p.saveThrowProf = MageClass.getSaveThrowProficiencies();
+                case "wizard":
+                    p.saveThrowProf = WizardClass.getSaveThrowProficiencies();
                     break;
                 case "ranger":
                     p.saveThrowProf = RangerClass.getSaveThrowProficiencies();
                     break;
-                case "warrior":
-                    p.saveThrowProf = WarriorClass.getSaveThrowProficiencies();
+                case "fighter":
+                    p.saveThrowProf = FighterClass.getSaveThrowProficiencies();
                     break;
                 case "rogue":
                     p.saveThrowProf = RogueClass.getSaveThrowProficiencies();
@@ -219,14 +221,14 @@ namespace RaargeDungeon.Creatures
                 case "cleric":
                     p.proficiencyBonus = ClericClass.getProficiencyBonus(p.level);
                     break;
-                case "mage":
-                    p.proficiencyBonus = MageClass.getProficiencyBonus(p.level);
+                case "wizard":
+                    p.proficiencyBonus = WizardClass.getProficiencyBonus(p.level);
                     break;
                 case "ranger":
                     p.proficiencyBonus = RangerClass.getProficiencyBonus(p.level);
                     break;
-                case "warrior":
-                    p.proficiencyBonus = WarriorClass.getProficiencyBonus(p.level);
+                case "fighter":
+                    p.proficiencyBonus = FighterClass.getProficiencyBonus(p.level);
                     break;
                 case "rogue":
                     p.proficiencyBonus = RogueClass.getProficiencyBonus(p.level);
@@ -250,7 +252,7 @@ namespace RaargeDungeon.Creatures
 
             switch (p.currentClass.ToString())
             {
-                case "Mage":
+                case "Wizard":
                     p.attackDie = 6;
                     p.numberAttackDie = 1;
                     break;
@@ -258,7 +260,7 @@ namespace RaargeDungeon.Creatures
                     p.attackDie = 8;
                     p.numberAttackDie = 1;
                     break;
-                case "Warrior":
+                case "Fighter":
                     p.attackDie = 6;
                     p.numberAttackDie = 2;
                     break;
@@ -334,13 +336,13 @@ namespace RaargeDungeon.Creatures
 
             switch (p.currentClass.ToString())
             {
-                case "Mage":
+                case "Wizard":
                     hd = 6;
                     break;
                 case "Ranger":
                     hd = 10;
                     break;
-                case "Warrior":
+                case "Fighter":
                     hd = 10;
                     break;
                 case "Rogue":
@@ -366,13 +368,13 @@ namespace RaargeDungeon.Creatures
 
             switch (p.currentClass.ToString())
             {
-                case "Mage":
+                case "Wizard":
                     ac = 11;
                     break;
                 case "Ranger":
                     ac = 12;
                     break;
-                case "Warrior":
+                case "Fighter":
                     ac = 16;
                     break;
                 case "Rogue":
@@ -406,8 +408,8 @@ namespace RaargeDungeon.Creatures
 
             if (typePotion == "health")
             {
-                upper = 4 * mods + 11 + (currentClass == PlayerClass.Mage ? +3 : 0); // if a mage add extra heal
-                lower = 2 * mods + 5 + (currentClass == PlayerClass.Mage ? +3 : 0);
+                upper = 4 * mods + 11 + (currentClass == PlayerClass.Wizard ? +3 : 0); // if a Wizard add extra heal
+                lower = 2 * mods + 5 + (currentClass == PlayerClass.Wizard ? +3 : 0);
             }
             else if (typePotion == "mana")
             {
@@ -505,32 +507,32 @@ namespace RaargeDungeon.Creatures
                             p = KiAbilities.GetKiAbilities(p, "Flurry of Blows");
                         break;
                     case 3:
-                        if (p.currentClass == PlayerClass.Warrior || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
-                            p.numberAttackDie++;
+                        if (p.currentClass == PlayerClass.Fighter || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
+                            p = CombatAbilities.GetCombatAbilities(p, "Extra Attack I");
                         if (p.currentClass == PlayerClass.Monk)
                             p.tradition = GetSelectedMonastaticTradition(p);
                         break;
                     case 4:
-                        if (p.currentClass == PlayerClass.Warrior)
+                        if (p.currentClass == PlayerClass.Fighter)
                             p.strength++;
                         if (p.currentClass == PlayerClass.Cleric)
                             p.wisdom++;
                         if (p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
                             p.dexterity++;
-                        if (p.currentClass == PlayerClass.Mage)
+                        if (p.currentClass == PlayerClass.Wizard)
                             p.intelligence++;
                         mods++;
                         break;
                     case 6:
-                        if (p.currentClass == PlayerClass.Warrior)
+                        if (p.currentClass == PlayerClass.Fighter)
                             p.constitution++;
-                        if (p.currentClass == PlayerClass.Cleric || p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Mage)
+                        if (p.currentClass == PlayerClass.Cleric || p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Wizard)
                             p.numberAttackDie++;
                         break;
                     case 8:
-                        if (p.currentClass == PlayerClass.Warrior)
+                        if (p.currentClass == PlayerClass.Fighter)
                             p.strength++;
-                        if (p.currentClass == PlayerClass.Cleric || p.currentClass == PlayerClass.Mage)
+                        if (p.currentClass == PlayerClass.Cleric || p.currentClass == PlayerClass.Wizard)
                             p.constitution++;
                         if (p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Ranger)
                             p.wisdom++;
@@ -541,30 +543,30 @@ namespace RaargeDungeon.Creatures
                     case 9:
                         break;
                     case 11:
-                        if (p.currentClass == PlayerClass.Warrior || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Ranger)
-                            p.numberAttackDie++;
+                        if (p.currentClass == PlayerClass.Fighter || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
+                            p = CombatAbilities.GetCombatAbilities(p, "Extra Attack II");
                         break;
                     case 12:
-                        if (p.currentClass == PlayerClass.Warrior)
+                        if (p.currentClass == PlayerClass.Fighter)
                             p.constitution++;
                         if (p.currentClass == PlayerClass.Cleric)
                             p.wisdom++;
                         if (p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
                             p.dexterity++;
-                        if (p.currentClass == PlayerClass.Mage)
+                        if (p.currentClass == PlayerClass.Wizard)
                             p.intelligence++;
                         mods++;
                         break;
                     case 14:
-                        if (p.currentClass == PlayerClass.Warrior)
+                        if (p.currentClass == PlayerClass.Fighter)
                             p.strength++;
                         break;
                     case 15:
                         break;
                     case 16:
-                        if (p.currentClass == PlayerClass.Warrior)
+                        if (p.currentClass == PlayerClass.Fighter)
                             p.constitution++;
-                        if (p.currentClass == PlayerClass.Cleric || p.currentClass == PlayerClass.Mage)
+                        if (p.currentClass == PlayerClass.Cleric || p.currentClass == PlayerClass.Wizard)
                             p.constitution++;
                         if (p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Ranger)
                             p.wisdom++;
@@ -573,22 +575,22 @@ namespace RaargeDungeon.Creatures
                         mods++;
                         break;
                     case 18:
-                        if (p.currentClass == PlayerClass.Cleric || p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Mage)
+                        if (p.currentClass == PlayerClass.Cleric || p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Wizard)
                             p.numberAttackDie++;
                         break;
                     case 19:
-                        if (p.currentClass == PlayerClass.Warrior)
+                        if (p.currentClass == PlayerClass.Fighter)
                             p.strength++;
                         if (p.currentClass == PlayerClass.Cleric)
                             p.wisdom++;
                         if (p.currentClass == PlayerClass.Monk || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
                             p.dexterity++;
-                        if (p.currentClass == PlayerClass.Mage)
+                        if (p.currentClass == PlayerClass.Wizard)
                             p.intelligence++;
                         break;
                     case 20:
-                        if (p.currentClass == PlayerClass.Warrior || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
-                            p.numberAttackDie++;
+                        if (p.currentClass == PlayerClass.Fighter || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue)
+                            p = CombatAbilities.GetCombatAbilities(p, "Extra Attack III");
                         mods++;
                         break;
                     default:
@@ -605,6 +607,8 @@ namespace RaargeDungeon.Creatures
             UIHelpers.Print($"Ding!!!! You are now level {p.level}! ");
             if (p.currentClass == PlayerClass.Monk && p.level == 2)
                 UIHelpers.Print("You feel your Chi enhance with the knowledge of Flurry of Blows");
+            if ((p.currentClass == PlayerClass.Fighter || p.currentClass == PlayerClass.Ranger || p.currentClass == PlayerClass.Rogue) && (p.level == 5 || p.level == 11 || p.level == 20))
+                UIHelpers.Print("You feel your ability to attack multiple times increase");
             Console.ResetColor();
 
             //StatTests.DisplayProficiencyAndSaveScoresCalculated(p);

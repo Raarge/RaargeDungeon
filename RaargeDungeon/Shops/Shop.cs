@@ -254,7 +254,7 @@ namespace RaargeDungeon.Shops
 
             if (Program.currentPlayer.race == Player.Race.Human)
             {
-                if (Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
+                if (Program.currentPlayer.currentClass == Player.PlayerClass.Fighter || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
                     cost = 90 * p.armorValue;
                 else if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
                     cost = 90 * (p.armorValue - 1);
@@ -263,14 +263,14 @@ namespace RaargeDungeon.Shops
             }
             else if (Program.currentPlayer.race == Player.Race.HalfOrc)
             {
-                if (Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
+                if (Program.currentPlayer.currentClass == Player.PlayerClass.Fighter || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
                     cost = 110 * p.armorValue;
                 else if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
                     cost = 110 * (p.armorValue - 1);
                 else
                     cost = 110 * (p.armorValue + 1);
             }
-            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Warrior || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
+            else if (Program.currentPlayer.currentClass == Player.PlayerClass.Fighter || Program.currentPlayer.currentClass == Player.PlayerClass.Cleric)
                 cost = 100 * p.armorValue;
             else if (Program.currentPlayer.currentClass == Player.PlayerClass.Monk)
                 cost = 100 * (p.armorValue - 1);
