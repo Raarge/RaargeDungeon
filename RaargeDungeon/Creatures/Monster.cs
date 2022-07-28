@@ -27,13 +27,15 @@ namespace RaargeDungeon.Creatures
         public int armorclass { get; set; }
         public int hitDice { get; set; }
         public int numberHitDie { get; set; } = 1;
+        public int toHitBonus { get; set; } = 2;
         public bool IsAlive { get; set; }
         public bool IsStunned { get; set; } = false;
                
 
         public enum monsterRace { Orc, Goblin, Ogre, Madman, Kobold, Wolf, Imp, Spider, Skeleton, Sprite, Zombie, Merfolk, Monodrone, TwigBlight, Mastiff, Snake, Blight,
         Bullywug, WildGnoll, Svirfneblin, WarGoblin, DeepGnome, DustMephit, GasSpore, Gnoll, Hobgoblin, Worg, Bugbear, DireWolf, Dryad, Ghoul, HalfOgre, Spectre, Centaur,
-        Gargoyle, Griffon, SpinedDevil, Wererat, Basilisk, BugbearChief, Grell, HellHound, Manticore, Minotaur, Mummy, Owlbear, Yeti}
+        Gargoyle, Griffon, SpinedDevil, Wererat, Basilisk, BugbearChief, Grell, HellHound, Manticore, Minotaur, Mummy, Owlbear, Yeti, Banshee, BoneNaga, Ettn, Lamia, SeaHag,
+        Wereboar, Weretiger}
         public monsterRace race = monsterRace.Sprite;
 
         
@@ -140,6 +142,13 @@ namespace RaargeDungeon.Creatures
             mstrList.Add(new Monster() { name = "Mummy", xpGiven = 700 });
             mstrList.Add(new Monster() { name = "Owlbear", xpGiven = 700 });
             mstrList.Add(new Monster() { name = "Yeti", xpGiven = 700 });
+            mstrList.Add(new Monster() { name = "Banshee", xpGiven = 1100 });
+            mstrList.Add(new Monster() { name = "BoneNaga", xpGiven = 1100 });
+            mstrList.Add(new Monster() { name = "Ettn", xpGiven = 1100 });
+            mstrList.Add(new Monster() { name = "Lamia", xpGiven = 1100 });
+            mstrList.Add(new Monster() { name = "SeaHag", xpGiven = 1100 });
+            mstrList.Add(new Monster() { name = "Wereboar", xpGiven = 1100 });
+            mstrList.Add(new Monster() { name = "Weretiger", xpGiven = 1100 });
 
             //Add more monsters after level 2
 
@@ -538,6 +547,70 @@ namespace RaargeDungeon.Creatures
                     m.hitDice = 10;
                     m.numberHitDie = 6;
                     break;
+                case "Banshee":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 3;
+                    m.toHitBonus = 4;
+                    m.armorclass = 12;
+                    m.damageResist = 2;
+                    m.hitDice = 8;
+                    m.numberHitDie = 13;
+                    break;
+                case "BoneNaga":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 2;
+                    m.toHitBonus = 5;
+                    m.armorclass = 15;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 9;
+                    break;
+                case "Ettn":
+                    m.attackDice = 8;
+                    m.numberAttackDice = 2;
+                    m.toHitBonus = 7;
+                    m.armorclass = 12;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 11;
+                    break;
+                case "Lamia":
+                    m.attackDice = 10;
+                    m.numberAttackDice = 2;
+                    m.toHitBonus = 5;
+                    m.armorclass = 13;
+                    m.damageResist = 1;
+                    m.hitDice = 10;
+                    m.numberHitDie = 13;
+                    break;
+                case "SeaHag":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 2;
+                    m.toHitBonus = 5;
+                    m.armorclass = 14;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 8;
+                    break;
+                case "Wereboar":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 3;
+                    m.toHitBonus = 5;
+                    m.armorclass = 11;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 13;
+                    break;
+                case "Weretiger":
+                    m.attackDice = 6;
+                    m.numberAttackDice = 2;
+                    m.toHitBonus = 5;
+                    m.armorclass = 12;
+                    m.damageResist = 1;
+                    m.hitDice = 8;
+                    m.numberHitDie = 18;
+                    break;
+
                 default:
                     m.attackDice = 6;
                     m.armorclass = 12;

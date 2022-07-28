@@ -534,7 +534,7 @@ namespace RaargeDungeon.Encounter
                 {4, new EncounterLevels { Easy = 100, Medium = 200, Hard = 450} },
                 {5, new EncounterLevels { Easy = 200, Medium = 450, Hard = 700} },
                 {6, new EncounterLevels { Easy = 450, Medium = 700, Hard = 700} },
-                {7, new EncounterLevels { Easy = 350, Medium = 700, Hard = 1100} },
+                {7, new EncounterLevels { Easy = 450, Medium = 700, Hard = 1100} },
                 {8, new EncounterLevels { Easy = 450, Medium = 700, Hard = 1100} },
                 {9, new EncounterLevels { Easy = 450, Medium = 1100, Hard = 1800} },
                 {10, new EncounterLevels { Easy = 700, Medium = 1100, Hard = 1800} },
