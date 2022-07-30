@@ -94,7 +94,7 @@ namespace RaargeDungeon.Creatures
             // Hit Points Setter
             p.hitDice = GetPlayerHitDice(p);
             p.numberHitDice = p.level;
-            p.baseHealth = Randomizer.GetHealth(p.hitDice, p.numberHitDice, Player.GetModifier(p.constitution));
+            p.baseHealth = p.hitDice + Player.GetModifier(p.constitution);
             p.health = p.baseHealth;
             if (p.currentClass != PlayerClass.Monk)
                 p.baseEnergy += (Randomizer.GetRandomNumber(p.intelligence) * 3) + (Player.GetModifier(p.intelligence) * 2) + ((int)(p.spellChanneling / 2) * 2);

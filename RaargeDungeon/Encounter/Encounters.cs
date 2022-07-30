@@ -132,7 +132,7 @@ namespace RaargeDungeon.Encounter
                 if (plyr.currentClass == Player.PlayerClass.Wizard ||
                     plyr.currentClass == Player.PlayerClass.Cleric)
                 {
-                    Console.WriteLine(" | (C)ast  (S)tats    |");
+                    Console.WriteLine(" | (C)ast            |");
                 }
 
 
@@ -141,6 +141,7 @@ namespace RaargeDungeon.Encounter
                     Console.WriteLine(" | (H)eal             |");
                 else
                     Console.WriteLine(" | (H)eal    (M)Mana  |");
+                Console.WriteLine(" | (S)tats    Sa(v)e  |"   );
                 Console.WriteLine(" |                    |");
                 Console.WriteLine(" =====================");
                 Console.WriteLine($" Level: {plyr.level} Class: {plyr.currentClass} Coins: {plyr.coins}");
@@ -163,7 +164,7 @@ namespace RaargeDungeon.Encounter
 
                 if (Program.currentPlayer.currentClass != Player.PlayerClass.Wizard)
                 {
-                    while (action != "a" && action != "d" && action != "r" && action != "h" && action != "m" && action.Length > 1)
+                    while (action != "a" && action != "d" && action != "r" && action != "h" && action != "m" && action != "v" && action.Length > 1)
                     {
                         Console.WriteLine("Invalid selection, choose again");
                         action = Console.ReadLine();
@@ -171,7 +172,7 @@ namespace RaargeDungeon.Encounter
                 }
                 else
                 {
-                    while (action != "a" && action != "d" && action != "r" && action != "h" && action != "m" && action != "c" && action.Length > 1)
+                    while (action != "a" && action != "d" && action != "r" && action != "h" && action != "m" && action != "c" && action != "v" && action.Length > 1)
                     {
                         Console.WriteLine("Invalid selection, choose again");
                         action = Console.ReadLine();
@@ -282,6 +283,12 @@ namespace RaargeDungeon.Encounter
 
                     // Cleric Holy Strike
                     mstr = Skills.HolyStrike(mstr, plyr, ref leader, ref style);
+                }
+                else if (action.ToLower() == "v")
+                {
+                    Program.Save();
+                    Console.WriteLine("You have saved successfully!");
+                    Console.ReadKey();
                 }
                 else if (action.ToLower() == "d")
                 {

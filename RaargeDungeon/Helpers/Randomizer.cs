@@ -66,5 +66,14 @@ namespace RaargeDungeon.Helpers
 
             return health;
         }
+
+        public static int GetMonsterHealth(int hd, int numHd, int modifier)
+        {
+            int health = 0;
+
+            health = GetRandomDieRoll(hd, numHd, 0) + modifier;
+
+            return health;
+        }
     }
 }

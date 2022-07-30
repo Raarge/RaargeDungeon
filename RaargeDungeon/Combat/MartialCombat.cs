@@ -271,7 +271,7 @@ namespace RaargeDungeon.Combat
 
             if (mstrAtkType == "melee")
             {
-                mstrDamage = Randomizer.GetRandomDieRoll(m.attackDice, m.numberAttackDice, BaseCreature.GetModifier(m.strength));
+                mstrDamage = Randomizer.GetRandomDieRoll(m.attackDice, m.numberAttackDice, 0) + m.attackDiceModifier;
             }
             else
             {
@@ -289,12 +289,13 @@ namespace RaargeDungeon.Combat
 
         public static HitChecks MstrHitTry(Player p, Monster m, HitChecks mstrHit, string mstrAtkType)
         {
+            string sender = "m";
             if (mstrAtkType == "melee" && m.currentCombatOrder != 0)
             {
                 if (mstrAtkType == "melee")
                 {
                     int modifiedAC = p.armorclass + (int)((p.evasion + p.armorMastery) / 4m);
-                    mstrHit = CheckHit(modifiedAC, m.strength, 0);
+                    mstrHit = CheckHit(modifiedAC, m.strength, m.toHitBonus, sender);
                 }
                 else if (mstrAtkType == "spell")
                     mstrHit = CheckMagicHit(m.spellDcCheck, p.intelligence);
@@ -307,12 +308,13 @@ namespace RaargeDungeon.Combat
 
         public static HitChecks PlyrHitTry(Player p, Monster m, HitChecks plyrHit, string plryAtkType)
         {
+            string sender = "p";
             if (plryAtkType == "melee" && p.currentInitiative != 0)
             {
                 if (plryAtkType == "melee")
                 {
                     int modifiedStr = p.strength + (int)(p.weaponMastery / 2m);
-                    plyrHit = CheckHit(m.armorclass, modifiedStr, p.proficiencyBonus);
+                    plyrHit = CheckHit(m.armorclass, modifiedStr, p.proficiencyBonus, sender);
                 }
                 else if (plryAtkType == "spell")
                 {
@@ -342,11 +344,15 @@ namespace RaargeDungeon.Combat
             return type;
         }
 
-        public static HitChecks CheckHit(int opossingAC, int Str, int profBonus)
+        public static HitChecks CheckHit(int opossingAC, int Str, int profBonus, string sender)
         {
             HitChecks hitCheck = new HitChecks();
             bool didHit;
-            int atkRoll = Randomizer.GetRandomDieRoll(20) + BaseCreature.GetModifier(Str) + profBonus;
+            int atkRoll = 0;
+            if (sender == "p")
+                atkRoll = Randomizer.GetRandomDieRoll(20) + BaseCreature.GetModifier(Str) + profBonus;
+            else if (sender == "m")
+                atkRoll = Randomizer.GetRandomDieRoll(20) + profBonus;
 
             if (atkRoll > opossingAC)
                 didHit = true;
