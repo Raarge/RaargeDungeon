@@ -14,17 +14,100 @@ namespace RaargeDungeon.Builder
         public static void AdminInterface()
         {
             string input = "";
+            int count25 = 0;
+            int count50 = 0;
+            int count75 = 0;
+            int count100 = 0;
+            int count200 = 0;
+            int count450 = 0;
+            int count700 = 0;
+            int count1100 = 0;
+            int count1800 = 0;
+            int count2300 = 0;
+            int count2900 = 0;
+            int count3900 = 0;
+            int count5000 = 0;
+            int count5900 = 0;
+            int count7200 = 0;
+            int count8400 = 0;
+            int issues = 0;
             List<Monster> monsters = new List<Monster>();
+            List<Monster> mIssues = new List<Monster>();
 
             monsters = LoadMonsters(monsters);
 
+            foreach (Monster m in monsters)
+            {
+                if (m.xpGiven == 25)
+                    count25++;
+                else if (m.xpGiven == 50)
+                    count50++;
+                else if (m.xpGiven == 75)
+                    count75++;
+                else if (m.xpGiven == 100)
+                    count100++;
+                else if (m.xpGiven == 200)
+                    count200++;
+                else if (m.xpGiven == 450)
+                    count450++;
+                else if (m.xpGiven == 700)
+                    count700++;
+                else if (m.xpGiven == 1100)
+                    count1100++;
+                else if (m.xpGiven == 1800)
+                    count1800++;
+                else if (m.xpGiven == 2300)
+                    count2300++;
+                else if (m.xpGiven == 2900)
+                    count2900++;
+                else if (m.xpGiven == 3900)
+                    count3900++;
+                else if (m.xpGiven == 5000)
+                    count5000++;
+                else if (m.xpGiven == 5900)
+                    count5900++;
+                else if (m.xpGiven == 7200)
+                    count7200++;
+                else if (m.xpGiven == 8400)
+                    count8400++;
+                else
+                {
+                    issues++;
+                    mIssues.Add(m);
+                }
+            }
+
             Console.Clear();
-            Console.WriteLine("         Admin Interfact ");
-            Console.WriteLine("==================================");
+            Console.WriteLine("         Admin Interface ");
+            Console.WriteLine("====================================");
+            Console.WriteLine("         Monster Counts");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine($"   25xp:   {count25} 50xp:   {count50}");
+            Console.WriteLine($"   75xp:   {count75} 100xp:  {count100}");
+            Console.WriteLine($"   200xp:  {count200} 450xp:  {count450}");
+            Console.WriteLine($"   700xp:  {count700} 1100xp: {count1100}");
+            Console.WriteLine($"   1800xp: {count1800} 2300xp: {count2300}");
+            Console.WriteLine($"   2900xp: {count2900} 3900xp: {count3900}");
+            Console.WriteLine($"   5000xp: {count5000} 5900xp: {count5900}");
+            Console.WriteLine($"   7200xp: {count7200} 8400xp: {count8400}");
+            Console.WriteLine($"===================================");
+            Console.WriteLine("          Monster Issues");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine($"          Issue Count: {issues}");
+            foreach (var issue in mIssues)
+            {
+                Console.WriteLine($"  Name: {issue.name} Xp: {issue.xpGiven}");
+            }
+            Console.WriteLine("====================================");
+            Console.WriteLine("            Comands");
+            Console.WriteLine("------------------------------------");
             Console.WriteLine("  (C)reate New Monster");
             Console.WriteLine("  (E)xit");
             Console.WriteLine("==================================");
+
+
             Console.WriteLine(" ");
+
             Console.WriteLine("Choice: ");
 
             input = Console.ReadLine().ToLower();

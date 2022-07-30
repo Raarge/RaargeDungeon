@@ -107,51 +107,51 @@ namespace RaargeDungeon.Creatures
             mstrList.Add(new Monster() { name = "Imp", xpGiven = 200 });//
             mstrList.Add(new Monster() { name = "Spider", xpGiven = 200 });//
             mstrList.Add(new Monster() { name = "Skeleton", xpGiven = 50 });//
-            mstrList.Add(new Monster() { name = "Sprite", xpGiven = 50 });
-            mstrList.Add(new Monster() { name = "Zombie", xpGiven = 50 });
-            mstrList.Add(new Monster() { name = "Merfolk", xpGiven = 25 });
-            mstrList.Add(new Monster() { name = "Monodrone", xpGiven = 25 });
-            mstrList.Add(new Monster() { name = "TwigBlight", xpGiven = 25 });
-            mstrList.Add(new Monster() { name = "Mastiff", xpGiven = 25 });
-            mstrList.Add(new Monster() { name = "Snake", xpGiven = 25 });
-            mstrList.Add(new Monster() { name = "Blight", xpGiven = 75 });
-            mstrList.Add(new Monster() { name = "Bullywug", xpGiven = 75 });
-            mstrList.Add(new Monster() { name = "WildGnoll", xpGiven = 75 });
-            mstrList.Add(new Monster() { name = "Svirfneblin", xpGiven = 75 });
-            mstrList.Add(new Monster() { name = "WarGoblin", xpGiven = 75 });
-            mstrList.Add(new Monster() { name = "DeepGnome", xpGiven = 100 });
-            mstrList.Add(new Monster() { name = "DustMephit", xpGiven = 100 });
-            mstrList.Add(new Monster() { name = "GasSpore", xpGiven = 100 });
-            mstrList.Add(new Monster() { name = "Gnoll", xpGiven = 100 });
+            mstrList.Add(new Monster() { name = "Sprite", xpGiven = 50 });//
+            mstrList.Add(new Monster() { name = "Zombie", xpGiven = 50 });//
+            mstrList.Add(new Monster() { name = "Merfolk", xpGiven = 25 });//
+            mstrList.Add(new Monster() { name = "Monodrone", xpGiven = 25 });//
+            mstrList.Add(new Monster() { name = "TwigBlight", xpGiven = 25 });//
+            mstrList.Add(new Monster() { name = "Mastiff", xpGiven = 25 });//
+            mstrList.Add(new Monster() { name = "Snake", xpGiven = 25 });//
+            mstrList.Add(new Monster() { name = "Blight", xpGiven = 75 });//
+            mstrList.Add(new Monster() { name = "Bullywug", xpGiven = 75 });//
+            mstrList.Add(new Monster() { name = "WildGnoll", xpGiven = 75 });//
+            mstrList.Add(new Monster() { name = "Svirfneblin", xpGiven = 75 });//
+            mstrList.Add(new Monster() { name = "WarGoblin", xpGiven = 75 });//
+            mstrList.Add(new Monster() { name = "DeepGnome", xpGiven = 100 });//
+            mstrList.Add(new Monster() { name = "DustMephit", xpGiven = 100 });//
+            mstrList.Add(new Monster() { name = "GasSpore", xpGiven = 100 });//
+            mstrList.Add(new Monster() { name = "Gnoll", xpGiven = 100 });//
             mstrList.Add(new Monster() { name = "Hobgoblin", xpGiven = 100 });
-            mstrList.Add(new Monster() { name = "Worg", xpGiven = 100 });
-            mstrList.Add(new Monster() { name = "Bugbear", xpGiven = 200 });
+            mstrList.Add(new Monster() { name = "Worg", xpGiven = 100 });//
+            mstrList.Add(new Monster() { name = "Bugbear", xpGiven = 200 });//
             mstrList.Add(new Monster() { name = "DireWolf", xpGiven = 200 });
-            mstrList.Add(new Monster() { name = "Dryad", xpGiven = 200 });
-            mstrList.Add(new Monster() { name = "Ghoul", xpGiven = 200 });
-            mstrList.Add(new Monster() { name = "HalfOgre", xpGiven = 200 });
-            mstrList.Add(new Monster() { name = "Spectre", xpGiven = 200 });
-            mstrList.Add(new Monster() { name = "Centaur", xpGiven = 450 });
-            mstrList.Add(new Monster() { name = "Gargoyle", xpGiven = 450 });
-            mstrList.Add(new Monster() { name = "Griffon", xpGiven = 450 });
+            mstrList.Add(new Monster() { name = "Dryad", xpGiven = 200 });//
+            mstrList.Add(new Monster() { name = "Ghoul", xpGiven = 200 });//
+            mstrList.Add(new Monster() { name = "HalfOgre", xpGiven = 200 });//
+            mstrList.Add(new Monster() { name = "Spectre", xpGiven = 200 });//
+            mstrList.Add(new Monster() { name = "Centaur", xpGiven = 450 });//
+            mstrList.Add(new Monster() { name = "Gargoyle", xpGiven = 450 });//
+            mstrList.Add(new Monster() { name = "Griffon", xpGiven = 450 });//
             mstrList.Add(new Monster() { name = "SpinedDevil", xpGiven = 450 });
-            mstrList.Add(new Monster() { name = "Wererat", xpGiven = 450 });
-            mstrList.Add(new Monster() { name = "Basilisk", xpGiven = 700 });
-            mstrList.Add(new Monster() { name = "BugbearChief", xpGiven = 700 });
-            mstrList.Add(new Monster() { name = "Grell", xpGiven = 700 });
-            mstrList.Add(new Monster() { name = "HellHound", xpGiven = 700 });
-            mstrList.Add(new Monster() { name = "Manticore", xpGiven = 700 });
-            mstrList.Add(new Monster() { name = "Minotaur", xpGiven = 700 });
-            mstrList.Add(new Monster() { name = "Mummy", xpGiven = 700 });
-            mstrList.Add(new Monster() { name = "Owlbear", xpGiven = 700 });
-            mstrList.Add(new Monster() { name = "Yeti", xpGiven = 700 });
-            mstrList.Add(new Monster() { name = "Banshee", xpGiven = 1100 });
-            mstrList.Add(new Monster() { name = "BoneNaga", xpGiven = 1100 });
-            mstrList.Add(new Monster() { name = "Ettn", xpGiven = 1100 });
-            mstrList.Add(new Monster() { name = "Lamia", xpGiven = 1100 });
-            mstrList.Add(new Monster() { name = "SeaHag", xpGiven = 1100 });
-            mstrList.Add(new Monster() { name = "Wereboar", xpGiven = 1100 });
-            mstrList.Add(new Monster() { name = "Weretiger", xpGiven = 1100 });
+            mstrList.Add(new Monster() { name = "Wererat", xpGiven = 450 });//
+            mstrList.Add(new Monster() { name = "Basilisk", xpGiven = 700 });//
+            mstrList.Add(new Monster() { name = "BugbearChief", xpGiven = 700 });//
+            mstrList.Add(new Monster() { name = "Grell", xpGiven = 700 });//
+            mstrList.Add(new Monster() { name = "HellHound", xpGiven = 700 });//
+            mstrList.Add(new Monster() { name = "Manticore", xpGiven = 700 });//
+            mstrList.Add(new Monster() { name = "Minotaur", xpGiven = 700 });//
+            mstrList.Add(new Monster() { name = "Mummy", xpGiven = 700 });//
+            mstrList.Add(new Monster() { name = "Owlbear", xpGiven = 700 });//
+            mstrList.Add(new Monster() { name = "Yeti", xpGiven = 700 });//
+            mstrList.Add(new Monster() { name = "Banshee", xpGiven = 1100 });//
+            mstrList.Add(new Monster() { name = "BoneNaga", xpGiven = 1100 });//
+            mstrList.Add(new Monster() { name = "Ettn", xpGiven = 1100 });//
+            mstrList.Add(new Monster() { name = "Lamia", xpGiven = 1100 });//
+            mstrList.Add(new Monster() { name = "SeaHag", xpGiven = 1100 });//
+            mstrList.Add(new Monster() { name = "Wereboar", xpGiven = 1100 });//
+            mstrList.Add(new Monster() { name = "Weretiger", xpGiven = 1100 });//
 
             //Add more monsters after level 2
 
