@@ -33,7 +33,7 @@ namespace RaargeDungeon.Creatures
         public int toHitBonus { get; set; } = 2;
         public bool IsAlive { get; set; }
         public bool IsStunned { get; set; } = false;
-               
+        public bool isUndead { get; set; } = false;               
 
         public enum monsterRace { Orc, Goblin, Ogre, Madman, Kobold, Wolf, Imp, Spider, Skeleton, Sprite, Zombie, Merfolk, Monodrone, TwigBlight, Mastiff, Snake, Blight,
         Bullywug, WildGnoll, Svirfneblin, WarGoblin, DeepGnome, DustMephit, GasSpore, Gnoll, Hobgoblin, Worg, Bugbear, DireWolf, Dryad, Ghoul, HalfOgre, Spectre, Centaur,

@@ -102,6 +102,7 @@ namespace RaargeDungeon.Builder
             Console.WriteLine("            Comands");
             Console.WriteLine("------------------------------------");
             Console.WriteLine("  (C)reate New Monster");
+            Console.WriteLine("  E(d)it Monster");
             Console.WriteLine("  (E)xit");
             Console.WriteLine("==================================");
 
@@ -112,7 +113,7 @@ namespace RaargeDungeon.Builder
 
             input = Console.ReadLine().ToLower();
 
-            while (input != "c" && input != "e" && input.Length != 1)
+            while (input != "c" && input != "e" && input != "d" && input.Length != 1)
             {
                 Console.WriteLine("Enter a valid value");
                 input = Console.ReadLine();
@@ -120,9 +121,139 @@ namespace RaargeDungeon.Builder
 
             if (input == "c")
                 AddNewMonsters();
+            if (input == "d")
+                EditMonster(monsters);
             if (input == "e")
                 Environment.Exit(0);
 
+
+        }
+
+        public static void EditMonster(List<Monster> monsters)
+        {
+            int input = 0;
+            int newValue = 0;
+            Boolean nvalue = false;
+            Monster mSelected = new Monster();
+
+            mSelected = ChooseMonsterToEdit(monsters);
+
+            Console.Clear();
+            Console.WriteLine(" ");
+            Console.WriteLine("          Monster Editor ");
+            Console.WriteLine("======================================");
+            Console.WriteLine("      Pick an Attribute to Edit");
+            Console.WriteLine("---------------------------------------");
+            Console.WriteLine($"       Editing {mSelected.name}");
+            Console.WriteLine("---------------------------------------");
+            Console.WriteLine($" 1. XP Given: {mSelected.xpGiven} ");
+            Console.WriteLine($" 2. Damage Dice Type: {mSelected.attackDice}");
+            Console.WriteLine($" 3. Number of Damage Dice: {mSelected.numberAttackDice}");
+            Console.WriteLine($" 4. Damage Modifier: {mSelected.attackDiceModifier}");
+            Console.WriteLine($" 5. Number of Attacks: {mSelected.numberAttacks}");
+            Console.WriteLine($" 6. Armor Class: {mSelected.armorclass}");
+            Console.WriteLine($" 7. Damage Resist 1 No 2 Yes: {mSelected.damageResist}");
+            Console.WriteLine($" 8. Hit Point Dice: {mSelected.hitDice}");
+            Console.WriteLine($" 9. Number of Hit Point Dice: {mSelected.numberHitDie}");
+            Console.WriteLine($" 10. Hit Point Dice Modifier: {mSelected.hitDiceModifier}");
+            Console.WriteLine($" 11. Is Monster Undead: true or false: { mSelected.isUndead}" );
+            Console.WriteLine("=========================================");
+            Console.WriteLine(" ");
+            Console.WriteLine(" Which attribute do you wish to edit? (enter number)");
+            input = Convert.ToInt32(Console.ReadLine());
+
+            while (input < 1 && input > 11)
+            {
+                Console.WriteLine("You did not choose a valid option. choose again ");
+                input = Convert.ToInt32(Console.ReadLine());
+            }
+
+            Console.Write("Enter new value: ");
+            if (input >= 1 && input <= 10)
+                newValue = Convert.ToInt32(Console.ReadLine());
+            else if (input == 11)
+                nvalue = Convert.ToBoolean(Console.ReadLine());
+
+            if (input == 1)
+                mSelected.xpGiven = newValue;
+            else if (input == 2)
+                mSelected.attackDice = newValue;
+            else if (input == 3)
+                mSelected.numberAttackDice = newValue;
+            else if (input == 4)
+                mSelected.attackDiceModifier = newValue;
+            else if (input == 5)
+                mSelected.numberAttacks = newValue;
+            else if (input == 6)
+                mSelected.armorclass = newValue;
+            else if (input == 7)
+                mSelected.damageResist = newValue;
+            else if (input == 8)
+                mSelected.hitDice = newValue;
+            else if (input == 9)
+                mSelected.numberHitDie = newValue;
+            else if (input == 10)
+                mSelected.hitDiceModifier = newValue;
+            else if (input == 11)
+                mSelected.isUndead = nvalue;
+
+            Console.WriteLine(" ");
+            Console.WriteLine("Hit a key to save");
+            Console.ReadKey();
+
+            SaveMonster(mSelected);
+
+
+        }
+
+        public static Monster ChooseMonsterToEdit(List<Monster> monsters)
+        {
+            string input = "";
+            int counter = 0;
+            bool inList = false;
+            Monster m = new Monster();
+
+            Console.Clear();
+            Console.WriteLine("   List of All Monsters");
+            Console.WriteLine("===============================");
+            foreach (Monster monster in monsters)
+            {
+                counter++;
+                if (counter == 4)
+                {
+                    Console.Write("\n");
+                    counter = 0;
+                }
+                
+                Console.Write($" {monster.name} ");
+            }
+            Console.WriteLine("=================================");
+            Console.WriteLine("   Pick a Monster to Edit");
+            Console.WriteLine(" ");
+            Console.Write("Which Monster will you edit? ");
+            input = Console.ReadLine();
+
+            while (!inList)
+            {
+                foreach (Monster monster in monsters)
+                {
+                    if (input == monster.name)
+                    {
+                        m = monster;
+                        inList = true;
+                        break;
+                    }
+                        
+                }
+                if (!inList)
+                {
+                    Console.WriteLine("You did not pick a monster from the list.  Enter a monster name ");
+                    input = Console.ReadLine();
+                }
+                
+            }
+
+            return m;
 
         }
 
@@ -175,6 +306,8 @@ namespace RaargeDungeon.Builder
             m.hitDiceModifier = Convert.ToInt32(Console.ReadLine());
             Console.Write("Monster Number of Attacks: ");
             m.numberAttacks = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Monster Is Undead? true or false: ");
+            m.isUndead = Convert.ToBoolean(Console.ReadLine());
             
 
             Console.Clear();
@@ -190,7 +323,7 @@ namespace RaargeDungeon.Builder
             Console.WriteLine($" Number of Hit Point Dice: {m.numberHitDie}");
             Console.WriteLine($" Hit Point Dice Modifier: +{m.hitDiceModifier}");
             Console.WriteLine($" Monster Number of Attacks: {m.numberAttacks}");
-            Console.WriteLine($"");
+            Console.WriteLine($" Is Monster Undead? {m.isUndead}");
             Console.WriteLine("===================================");
             Console.WriteLine(" ");
             Console.WriteLine("Save this monster?");
