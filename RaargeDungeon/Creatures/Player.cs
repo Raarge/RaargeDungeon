@@ -603,6 +603,7 @@ namespace RaargeDungeon.Creatures
 
             p.health = p.baseHealth;
             p.energy = p.baseEnergy;
+            Program.Save();
             Console.ForegroundColor = ConsoleColor.Green;
             UIHelpers.Print($"Ding!!!! You are now level {p.level}! ");
             if (p.currentClass == PlayerClass.Monk && p.level == 2)

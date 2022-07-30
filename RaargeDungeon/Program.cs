@@ -8,6 +8,7 @@ using RaargeDungeon.Helpers;
 using System.Threading;
 using RaargeDungeon.Creatures;
 using RaargeDungeon.Encounter;
+using RaargeDungeon.Builder;
 
 namespace RaargeDungeon
 {
@@ -21,6 +22,11 @@ namespace RaargeDungeon
             if (!Directory.Exists("saves"))
             {
                 Directory.CreateDirectory("saves");
+            }
+
+            if (!Directory.Exists("monsters"))
+            {
+                Directory.CreateDirectory("monsters");
             }
 
             currentPlayer = Load(out bool newP);
@@ -212,8 +218,6 @@ namespace RaargeDungeon
             string[] paths = Directory.GetFiles("saves");
             List<Player> players = new List<Player>();
             int idCount = 0;
-
-            
             
             FileStream fs;
 
@@ -243,7 +247,7 @@ namespace RaargeDungeon
 
                 foreach (Player p in players)
                 {
-                    Console.WriteLine($"{p.id}: {p.name}");
+                    Console.WriteLine($"ID: {p.id} Level: {p.level} Name: {p.name}  Class:  {p.currentClass}");
                 }
 
                 UIHelpers.Print("Please input player name or id (id:# or playername).");
@@ -278,6 +282,10 @@ namespace RaargeDungeon
                         newP = true;
                         return newPlayer;
                         
+                    }
+                    else if (data[0] == "admin")
+                    {
+                        MonsterBuilder.AdminInterface();
                     }
                     else
                     {
