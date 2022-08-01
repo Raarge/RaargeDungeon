@@ -60,6 +60,7 @@ namespace RaargeDungeon
                     Console.ResetColor();                    
                     
                 }
+                m.lastDamageTaken = backStabDamage;
                 if (m.health < backStabDamage)
                     backStabDamage = m.health;
                 m.health -= backStabDamage;
@@ -121,6 +122,9 @@ namespace RaargeDungeon
                     p.magicMastery += Checkers.GetSkillXPGain(m.level, 3, 1, "magic");
                     p.spellChanneling += Checkers.GetSkillXPGain(m.level, 3, 1, "channel");
                     p.spellCasting += Checkers.GetSkillXPGain(m.level, 3, 1, "cast");
+                    m.lastDamageTaken = spellDamage;
+                    if(spellDamage > m.health)
+                        spellDamage = m.health;
                     m.health -= spellDamage;
                     if (m.health <= 0)
                     {
@@ -181,6 +185,7 @@ namespace RaargeDungeon
                     UIHelpers.Print($"You whistle loudly, a {companion} comes out of nowhere attacking {m.name} dealing ");
                     UIHelpers.Print($"{animalCallDamage} damage.");
                     Console.ResetColor();
+                    m.lastDamageTaken = animalCallDamage;
                     if (m.health < animalCallDamage)
                         animalCallDamage = m.health;
                     m.health -= animalCallDamage;
@@ -245,7 +250,8 @@ namespace RaargeDungeon
 
                         m.IsAlive = false;
                     }
-}
+                }
+                m.lastDamageTaken = chiStrikeDamage;
                 if (chiStrikeDamage > m.health)
                     chiStrikeDamage = m.health;
                 m.health -= chiStrikeDamage;
@@ -289,6 +295,7 @@ namespace RaargeDungeon
                     
                 }
 
+                m.lastDamageTaken = holyStrikeDamage;
                 if (holyStrikeDamage > m.health)
                     holyStrikeDamage = m.health;
                 m.health -= holyStrikeDamage;

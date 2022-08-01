@@ -263,6 +263,15 @@ namespace RaargeDungeon.Encounter
                         }
                     }
 
+                    // Check and execute Monster Second Attacks
+                    if (mstr.numberAttacks > 1 && mstr.IsAlive == true)
+                    {
+                        for(int i = 1; i <= mstr.numberAttacks - 1; i++)
+                        {
+                            plyr = MartialCombat.DoMonsterSoloCombat(mstr, plyr, action);
+                        }
+                    }
+
                     //special attacks
 
 
@@ -305,7 +314,11 @@ namespace RaargeDungeon.Encounter
                     }
                     else if (hitChecks.AttackHits == true)
                     {
-                        attack = Randomizer.GetRandomDieRoll(plyr.attackDie, (plyr.numberAttackDie / 2)); // half damage dealt defending
+                        if(plyr.currentClass != Player.PlayerClass.Monk || plyr.currentClass != Player.PlayerClass.Rogue)
+                            attack = Randomizer.GetRandomDieRoll(plyr.attackDie, plyr.numberAttackDie, BaseCreature.GetModifier(plyr.strength) );
+                        else
+                            attack = Randomizer.GetRandomDieRoll(plyr.attackDie, plyr.numberAttackDie, BaseCreature.GetModifier(plyr.dexterity));
+                        attack = attack / 2; // half damage dealt defending
                     }
 
                     if (hitChecks.AttackHits == true && hitChecks.ToHitRoll == 20)
@@ -329,8 +342,10 @@ namespace RaargeDungeon.Encounter
                         Console.ResetColor();
                     }
                     Console.WriteLine($"You deal {attack} damage to {mstr.name}.");
-                    //                TextHelpers.GetMonsterHitLine(mstr.name, damage, monsterCrit, action.ToLower());
 
+                    mstr.lastDamageTaken = attack;
+                    if(mstr.health < attack)
+                        attack = mstr.health;
                     mstr.health -= attack;
                     if (mstr.health <= 0)
                     {
@@ -464,9 +479,20 @@ namespace RaargeDungeon.Encounter
 
                 if (mstr.IsAlive)
                     Console.ReadKey();
+
+                if (!mstr.IsAlive && mstr.isUndead)
+                    mstr = CheckUndeadForDeath(mstr);
             }
 
             Console.WriteLine($"{mstr.name} was Slain!!");
+            
+            if (mstr.name == "GasSpore")
+            {
+                plyr = CheckGasSporeDamage(plyr);
+                CheckForDeath(mstr.name);
+            }
+                
+
 
             int xp = plyr.GetXP(mstr);
             int cn = plyr.GetCoins(mstr);
@@ -485,6 +511,56 @@ namespace RaargeDungeon.Encounter
                 plyr = plyr.LevelUp(plyr);
 
             Console.ReadKey();
+        }
+
+        public static Player CheckGasSporeDamage(Player plyr)
+        {
+            var conDC = 15;
+            var conSaveRoll = Randomizer.GetRandomDieRoll(20) + plyr.constitutionSave;
+            bool saveSuccess = false;
+
+            if(conSaveRoll > conDC)
+            {
+                saveSuccess = true;
+            }
+
+            UIHelpers.Print("A Gas Spore explodes in a green cloud of spores.");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            if (!saveSuccess)
+            {
+                var damage = Randomizer.GetRandomDieRoll(6, 3);
+                                
+                UIHelpers.Print($"You take {damage} poison damage!");
+
+                if(plyr.health < damage)
+                    damage = plyr.health;
+
+                plyr.health -= damage;
+            }
+            else
+            {
+                UIHelpers.Print("You dodge barely escaping the blast!");
+            }
+
+            Console.ResetColor();
+
+            return plyr;
+        }
+
+        public static Monster CheckUndeadForDeath(Monster mstr)
+        {
+            int conSaveMod = Monster.GetMonsterSavingThrowModifier(mstr, "constitution");
+            int difficulty = mstr.lastDamageTaken + 5;
+            int conSaveThros = Randomizer.GetRandomDieRoll(20) + conSaveMod;
+
+            if(conSaveThros > difficulty)
+            {
+                mstr.IsAlive = true;
+                mstr.health = 1;
+            }
+
+            return mstr;
         }
 
         public static int GetCurrentEncounterXPLevel(EncounterLevels encounterLvls)

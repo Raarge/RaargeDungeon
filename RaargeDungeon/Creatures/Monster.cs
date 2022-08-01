@@ -34,9 +34,9 @@ namespace RaargeDungeon.Creatures
         public int toHitBonus { get; set; } = 2;
         public bool IsAlive { get; set; }
         public bool IsStunned { get; set; } = false;
-        public bool isUndead { get; set; } = false;               
-
+        public bool isUndead { get; set; } = false;   
         public string race { get; set; }
+        public int lastDamageTaken { get; set; }
 
         
         public static Monster SpawnMonster(Monster mstr, bool random, int plrLevel, int eclChosen)
@@ -133,6 +133,29 @@ namespace RaargeDungeon.Creatures
             return FullListMonster;
         }
 
+        public static int GetMonsterSavingThrowModifier(Monster m, string typeSave)
+        {
+            int statScore = 0;
+            int saveModifier = 0;
+
+            if (typeSave == "strength")
+                statScore = m.strength;
+            else if (typeSave == "constitution")
+                statScore = m.constitution;
+            else if (typeSave == "dexterity")
+                statScore = m.dexterity;
+            else if (typeSave == "intelligence")
+                statScore = m.intelligence;
+            else if (typeSave == "wisdom")
+                statScore = m.wisdom;
+            else if (typeSave == "charisma")
+                statScore = m.charisma;
+
+
+            saveModifier = GetModifier(statScore);
+
+            return saveModifier;
+        }
     }
 }
 

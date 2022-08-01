@@ -76,6 +76,7 @@ namespace RaargeDungeon.Combat
             else
                 Console.WriteLine($"You swing your {TextHelpers.GetWeapon()} at a {m.name} but miss.");
 
+            m.lastDamageTaken = plyrDamage;
             if (m.health < plyrDamage)
                 plyrDamage = m.health;
             m.health -= plyrDamage;
@@ -208,7 +209,7 @@ namespace RaargeDungeon.Combat
                 p.evasion += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.evasion.ToString());
             }
 
-
+            m.lastDamageTaken = plyrDamage;
             if (m.health < plyrDamage)
                 plyrDamage = m.health;
 
