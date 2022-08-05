@@ -150,12 +150,7 @@ namespace RaargeDungeon.Combat
 
                     p.weaponMastery += Checkers.GetCombatSkillGain(m, p, Player.skillCombatType.weapon.ToString());
                 }
-                else
-                {
-                    // add spell damage here 
-
-
-                }
+                
                 if (playerCrit)
                     plyrDamage *= 2;
 

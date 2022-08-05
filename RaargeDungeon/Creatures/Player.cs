@@ -690,6 +690,32 @@ namespace RaargeDungeon.Creatures
         }
         #endregion
 
+        public static int GetSpellDifficultyModifier(Player p, string spellSkill, int additionalSpellMod)
+        {
+            int standardSpellInitialMod = 8;
+            int proficiency = p.proficiencyBonus;
+            int abilityModifier;
+            int abilityScore;
+            int spellDC;
+
+            abilityScore = spellSkill switch
+            {
+                "Strength" => p.strength,
+                "Constitution" => p.constitution,
+                "Dexterity" => p.dexterity,
+                "Intelligence" => p.intelligence,
+                "Wisdom" => p.wisdom,
+                "Charisma" => p.charisma,
+                _ => throw new NotImplementedException()
+            };
+
+            abilityModifier = Player.GetModifier(abilityScore);
+
+            spellDC = standardSpellInitialMod + abilityModifier + proficiency + additionalSpellMod;
+
+            return spellDC;
+        } 
+
         #region GetFavor()
         public int GetFavor()
         {

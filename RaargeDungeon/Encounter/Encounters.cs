@@ -364,13 +364,12 @@ namespace RaargeDungeon.Encounter
                     chosenSpell = Pickers.GetChosenSpell();
                     int spellCost = Checkers.GetSpellCost(chosenSpell);
 
-                    int spellAttack = (int)Math.Ceiling(Randomizer.GetRandomDieRoll(chosenSpell.spellDamageDice, chosenSpell.spellNumberDamageDice, (chosenSpell.spellDamageModifier * chosenSpell.spellNumberDamageDice)) + Program.currentPlayer.magicMastery) * (plyr.level / 2 + 1);
+                    int spellAttack = (int)Math.Ceiling(Randomizer.GetRandomDieRoll(chosenSpell.spellDamageDice, chosenSpell.spellNumberDamageDice, (chosenSpell.spellDamageModifier * chosenSpell.spellNumberDamageDice)) + Program.currentPlayer.magicMastery);
 
                     if (rand.Next(0, upper) == 0)
                         spellFail = true;
 
-                    if (rand.Next(1, 11) == 3)
-                        spellCrit = true;
+                    
                     // check for spell failure
 
                     if (spellFail)
@@ -380,16 +379,8 @@ namespace RaargeDungeon.Encounter
                     }
                     else
                     {
-                        if (spellCrit)
-                        {
-                            spellAttack = spellAttack * chosenSpell.critMultiplier;
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine($"{chosenSpell.Name} Critical!");
-                            Console.ResetColor();
-                        }
+                        MagicalCombat.DoMagicalCombat(mstr, plyr, chosenSpell);
 
-                        Console.WriteLine($"You begin casting {chosenSpell.Name}, you thrust your hand forward and");
-                        Console.WriteLine(chosenSpell.FlavorText);
                         Console.WriteLine($"A {mstr.name} attacks in return.");
                         Console.WriteLine($"You deal {spellAttack} {chosenSpell.type} damage to the {mstr.name}.");
 
@@ -404,13 +395,7 @@ namespace RaargeDungeon.Encounter
                     Program.currentPlayer.spellCasting += Checkers.GetSkillXPGain(mstr.level, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "cast");
                     Program.currentPlayer.spellChanneling += Checkers.GetSkillXPGain(mstr.level, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "channel");
                     Program.currentPlayer.magicMastery += Checkers.GetSkillXPGain(mstr.level, chosenSpell.SpellCost, chosenSpell.RequiredLevel, "magic");
-
-                    mstr.health -= spellAttack;
-                    if (mstr.health <= 0)
-                    {
-                        //Console.WriteLine($"{nm} was Slain!!");
-                        mstr.IsAlive = false;
-                    }
+                                  
 
                 }
                 else if (action.ToLower() == "r" && Program.currentPlayer.race != Player.Race.Dwarf)

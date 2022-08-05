@@ -16,6 +16,11 @@ namespace RaargeDungeon.Items
         public int critMultiplier { get; set; }
         public int dcCheck { get; set; }
         public int damageDicePerSpellLevel { get; set; }
+        public int numberAttacks { get; set; }
+        public bool requiresMeleeSpellAttack { get; set; }
+        public int spellLevel { get; set; }
+        public string typeSaveRequired { get; set; }
+        public bool halfDamageOnSave { get; set; }
 
 
         public static Player GetSpellScroll(Player p, string scrollName)
@@ -55,6 +60,10 @@ namespace RaargeDungeon.Items
             InflictWounds.spellDamageModifier = 0;
             InflictWounds.spellNumberDamageDice = 3;
             InflictWounds.critMultiplier = 2;
+            InflictWounds.numberAttacks = 1;
+            InflictWounds.requiresMeleeSpellAttack = true;
+            InflictWounds.savingThrowAllowed = false;
+            InflictWounds.spellLevel = 1;
             list.Add(InflictWounds);
             #endregion
 
@@ -71,8 +80,12 @@ namespace RaargeDungeon.Items
             MagicMissile.spellDamageDice = 4;
             MagicMissile.type = "Arcane";
             MagicMissile.spellDamageModifier = 1;
-            MagicMissile.spellNumberDamageDice = 3;
+            MagicMissile.spellNumberDamageDice = 1;
             MagicMissile.critMultiplier = 3;
+            MagicMissile.numberAttacks = 3;
+            MagicMissile.savingThrowAllowed = false;
+            MagicMissile.requiresMeleeSpellAttack = false;
+            MagicMissile.spellLevel = 1;
             list.Add(MagicMissile);
             #endregion
 
